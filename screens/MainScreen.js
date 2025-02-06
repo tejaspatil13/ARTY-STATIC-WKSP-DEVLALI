@@ -6,7 +6,7 @@ const MainScreen = ({ navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>ARTY STATIC WKSP DEVLALI - DUTY JCO FORM</Text>
+      <Text style={styles.title}>DUTY JCO FORM</Text>
       {pages.map((page) => (
         <View key={page} style={styles.buttonContainer}>
           <Button
