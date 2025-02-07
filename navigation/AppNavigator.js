@@ -13,7 +13,6 @@ import CookHouseObservationsPage from '../screens/CookHouseObservationsPage';
 import FireEquipmentCheckPage from '../screens/FireEquipmentCheckPage';
 import FoodTastingPage from '../screens/FoodTastingPage'; 
 import HealthHygienePage from '../screens/HealthHygienePage';
-import MainScreen from '../screens/MainScreen';
 
 
 

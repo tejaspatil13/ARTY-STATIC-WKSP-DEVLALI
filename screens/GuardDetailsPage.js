@@ -1,13 +1,7 @@
-<<<<<<< HEAD
-import React, { useContext, useLayoutEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';  
-=======
-import React, { useContext } from 'react';
-import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
->>>>>>> d7e76c7e36004204093334b24bfb936d2d2923d1
-import { FormContext } from '../utils/FormContext';
 import { Ionicons } from '@expo/vector-icons';
+import { FormContext } from '../utils/FormContext';
 
 const GuardDetailsPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
@@ -16,12 +10,11 @@ const GuardDetailsPage = ({ navigation }) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-<<<<<<< HEAD
-  // Set up the home icon and center the header title
-  useLayoutEffect(() => {
+  // Set up the title and home button
+  useEffect(() => {
     navigation.setOptions({
       headerTitle: 'Guard Details', 
-      headerTitleAlign: 'center',  // Center the header title
+      headerTitleAlign: 'center',
       headerTitleStyle: { 
         fontSize: 22, 
         fontWeight: 'bold', 
@@ -30,16 +23,6 @@ const GuardDetailsPage = ({ navigation }) => {
       headerLeft: () => (
         <TouchableOpacity onPress={() => navigation.navigate('Main')} style={styles.homeButton}>
           <Ionicons name="home" size={28} color="#000" />
-=======
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerLeft: () => (
-        <TouchableOpacity 
-          onPress={() => navigation.navigate('MainScreen')}
-          style={styles.headerButton}
-        >
-          <Ionicons name="home-outline" size={24} color="#2196F3" />
->>>>>>> d7e76c7e36004204093334b24bfb936d2d2923d1
         </TouchableOpacity>
       ),
     });
@@ -47,43 +30,34 @@ const GuardDetailsPage = ({ navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-<<<<<<< HEAD
-      {/* Left-aligned section title */}
-=======
->>>>>>> d7e76c7e36004204093334b24bfb936d2d2923d1
       <Text style={styles.sectionTitle}>2. Kote Guard Details</Text>
+
+      <Text style={styles.label}>Mounted at (hrs)</Text>
       <TextInput
         style={styles.input}
-        placeholder="Mounted at (hrs)"
+        placeholder="Enter time"
         value={formData.koteGuardTime}
         onChangeText={t => handleInputChange('koteGuardTime', t)}
       />
+
+      <Text style={styles.label}>Findings</Text>
       <TextInput
         style={styles.input}
-        placeholder="Findings"
+        placeholder="Enter findings"
         value={formData.koteGuardFindings}
         onChangeText={t => handleInputChange('koteGuardFindings', t)}
       />
-<<<<<<< HEAD
 
-=======
->>>>>>> d7e76c7e36004204093334b24bfb936d2d2923d1
+      {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
-        <Button
-          title="← Previous"
-          onPress={() => navigation.navigate('DutyHandover')}
-          color="#757575"
-        />
-        <Button
-          title="Next →"
-          onPress={() => navigation.navigate('MTBriefing')}
-          color="#2196F3"
-        />
+        <Button title="← Previous" onPress={() => navigation.navigate('DutyHandover')} color="#757575" />
+        <Button title="Next →" onPress={() => navigation.navigate('MTBriefing')} color="#2196F3" />
       </View>
     </ScrollView>
   );
 };
 
+// Styles
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
@@ -95,6 +69,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     color: '#333',
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    color: '#555',
   },
   input: {
     borderWidth: 1,
@@ -109,17 +89,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 30,
   },
-<<<<<<< HEAD
   homeButton: {
     marginLeft: 15,
   },
-=======
-  headerButton: {
-    marginLeft: 15,
-    padding: 5,
-  }
->>>>>>> d7e76c7e36004204093334b24bfb936d2d2923d1
 });
 
 export default GuardDetailsPage;
-
