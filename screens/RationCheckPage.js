@@ -1,5 +1,6 @@
-import React, { useContext } from 'react';
-import { View, Text, TextInput, Button, ScrollView, StyleSheet } from 'react-native';
+import React, { useContext, useEffect } from 'react';
+import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';  
 import { FormContext } from '../utils/FormContext';
 
 const RationCheckPage = ({ navigation }) => {
@@ -8,6 +9,24 @@ const RationCheckPage = ({ navigation }) => {
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
+
+  // Set up title and home button
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: 'Ration Check', 
+      headerTitleAlign: 'center', 
+      headerTitleStyle: { 
+        fontSize: 22, 
+        fontWeight: 'bold', 
+        color: '#333' 
+      },
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.navigate('Main')} style={styles.homeButton}>
+          <Ionicons name="home" size={28} color="#000" />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -68,6 +87,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 30,
+  },
+  homeButton: {
+    marginLeft: 15,
   },
 });
 
