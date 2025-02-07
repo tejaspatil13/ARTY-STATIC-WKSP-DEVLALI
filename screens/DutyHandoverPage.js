@@ -1,5 +1,6 @@
-import React, { useContext } from 'react';
-import { View, Text, TextInput, Button, ScrollView, StyleSheet } from 'react-native';
+import React, { useContext, useEffect } from 'react';
+import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';  
 import { FormContext } from '../utils/FormContext';
 
 const DutyHandoverPage = ({ navigation }) => {
@@ -9,15 +10,33 @@ const DutyHandoverPage = ({ navigation }) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  // Set up the home icon and center the title
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: 'Duty Handover', 
+      headerTitleAlign: 'center',  // Center the title
+      headerTitleStyle: { 
+        fontSize: 22, 
+        fontWeight: 'bold', 
+        color: '#333' 
+      },
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.navigate('Main')} style={styles.homeButton}>
+          <Ionicons name="home" size={28} color="#000" />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Duty JCO Handover Section */}
       <Text style={styles.sectionTitle}>1. Duty JCO Handover</Text>
 
-      <Text style={styles.label}>JC </Text>
+      <Text style={styles.label}>JC</Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter JC "
+        placeholder="Enter JC"
         value={formData.jcNumber}
         onChangeText={t => handleInputChange('jcNumber', t)}
       />
@@ -72,10 +91,10 @@ const DutyHandoverPage = ({ navigation }) => {
 
       <Text style={styles.subSection}>Took Over Duty From</Text>
 
-      <Text style={styles.label}>Previous JC </Text>
+      <Text style={styles.label}>Previous JC</Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter Previous JC "
+        placeholder="Enter Previous JC"
         value={formData.prevJCNumber}
         onChangeText={t => handleInputChange('prevJCNumber', t)}
       />
@@ -98,7 +117,6 @@ const DutyHandoverPage = ({ navigation }) => {
 
       {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
-        <Button title="← Previous" onPress={() => navigation.goBack()} color="#757575" />
         <Button title="Next →" onPress={() => navigation.navigate('GuardDetails')} color="#2196F3" />
       </View>
     </ScrollView>
@@ -116,7 +134,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#333',
+    color: '#333', // Keep section title left-aligned
   },
   label: {
     fontSize: 14,
@@ -153,6 +171,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 30,
+  },
+  homeButton: {
+    marginLeft: 15,
   },
 });
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
 // Import Screens
+import MainScreen from '../screens/MainScreen';
 import DutyHandoverPage from '../screens/DutyHandoverPage';
 import MTBriefingPage from '../screens/MTBriefingPage';
 import GuardDetailsPage from '../screens/GuardDetailsPage';
@@ -15,11 +16,13 @@ import HealthHygienePage from '../screens/HealthHygienePage';
 
 
 
+
 const Stack = createStackNavigator();
 
 const AppNavigator = () => {
   return (
-    <Stack.Navigator initialRouteName="DutyHandover">
+    <Stack.Navigator initialRouteName="Main">
+      <Stack.Screen name="Main" component={MainScreen} options={{ title: 'Main' }} />
       <Stack.Screen name="DutyHandover" component={DutyHandoverPage} options={{ title: 'Duty Handover' }} />
       <Stack.Screen name="GuardDetails" component={GuardDetailsPage} />  
       <Stack.Screen name="MTBriefing" component={MTBriefingPage} options={{ title: 'MT Briefing' }} /> 

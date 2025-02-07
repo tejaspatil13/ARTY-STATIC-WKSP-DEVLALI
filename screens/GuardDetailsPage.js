@@ -1,5 +1,6 @@
-import React, { useContext } from 'react';
-import { View, Text, TextInput, Button, ScrollView, StyleSheet } from 'react-native';
+import React, { useContext, useLayoutEffect } from 'react';
+import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';  
 import { FormContext } from '../utils/FormContext';
 
 const GuardDetailsPage = ({ navigation }) => {
@@ -9,9 +10,27 @@ const GuardDetailsPage = ({ navigation }) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  // Set up the home icon and center the header title
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: 'Guard Details', 
+      headerTitleAlign: 'center',  // Center the header title
+      headerTitleStyle: { 
+        fontSize: 22, 
+        fontWeight: 'bold', 
+        color: '#333' 
+      },
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.navigate('Main')} style={styles.homeButton}>
+          <Ionicons name="home" size={28} color="#000" />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* Kote Guard Details Section */}
+      {/* Left-aligned section title */}
       <Text style={styles.sectionTitle}>2. Kote Guard Details</Text>
 
       <TextInput
@@ -28,7 +47,6 @@ const GuardDetailsPage = ({ navigation }) => {
         onChangeText={t => handleInputChange('koteGuardFindings', t)}
       />
 
-      {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
         <Button
           title="← Previous"
@@ -37,7 +55,7 @@ const GuardDetailsPage = ({ navigation }) => {
         />
         <Button
           title="Next →"
-          onPress={() => navigation.navigate('MTBriefing')} // Corrected navigation
+          onPress={() => navigation.navigate('MTBriefing')}
           color="#2196F3"
         />
       </View>
@@ -70,6 +88,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 30,
+  },
+  homeButton: {
+    marginLeft: 15,
   },
 });
 

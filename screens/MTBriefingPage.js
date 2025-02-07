@@ -1,5 +1,6 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons'; // Consistent home icon
 import { FormContext } from '../utils/FormContext';
 
 const MTBriefingPage = ({ navigation }) => {
@@ -22,6 +23,24 @@ const MTBriefingPage = ({ navigation }) => {
     setStrengthFields(updatedFields);
     setFormData(prev => ({ ...prev, mtStrengthFields: updatedFields }));
   };
+
+  // Set navigation options dynamically
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: 'MT Briefing',
+      headerTitleAlign: 'center',
+      headerTitleStyle: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: '#333',
+      },
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.navigate('Main')} style={styles.homeButton}>
+          <Ionicons name="home" size={28} color="#000" />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -73,12 +92,10 @@ const MTBriefingPage = ({ navigation }) => {
       </TouchableOpacity>
 
       {/* Navigation Buttons */}
-      {/* Navigation Buttons */}
-<View style={styles.buttonContainer}>
-  <Button title="← Previous" onPress={() => navigation.goBack()} color="#757575" />
-  <Button title="Next →" onPress={() => navigation.navigate('GuardCheck')} color="#2196F3" />
-</View>
-
+      <View style={styles.buttonContainer}>
+        <Button title="← Previous" onPress={() => navigation.goBack()} color="#757575" />
+        <Button title="Next →" onPress={() => navigation.navigate('GuardCheck')} color="#2196F3" />
+      </View>
     </ScrollView>
   );
 };
@@ -143,6 +160,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 30,
+  },
+  homeButton: {
+    marginLeft: 15,
   },
 });
 
