@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
-import { View, Text, TextInput, Button, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { FormContext } from '../utils/FormContext';
+import { Ionicons } from '@expo/vector-icons';
 
 const GuardDetailsPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
@@ -9,26 +10,34 @@ const GuardDetailsPage = ({ navigation }) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity 
+          onPress={() => navigation.navigate('MainScreen')}
+          style={styles.headerButton}
+        >
+          <Ionicons name="home-outline" size={24} color="#2196F3" />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* Kote Guard Details Section */}
       <Text style={styles.sectionTitle}>2. Kote Guard Details</Text>
-
       <TextInput
         style={styles.input}
         placeholder="Mounted at (hrs)"
         value={formData.koteGuardTime}
         onChangeText={t => handleInputChange('koteGuardTime', t)}
       />
-
       <TextInput
         style={styles.input}
         placeholder="Findings"
         value={formData.koteGuardFindings}
         onChangeText={t => handleInputChange('koteGuardFindings', t)}
       />
-
-      {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
         <Button
           title="← Previous"
@@ -37,7 +46,7 @@ const GuardDetailsPage = ({ navigation }) => {
         />
         <Button
           title="Next →"
-          onPress={() => navigation.navigate('MTBriefing')} // Corrected navigation
+          onPress={() => navigation.navigate('MTBriefing')}
           color="#2196F3"
         />
       </View>
@@ -45,7 +54,6 @@ const GuardDetailsPage = ({ navigation }) => {
   );
 };
 
-// Styles
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
@@ -71,6 +79,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 30,
   },
+  headerButton: {
+    marginLeft: 15,
+    padding: 5,
+  }
 });
 
 export default GuardDetailsPage;
