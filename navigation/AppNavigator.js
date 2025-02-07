@@ -13,7 +13,7 @@ import CookHouseObservationsPage from '../screens/CookHouseObservationsPage';
 import FireEquipmentCheckPage from '../screens/FireEquipmentCheckPage';
 import FoodTastingPage from '../screens/FoodTastingPage'; 
 import HealthHygienePage from '../screens/HealthHygienePage';
-
+import MainScreen from '../screens/MainScreen';
 
 
 
@@ -33,6 +33,7 @@ const AppNavigator = () => {
       <Stack.Screen name="FireEquipmentCheck" component={FireEquipmentCheckPage} options={{ title: 'Fire Equipment Check' }} />
       <Stack.Screen name="FoodTasting" component={FoodTastingPage} options={{ title: 'Food Tasting' }} />
       <Stack.Screen name="HealthHygiene" component={HealthHygienePage} options={{ title: 'Health & Hygiene' }} />
+      <Stack.Screen name="MainScreen" component={MainScreen} options={{ title: 'MainScreen' }} />
     </Stack.Navigator>
   );
 };

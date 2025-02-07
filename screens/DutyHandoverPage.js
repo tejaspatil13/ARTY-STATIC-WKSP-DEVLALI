@@ -3,12 +3,16 @@ import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity
 import { Ionicons } from '@expo/vector-icons';  
 import { FormContext } from '../utils/FormContext';
 
+
 const DutyHandoverPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
+ 
+
+
 
   // Set up the home icon and center the title
   useEffect(() => {
