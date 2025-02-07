@@ -1,24 +1,25 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';  
 import { FormContext } from '../utils/FormContext';
+import { Ionicons } from '@expo/vector-icons';
 
-const RationCheckPage = ({ navigation }) => {
+const SaleCSDPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
 
+  // Handle input change for CSD sale
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  // Set up title and home button
-  useEffect(() => {
+  // Set up the home icon and center the title
+  React.useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitle: 'Ration Check', 
-      headerTitleAlign: 'center', 
-      headerTitleStyle: { 
-        fontSize: 22, 
-        fontWeight: 'bold', 
-        color: '#333' 
+      headerTitle: 'Sale of CSD ',
+      headerTitleAlign: 'center',
+      headerTitleStyle: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: '#333',
       },
       headerLeft: () => (
         <TouchableOpacity onPress={() => navigation.navigate('Main')} style={styles.homeButton}>
@@ -30,23 +31,33 @@ const RationCheckPage = ({ navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* Section Title */}
-      <Text style={styles.sectionTitle}>6. Ration Check</Text>
+      {/* Sale of CSD Section */}
+      <Text style={styles.sectionTitle}>21. Sale of CSD Grocery & Liquor</Text>
 
-      {/* Observations Input */}
-      <Text style={styles.label}>Observations</Text>
+      {/* Grocery Sale */}
+      <Text style={styles.label}>Sale of CSD Grocery (Rs.):</Text>
       <TextInput
-        style={[styles.input, styles.multilineInput]}
-        placeholder="Enter observations..."
-        value={formData.ration_observations}
-        onChangeText={text => handleInputChange('ration_observations', text)}
-        multiline
+        style={styles.input}
+        placeholder="Enter amount"
+        value={formData.csdGrocerySale}
+        onChangeText={t => handleInputChange('csdGrocerySale', t)}
+        keyboardType="numeric"
+      />
+
+      {/* Liquor Sale */}
+      <Text style={styles.label}>Sale of Liquor (Rs.):</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter amount"
+        value={formData.csdLiquorSale}
+        onChangeText={t => handleInputChange('csdLiquorSale', t)}
+        keyboardType="numeric"
       />
 
       {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
-        <Button title="← Previous" onPress={() => navigation.goBack()} color="#757575" />
-        <Button title="Next →" onPress={() => navigation.navigate('CookHouseObservations')} color="#2196F3" />
+        <Button title="← Previous" onPress={() => navigation.navigate('RollCall')} color="#757575" />
+        <Button title="Next →" onPress={() => navigation.navigate('QtrVisit')} color="#2196F3" />
       </View>
     </ScrollView>
   );
@@ -68,7 +79,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: 'bold',
-    marginBottom: 5,
+    marginBottom: 10,
     color: '#555',
   },
   input: {
@@ -78,10 +89,6 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 15,
     backgroundColor: '#fff',
-  },
-  multilineInput: {
-    minHeight: 80,
-    textAlignVertical: 'top',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -93,4 +100,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RationCheckPage;
+export default SaleCSDPage;

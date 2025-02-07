@@ -2,6 +2,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
 // Import Screens
+import MainScreen from "../screens/MainScreen";
 import DutyHandoverPage from "../screens/DutyHandoverPage";
 import MTBriefingPage from "../screens/MTBriefingPage";
 import GuardDetailsPage from "../screens/GuardDetailsPage";
@@ -12,8 +13,6 @@ import CookHouseObservationsPage from "../screens/CookHouseObservationsPage";
 import FireEquipmentCheckPage from "../screens/FireEquipmentCheckPage";
 import FoodTastingPage from "../screens/FoodTastingPage";
 import HealthHygienePage from "../screens/HealthHygienePage";
-import MainScreen from "../screens/MainScreen";
-import SecurityMeasuresPage from "../screens/SecurityMeasures";
 
 const Stack = createStackNavigator();
 
@@ -23,9 +22,8 @@ const AppNavigator = () => {
       <Stack.Screen
         name="Main"
         component={MainScreen}
-        options={{ title: "Main Screen" }}
+        options={{ title: "Main" }}
       />
-
       <Stack.Screen
         name="DutyHandover"
         component={DutyHandoverPage}
@@ -73,9 +71,9 @@ const AppNavigator = () => {
         options={{ title: "Health & Hygiene" }}
       />
       <Stack.Screen
-        name="SecurityMeasures"
-        component={SecurityMeasuresPage}
-        options={{ title: "Security Measures" }}
+        name="MainScreen"
+        component={MainScreen}
+        options={{ title: "MainScreen" }}
       />
     </Stack.Navigator>
   );
