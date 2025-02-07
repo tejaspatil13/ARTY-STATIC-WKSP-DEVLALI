@@ -1,11 +1,29 @@
-import React, { useContext, useState } from 'react';
-import { View, Text, TextInput, Button, ScrollView, StyleSheet } from 'react-native';
+import React, { useContext, useState, useEffect } from 'react';
+import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import { Ionicons } from '@expo/vector-icons';
 import { FormContext } from '../utils/FormContext';
 
 const GuardCheckPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
   const [guards, setGuards] = useState(formData.guards || [{ id: 1, type: '', day: '', night: '' }]);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: 'Guard Check', 
+      headerTitleAlign: 'center',  
+      headerTitleStyle: { 
+        fontSize: 22, 
+        fontWeight: 'bold', 
+        color: '#333' 
+      },
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.navigate('Main')} style={styles.homeButton}>
+          <Ionicons name="home" size={28} color="#000" />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
 
   const handleGuardChange = (index, field, value) => {
     const updatedGuards = [...guards];
@@ -126,6 +144,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 20,
+  },
+  homeButton: {
+    marginLeft: 15,
   },
 });
 
