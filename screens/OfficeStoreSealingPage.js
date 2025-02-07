@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { View, Text, TextInput, Button, ScrollView, StyleSheet } from 'react-native';
 import { FormContext } from '../utils/FormContext';
 
-const GuardDetailsPage = ({ navigation }) => {
+const OfficeStoreSealingPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
 
   const handleInputChange = (field, value) => {
@@ -11,35 +11,33 @@ const GuardDetailsPage = ({ navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* Kote Guard Details Section */}
-      <Text style={styles.sectionTitle}>2. Kote Guard Details</Text>
+      {/* Office & Store Sealing Section */}
+      <Text style={styles.sectionTitle}>5. Office & Store Sealing</Text>
 
+      {/* Office Sealed At */}
+      <Text style={styles.label}>Office Sealed At</Text>
       <TextInput
         style={styles.input}
-        placeholder="Mounted at (hrs)"
-        value={formData.koteGuardTime}
-        onChangeText={t => handleInputChange('koteGuardTime', t)}
+        placeholder="HH:MM AM/PM"
+        value={formData.office_sealed}
+        onChangeText={t => handleInputChange('office_sealed', t)}
+        keyboardType="numeric"
       />
 
+      {/* Store Sealed At */}
+      <Text style={styles.label}>Store Sealed At</Text>
       <TextInput
         style={styles.input}
-        placeholder="Findings"
-        value={formData.koteGuardFindings}
-        onChangeText={t => handleInputChange('koteGuardFindings', t)}
+        placeholder="HH:MM AM/PM"
+        value={formData.store_sealed}
+        onChangeText={t => handleInputChange('store_sealed', t)}
+        keyboardType="numeric"
       />
 
       {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
-        <Button
-          title="← Previous"
-          onPress={() => navigation.navigate('DutyHandover')}
-          color="#757575"
-        />
-        <Button
-          title="Next →"
-          onPress={() => navigation.navigate('MTBriefing')} // Corrected navigation
-          color="#2196F3"
-        />
+        <Button title="← Previous" onPress={() => navigation.goBack()} color="#757575" />
+        <Button title="Next →" onPress={() => navigation.navigate('RationCheck')} color="#2196F3" />
       </View>
     </ScrollView>
   );
@@ -58,6 +56,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: '#333',
   },
+  label: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    color: '#555',
+  },
   input: {
     borderWidth: 1,
     borderColor: '#ccc',
@@ -73,4 +77,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default GuardDetailsPage;
+export default OfficeStoreSealingPage;

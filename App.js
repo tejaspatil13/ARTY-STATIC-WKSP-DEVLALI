@@ -1,9 +1,9 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import AppNavigator from './navigation/AppNavigator';
 import { FormProvider } from './utils/FormContext';
+import AppNavigator from './navigation/AppNavigator';
 
-export default function App() {
+const App = () => {
   return (
     <FormProvider>
       <NavigationContainer>
@@ -11,4 +11,6 @@ export default function App() {
       </NavigationContainer>
     </FormProvider>
   );
-}
+};
+
+export default App;

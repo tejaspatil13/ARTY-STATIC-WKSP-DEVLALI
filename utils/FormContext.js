@@ -20,25 +20,33 @@ export const FormProvider = ({ children }) => {
     koteGuardTime: '',
     koteGuardFindings: '',
     
-    // Page 3: MT Briefing
-    mtBriefingTime: '',
-    mtBriefingStr: { a: '', b: '', c: '' },
-    
-    // Other pages (add more fields as needed)
-    guardChecks: {
-      mainGateDay: false,
-      mainGateNight: false,
-      kote: false,
-      aPl: false,
-      bPl: false,
-      csd: false,
-      dhobiGhat: false,
-      peerBabal: false,
-      sdp: false
-    },
-    officeSealTime: '',
-    storeSealTime: '',
-    rationRemarks: ''
+    // MT Briefing Page Data
+    mt_time: '',
+    mt_strength: '',
+    mtStrengthFields: [{ id: 1, name: '' }], // Dynamic strength fields
+
+    //office sealling
+  office_sealed: '',
+  store_sealed: '',
+
+    //ration checking
+    ration_observations: '',
+
+    //cook houses
+    cookHouseObservations: [{ cook_house: '', appliances: '', staff: '' }],
+
+    // Fire Equipment Check Page
+    fireEquipment: [{ fire_point_location: '', fire_type: '', fire_serviceability: '', observations: '' }],
+
+    //food tasting
+    foodTasting: [
+    { cookHouse: "A PI", meal: "Breakfast", quality: "", improvement: "" },
+    { cookHouse: "A PI", meal: "Lunch", quality: "", improvement: "" },
+    { cookHouse: "A PI", meal: "Dinner", quality: "", improvement: "" },
+    { cookHouse: "B PI", meal: "Breakfast", quality: "", improvement: "" },
+    { cookHouse: "B PI", meal: "Lunch", quality: "", improvement: "" },
+    { cookHouse: "B PI", meal: "Dinner", quality: "", improvement: "" },  ],
+
   });
 
   return (

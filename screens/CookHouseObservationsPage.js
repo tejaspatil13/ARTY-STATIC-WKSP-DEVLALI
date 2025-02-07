@@ -1,0 +1,141 @@
+import React, { useContext } from 'react';
+import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { FormContext } from '../utils/FormContext';
+
+const CookHouseObservationsPage = ({ navigation }) => {
+  const { formData, setFormData } = useContext(FormContext);
+
+  const handleInputChange = (index, field, value) => {
+    const updatedObservations = [...formData.cookHouseObservations];
+    updatedObservations[index][field] = value;
+    setFormData((prev) => ({ ...prev, cookHouseObservations: updatedObservations }));
+  };
+
+  const handleAddRow = () => {
+    setFormData((prev) => ({
+      ...prev,
+      cookHouseObservations: [...prev.cookHouseObservations, { cook_house: '', appliances: '', staff: '' }],
+    }));
+  };
+
+  const handleRemoveRow = (index) => {
+    const updatedObservations = formData.cookHouseObservations.filter((_, i) => i !== index);
+    setFormData((prev) => ({ ...prev, cookHouseObservations: updatedObservations }));
+  };
+
+  return (
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.sectionTitle}>7. Cook House Observations</Text>
+
+      {formData.cookHouseObservations.map((row, index) => (
+        <View key={index} style={styles.card}>
+          <Text style={styles.label}>Cook House</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter Cook House"
+            value={row.cook_house}
+            onChangeText={(text) => handleInputChange(index, 'cook_house', text)}
+          />
+
+          <Text style={styles.label}>Serviceability of Appliances</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter Appliance Status"
+            value={row.appliances}
+            onChangeText={(text) => handleInputChange(index, 'appliances', text)}
+          />
+
+          <Text style={styles.label}>Staff Adequacy</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter Staff Details"
+            value={row.staff}
+            onChangeText={(text) => handleInputChange(index, 'staff', text)}
+          />
+
+          <TouchableOpacity onPress={() => handleRemoveRow(index)} style={styles.removeButton}>
+            <Text style={styles.removeButtonText}>Remove Entry</Text>
+          </TouchableOpacity>
+        </View>
+      ))}
+
+      <TouchableOpacity onPress={handleAddRow} style={styles.addButton}>
+        <Text style={styles.addButtonText}>Add Another Entry</Text>
+      </TouchableOpacity>
+
+      {/* Navigation Buttons */}
+      <View style={styles.buttonContainer}>
+        <Button title="← Previous" onPress={() => navigation.goBack()} color="#757575" />
+        <Button title="Next →" onPress={() => navigation.navigate('FireEquipmentCheck')} color="#2196F3" />
+      </View>
+    </ScrollView>
+  );
+};
+
+// Styles
+const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+    padding: 20,
+    backgroundColor: '#f5f5f5',
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    color: '#333',
+  },
+  card: {
+    backgroundColor: '#fff',
+    padding: 15,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+    marginBottom: 15,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    color: '#555',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 15,
+    backgroundColor: '#fff',
+  },
+  removeButton: {
+    padding: 10,
+    backgroundColor: '#ff5c5c',
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  removeButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  addButton: {
+    padding: 12,
+    backgroundColor: '#34d399',
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  addButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 30,
+  },
+});
+
+export default CookHouseObservationsPage;
