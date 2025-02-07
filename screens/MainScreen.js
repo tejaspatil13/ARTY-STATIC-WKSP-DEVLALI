@@ -8,7 +8,7 @@ const MainScreen = ({ navigation }) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* App Title */}
-      <Text style={styles.title}>ARTY STATIC WKSP DEVLALI - DUTY JCO FORM</Text>
+      <Text style={styles.title}> DUTY JCO FORM</Text>
 
       {/* Start Duty Handover Button */}
       <View style={styles.buttonContainer}>
@@ -17,18 +17,52 @@ const MainScreen = ({ navigation }) => {
           onPress={() => navigation.navigate('DutyHandover')}
           color="#2196F3"
         />
+         <Button
+          title="Guard Details"
+          onPress={() => navigation.navigate('GuardDetails')}
+          color="#2196F3"
+        />
+        <Button
+          title="MT Briefing"
+          onPress={() => navigation.navigate('MTBriefing')}
+          color="#2196F3"
+        />
+         <Button
+          title="Guard Check"
+          onPress={() => navigation.navigate('GuardCheck')}
+          color="#2196F3"
+        />
+
+       <Button
+          title="Office Store Sealing"
+          onPress={() => navigation.navigate('OfficeStoreSealing')}
+          color="#2196F3"
+        />
+         <Button
+          title="Ration Check"
+          onPress={() => navigation.navigate('RationCheck')}
+          color="#2196F3"
+        />
+        <Button
+          title="Cook House Observations"
+          onPress={() => navigation.navigate('CookHouseObservations')}
+          color="#2196F3"
+        />
+         <Button
+          title="Fire Equipment Check"
+          onPress={() => navigation.navigate('FireEquipmentCheck')}
+          color="#2196F3"
+        />
+
+       <Button
+          title="Food Tasting"
+          onPress={() => navigation.navigate('FoodTasting')}
+          color="#2196F3"
+        />
       </View>
 
-      {/* Buttons for Other Pages */}
-      {pages.map((page) => (
-        <View key={page} style={styles.buttonContainer}>
-          <Button
-            title={`Go to Page ${page}`}
-            onPress={() => navigation.navigate(`Page${page}`)}
-            color="#4CAF50"
-          />
-        </View>
-      ))}
+   
+     
     </ScrollView>
   );
 };
@@ -39,7 +73,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding: 70,
     backgroundColor: '#f5f5f5',
   },
   title: {
@@ -51,7 +85,8 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: '80%',
-    marginVertical: 10,
+    marginVertical: 70,
+    gap:30,
     borderRadius: 5,
     overflow: 'hidden',
   },

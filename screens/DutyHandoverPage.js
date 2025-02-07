@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { View, Text, TextInput, Button, ScrollView, StyleSheet } from 'react-native';
 import { FormContext } from '../utils/FormContext';
+import CustomHeader from '../components/CustomHeader';
 
 const DutyHandoverPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
@@ -8,6 +9,12 @@ const DutyHandoverPage = ({ navigation }) => {
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => <CustomHeader navigation={navigation} />,
+    });
+  }, [navigation]);
+
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
