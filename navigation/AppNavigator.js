@@ -2,6 +2,9 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
 // Import Screens
+
+import SecurityMeasuresPage from "../screens/SecurityMeasures";
+import MainScreen from "../screens/MainScreen";
 import DutyHandoverPage from "../screens/DutyHandoverPage";
 import MTBriefingPage from "../screens/MTBriefingPage";
 import GuardDetailsPage from "../screens/GuardDetailsPage";
@@ -12,8 +15,14 @@ import CookHouseObservationsPage from "../screens/CookHouseObservationsPage";
 import FireEquipmentCheckPage from "../screens/FireEquipmentCheckPage";
 import FoodTastingPage from "../screens/FoodTastingPage";
 import HealthHygienePage from "../screens/HealthHygienePage";
-import MainScreen from "../screens/MainScreen";
-import SecurityMeasuresPage from "../screens/SecurityMeasures";
+import HandoverDutiesPage from "../screens/HandoverDutiesPage";
+import AwarenessPage from "../screens/AwarenessPage";
+import ImprovementPage from "../screens/ImprovementPage";
+import LiquorIssuePage from "../screens/LiquorIssuePage";
+import RollCallPage from "../screens/RollCallPage";
+import SaleCSDPage from "../screens/SaleCSDPage";
+import QtrVisitPage from "../screens/QtrVisitPage";
+import MobileCheckPage from "../screens/MobileCheckPage";
 
 const Stack = createStackNavigator();
 
@@ -23,9 +32,8 @@ const AppNavigator = () => {
       <Stack.Screen
         name="Main"
         component={MainScreen}
-        options={{ title: "Main Screen" }}
+        options={{ title: "Main" }}
       />
-
       <Stack.Screen
         name="DutyHandover"
         component={DutyHandoverPage}
@@ -73,9 +81,49 @@ const AppNavigator = () => {
         options={{ title: "Health & Hygiene" }}
       />
       <Stack.Screen
-        name="SecurityMeasures"
-        component={SecurityMeasuresPage}
-        options={{ title: "Security Measures" }}
+        name="MainScreen"
+        component={MainScreen}
+        options={{ title: "MainScreen" }}
+      />
+      <Stack.Screen
+        name="HandoverDuties"
+        component={HandoverDutiesPage}
+        options={{ title: "HandoverDuties" }}
+      />
+      <Stack.Screen
+        name="Awareness"
+        component={AwarenessPage}
+        options={{ title: "Awareness" }}
+      />
+      <Stack.Screen
+        name="Improvement"
+        component={ImprovementPage}
+        options={{ title: "Improvement" }}
+      />
+      <Stack.Screen
+        name="LiquorIssue"
+        component={LiquorIssuePage}
+        options={{ title: "LiquorIssue" }}
+      />
+      <Stack.Screen
+        name="RollCall"
+        component={RollCallPage}
+        options={{ title: "RollCall" }}
+      />
+      <Stack.Screen
+        name="SaleCSD"
+        component={SaleCSDPage}
+        options={{ title: "SaleCSD" }}
+      />
+      <Stack.Screen
+        name="QtrVisit"
+        component={QtrVisitPage}
+        options={{ title: "QtrVisit" }}
+      />
+      <Stack.Screen
+        name="MobileCheck"
+        component={MobileCheckPage}
+        options={{ title: "MobileCheck" }}
       />
     </Stack.Navigator>
   );

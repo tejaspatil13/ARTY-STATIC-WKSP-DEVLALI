@@ -1,66 +1,77 @@
-import React, { useContext } from 'react';
-import { View, Text, TextInput, Button, ScrollView, StyleSheet } from 'react-native';
+import React, { useContext, useEffect } from 'react';
+import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { FormContext } from '../utils/FormContext';
 
-const HealthHygienePage = ({ navigation }) => {
+const FoodTastingPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
 
-  const fields = [
-    "Cleanliness of JCO Mess",
-    "Persons sleeping on ground",
-    "Cleanliness of bathroom and latrines",
-    "Cleanliness of OR Cook House",
-    "Disposal of Kitchen Wastage",
-    "Cleanliness of Barracks/Toilets",
-    "Personnel Maintenance",
-    "Availability of Drinking Water for Troops",
-    "Cleanliness of Civilian Tea Room",
-    "Anti-Malaria/Dengue Precautions",
-  ];
-
-  const handleInputChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const handleInputChange = (index, field, value) => {
+    const updatedFoodTasting = [...formData.foodTasting];
+    updatedFoodTasting[index][field] = value;
+    setFormData(prev => ({ ...prev, foodTasting: updatedFoodTasting }));
   };
+
+  // Set up the home icon and center the title
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: 'Food Tasting',
+      headerTitleAlign: 'center',
+      headerTitleStyle: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: '#333',
+      },
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.navigate('Main')} style={styles.homeButton}>
+          <Ionicons name="home" size={28} color="#000" />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* Page Title with Number */}
-      <Text style={styles.sectionTitle}>10. Health & Hygiene Report</Text>
+      <Text style={styles.sectionTitle}>9. Food Tasting Observations</Text>
 
-      <View style={styles.tableContainer}>
-        {/* Table Header */}
-        <View style={styles.tableHeader}>
-          <Text style={styles.headerCell}>Aspect</Text>
-          <Text style={styles.headerCell}>Observations</Text>
-          <Text style={styles.headerCell}>Remarks</Text>
+      {formData.foodTasting.map((item, index) => (
+        <View key={index} style={styles.foodTastingContainer}>
+          <Text style={styles.label}>Cook House</Text>
+          <TextInput
+            style={styles.input}
+            value={item.cookHouse}
+            editable={false} // Keep it static
+          />
+
+          <Text style={styles.label}>Meal</Text>
+          <TextInput
+            style={styles.input}
+            value={item.meal}
+            editable={false} // Keep it static
+          />
+
+          <Text style={styles.label}>Quality of Food</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter food quality"
+            value={item.quality}
+            onChangeText={t => handleInputChange(index, 'quality', t)}
+          />
+
+          <Text style={styles.label}>Points for Improvement</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter improvement points"
+            value={item.improvement}
+            onChangeText={t => handleInputChange(index, 'improvement', t)}
+          />
         </View>
-
-        {/* Dynamic Fields */}
-        {fields.map((item, index) => (
-          <View key={index} style={styles.rowContainer}>
-            <Text style={styles.cell}>{item}</Text>
-
-            <TextInput
-              style={styles.input}
-              placeholder="Observation"
-              value={formData[`observation_${index}`] || ''}
-              onChangeText={text => handleInputChange(`observation_${index}`, text)}
-            />
-
-            <TextInput
-              style={styles.input}
-              placeholder="Remarks"
-              value={formData[`remark_${index}`] || ''}
-              onChangeText={text => handleInputChange(`remark_${index}`, text)}
-            />
-          </View>
-        ))}
-      </View>
+      ))}
 
       {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
-        <Button title="← Previous" onPress={() => navigation.goBack()} color="#757575" />
-        <Button title="Next →" onPress={() => navigation.navigate('NextPageName')} color="#2196F3" />
+        <Button title="← Previous" onPress={() => navigation.navigate('FireEquipmentCheck')} color="#757575" />
+        <Button title="Next →" onPress={() => navigation.navigate('HealthHygiene')} color="#2196F3" />
       </View>
     </ScrollView>
   );
@@ -78,46 +89,32 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     color: '#333',
-    textAlign: 'left', // Aligning title to the left
   },
-  tableContainer: {
+  foodTastingContainer: {
+    marginBottom: 20,
+    padding: 15,
     backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 10,
-    elevation: 3,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 2,
   },
-  tableHeader: {
-    flexDirection: 'row',
-    backgroundColor: '#f1f1f1',
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
-  headerCell: {
-    flex: 1,
+  label: {
     fontSize: 14,
     fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#333',
-  },
-  rowContainer: {
-    flexDirection: 'row',
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-    alignItems: 'center',
-  },
-  cell: {
-    flex: 2,
-    fontSize: 14,
-    color: '#333',
+    marginBottom: 5,
+    color: '#555',
   },
   input: {
-    flex: 2,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
-    padding: 8,
+    padding: 10,
+    marginBottom: 15,
     backgroundColor: '#fff',
   },
   buttonContainer: {
@@ -125,6 +122,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 30,
   },
+  homeButton: {
+    marginLeft: 15,
+  },
 });
 
-export default HealthHygienePage;
+export default FoodTastingPage;

@@ -1,5 +1,6 @@
-import React, { useContext } from 'react';
-import { View, Text, TextInput, Button, ScrollView, StyleSheet } from 'react-native';
+import React, { useContext, useEffect } from 'react';
+import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { FormContext } from '../utils/FormContext';
 
 const HealthHygienePage = ({ navigation }) => {
@@ -22,9 +23,28 @@ const HealthHygienePage = ({ navigation }) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  // Set up the home icon and center the title
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: 'Health & Hygiene Report',
+      headerTitleAlign: 'center',
+      headerTitleStyle: { 
+        fontSize: 22, 
+        fontWeight: 'bold', 
+        color: '#333' 
+      },
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.navigate('Main')} style={styles.homeButton}>
+          <Ionicons name="home" size={28} color="#000" />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.sectionTitle}>Health & Hygiene Report</Text>
+      {/* Page Title with Number */}
+      <Text style={styles.sectionTitle}>10. Health & Hygiene Report</Text>
 
       <View style={styles.tableContainer}>
         {/* Table Header */}
@@ -59,7 +79,7 @@ const HealthHygienePage = ({ navigation }) => {
       {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
         <Button title="← Previous" onPress={() => navigation.goBack()} color="#757575" />
-        <Button title="Next →" onPress={() => navigation.navigate('NextPageName')} color="#2196F3" />
+        <Button title="Next →" onPress={() => navigation.navigate('LandMatters')} color="#2196F3" />
       </View>
     </ScrollView>
   );
@@ -77,7 +97,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     color: '#333',
-    textAlign: 'center',
+    textAlign: 'left',
   },
   tableContainer: {
     backgroundColor: '#fff',
@@ -123,6 +143,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 30,
+  },
+  homeButton: {
+    marginLeft: 15,
   },
 });
 

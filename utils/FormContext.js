@@ -47,13 +47,24 @@ export const FormProvider = ({ children }) => {
 
     //food tasting
     foodTasting: [
-      { cookHouse: "A PI", meal: "Breakfast", quality: "", improvement: "" },
-      { cookHouse: "A PI", meal: "Lunch", quality: "", improvement: "" },
-      { cookHouse: "A PI", meal: "Dinner", quality: "", improvement: "" },
-      { cookHouse: "B PI", meal: "Breakfast", quality: "", improvement: "" },
-      { cookHouse: "B PI", meal: "Lunch", quality: "", improvement: "" },
-      { cookHouse: "B PI", meal: "Dinner", quality: "", improvement: "" },
-    ],
+    { cookHouse: "A PI", meal: "Breakfast", quality: "", improvement: "" },
+    { cookHouse: "A PI", meal: "Lunch", quality: "", improvement: "" },
+    { cookHouse: "A PI", meal: "Dinner", quality: "", improvement: "" },
+    { cookHouse: "B PI", meal: "Breakfast", quality: "", improvement: "" },
+    { cookHouse: "B PI", meal: "Lunch", quality: "", improvement: "" },
+    { cookHouse: "B PI", meal: "Dinner", quality: "", improvement: "" },  ],
+
+    // land matters
+    defense_land_check: '',
+    remarks: '',
+
+    //defenseLandSurvey
+    defenseLandSurvey: {
+      RP: false,
+      QM: false,
+      observations: [],
+    },
+
   });
 
   return (

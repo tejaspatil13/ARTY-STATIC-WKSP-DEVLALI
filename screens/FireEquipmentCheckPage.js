@@ -1,5 +1,6 @@
-import React, { useContext } from 'react';
-import { View, Text, TextInput, Button, ScrollView, StyleSheet } from 'react-native';
+import React, { useContext, useEffect } from 'react';
+import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';  
 import { FormContext } from '../utils/FormContext';
 
 const FireEquipmentCheckPage = ({ navigation }) => {
@@ -26,6 +27,24 @@ const FireEquipmentCheckPage = ({ navigation }) => {
     updatedFireEquipment.splice(index, 1);
     setFormData(prev => ({ ...prev, fireEquipment: updatedFireEquipment }));
   };
+
+  // Set up the home icon and center the title
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: 'Fire Equipment Check', 
+      headerTitleAlign: 'center',  // Center the title
+      headerTitleStyle: { 
+        fontSize: 22, 
+        fontWeight: 'bold', 
+        color: '#333' 
+      },
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.navigate('Main')} style={styles.homeButton}>
+          <Ionicons name="home" size={28} color="#000" />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -122,6 +141,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 30,
+  },
+  homeButton: {
+    marginLeft: 15,
   },
 });
 
