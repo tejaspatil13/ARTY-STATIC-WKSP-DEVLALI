@@ -1,38 +1,82 @@
-import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
 
 // Import Screens
-import MainScreen from '../screens/MainScreen';
-import DutyHandoverPage from '../screens/DutyHandoverPage';
-import MTBriefingPage from '../screens/MTBriefingPage';
-import GuardDetailsPage from '../screens/GuardDetailsPage';
-import GuardCheckPage from '../screens/GuardCheckPage';
-import OfficeStoreSealingPage from '../screens/OfficeStoreSealingPage';
-import RationCheckPage from '../screens/RationCheckPage';
-import CookHouseObservationsPage from '../screens/CookHouseObservationsPage';
-import FireEquipmentCheckPage from '../screens/FireEquipmentCheckPage';
-import FoodTastingPage from '../screens/FoodTastingPage'; 
-import HealthHygienePage from '../screens/HealthHygienePage';
-
-
+import DutyHandoverPage from "../screens/DutyHandoverPage";
+import MTBriefingPage from "../screens/MTBriefingPage";
+import GuardDetailsPage from "../screens/GuardDetailsPage";
+import GuardCheckPage from "../screens/GuardCheckPage";
+import OfficeStoreSealingPage from "../screens/OfficeStoreSealingPage";
+import RationCheckPage from "../screens/RationCheckPage";
+import CookHouseObservationsPage from "../screens/CookHouseObservationsPage";
+import FireEquipmentCheckPage from "../screens/FireEquipmentCheckPage";
+import FoodTastingPage from "../screens/FoodTastingPage";
+import HealthHygienePage from "../screens/HealthHygienePage";
+import MainScreen from "../screens/MainScreen";
+import SecurityMeasuresPage from "../screens/SecurityMeasures";
 
 const Stack = createStackNavigator();
 
 const AppNavigator = () => {
   return (
     <Stack.Navigator initialRouteName="Main">
-      <Stack.Screen name="Main" component={MainScreen} options={{ title: 'Main' }} />
-      <Stack.Screen name="DutyHandover" component={DutyHandoverPage} options={{ title: 'Duty Handover' }} />
-      <Stack.Screen name="GuardDetails" component={GuardDetailsPage} />  
-      <Stack.Screen name="MTBriefing" component={MTBriefingPage} options={{ title: 'MT Briefing' }} /> 
-      <Stack.Screen name="GuardCheck" component={GuardCheckPage} options={{ title: 'Guard Check' }} />
-      <Stack.Screen name="OfficeStoreSealing" component={OfficeStoreSealingPage} options={{ title: 'Office & Store Sealing' }} />
-      <Stack.Screen name="RationCheck" component={RationCheckPage} options={{ title: 'Ration Check' }} />
-      <Stack.Screen name="CookHouseObservations" component={CookHouseObservationsPage} options={{ title: 'Cook House Observations' }} />
-      <Stack.Screen name="FireEquipmentCheck" component={FireEquipmentCheckPage} options={{ title: 'Fire Equipment Check' }} />
-      <Stack.Screen name="FoodTasting" component={FoodTastingPage} options={{ title: 'Food Tasting' }} />
-      <Stack.Screen name="HealthHygiene" component={HealthHygienePage} options={{ title: 'Health & Hygiene' }} />
-      <Stack.Screen name="MainScreen" component={MainScreen} options={{ title: 'MainScreen' }} />
+      <Stack.Screen
+        name="Main"
+        component={MainScreen}
+        options={{ title: "Main Screen" }}
+      />
+
+      <Stack.Screen
+        name="DutyHandover"
+        component={DutyHandoverPage}
+        options={{ title: "Duty Handover" }}
+      />
+      <Stack.Screen name="GuardDetails" component={GuardDetailsPage} />
+      <Stack.Screen
+        name="MTBriefing"
+        component={MTBriefingPage}
+        options={{ title: "MT Briefing" }}
+      />
+      <Stack.Screen
+        name="GuardCheck"
+        component={GuardCheckPage}
+        options={{ title: "Guard Check" }}
+      />
+      <Stack.Screen
+        name="OfficeStoreSealing"
+        component={OfficeStoreSealingPage}
+        options={{ title: "Office & Store Sealing" }}
+      />
+      <Stack.Screen
+        name="RationCheck"
+        component={RationCheckPage}
+        options={{ title: "Ration Check" }}
+      />
+      <Stack.Screen
+        name="CookHouseObservations"
+        component={CookHouseObservationsPage}
+        options={{ title: "Cook House Observations" }}
+      />
+      <Stack.Screen
+        name="FireEquipmentCheck"
+        component={FireEquipmentCheckPage}
+        options={{ title: "Fire Equipment Check" }}
+      />
+      <Stack.Screen
+        name="FoodTasting"
+        component={FoodTastingPage}
+        options={{ title: "Food Tasting" }}
+      />
+      <Stack.Screen
+        name="HealthHygiene"
+        component={HealthHygienePage}
+        options={{ title: "Health & Hygiene" }}
+      />
+      <Stack.Screen
+        name="SecurityMeasures"
+        component={SecurityMeasuresPage}
+        options={{ title: "Security Measures" }}
+      />
     </Stack.Navigator>
   );
 };
