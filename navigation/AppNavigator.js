@@ -2,7 +2,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
 // Import Screens
-import MainScreen from '../screens/MainScreen';
+import MainScreen from "../screens/MainScreen";
 import DutyHandoverPage from '../screens/DutyHandoverPage';
 import MTBriefingPage from '../screens/MTBriefingPage';
 import GuardDetailsPage from '../screens/GuardDetailsPage';
@@ -26,33 +26,13 @@ import SaleCSDPage from '../screens/SaleCSDPage';
 import QtrVisitPage from '../screens/QtrVisitPage';
 import MobileCheckPage from '../screens/MobileCheckPage';
 import CSDSampleChecksPage from '../screens/CSDSampleChecksPage';
+import QuarterGdKotePage from '../screens/QuarterGdKotePage';
+import AmnMagazinePage from '../screens/AmnMagazinePage'
+import TSSPage from "../screens/TSSPage";
 
 
 
 
-import MainScreen from "../screens/MainScreen";
-import DutyHandoverPage from "../screens/DutyHandoverPage";
-import MTBriefingPage from "../screens/MTBriefingPage";
-import GuardDetailsPage from "../screens/GuardDetailsPage";
-import GuardCheckPage from "../screens/GuardCheckPage";
-import OfficeStoreSealingPage from "../screens/OfficeStoreSealingPage";
-import RationCheckPage from "../screens/RationCheckPage";
-import CookHouseObservationsPage from "../screens/CookHouseObservationsPage";
-import FireEquipmentCheckPage from "../screens/FireEquipmentCheckPage";
-import FoodTastingPage from "../screens/FoodTastingPage";
-import HealthHygienePage from "../screens/HealthHygienePage";
-import LandMattersPage from "../screens/LandMattersPage";
-import DefenseLandSurveyPage from "../screens/DefenseLandSurveyPage";
-import MedicalVisitPage from "../screens/MedicalVisitPage";
-import CCTVLocationPage from "../screens/CCTVLocationPage";
-import HandoverDutiesPage from "../screens/HandoverDutiesPage";
-import AwarenessPage from "../screens/AwarenessPage";
-import ImprovementPage from "../screens/ImprovementPage";
-import LiquorIssuePage from "../screens/LiquorIssuePage";
-import RollCallPage from "../screens/RollCallPage";
-import SaleCSDPage from "../screens/SaleCSDPage";
-import QtrVisitPage from "../screens/QtrVisitPage";
-import MobileCheckPage from "../screens/MobileCheckPage";
 
 const Stack = createStackNavigator();
 
@@ -94,7 +74,7 @@ const AppNavigator = () => {
 
 
 
-      <Stack.Screen
+      {/* <Stack.Screen
         name="Main"
         component={MainScreen}
         options={{ title: "Main" }}
@@ -225,8 +205,7 @@ const AppNavigator = () => {
         component={AmnMagazinePage}
         options={{ title: "AmnMagazine" }}
       />
-      <Stack.Screen name="TSS" component={TSSPage} options={{ title: "TSS" }} />
-      8cccddd1c8570eec7b440f80aa71bb1be261f0ec
+      <Stack.Screen name="TSS" component={TSSPage} options={{ title: "TSS" }} /> */}
     </Stack.Navigator>
   );
 };
