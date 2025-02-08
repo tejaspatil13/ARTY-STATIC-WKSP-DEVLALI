@@ -128,7 +128,7 @@ const SecurityMeasuresPage = ({ navigation }) => {
         />
         <Button
           title="Next →"
-          onPress={() => navigation.navigate("NextPage")}
+          onPress={() => navigation.navigate("CCTVLocation")}
           color="#2196F3"
         />
       </View>

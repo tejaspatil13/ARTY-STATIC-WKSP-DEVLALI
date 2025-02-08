@@ -5,6 +5,8 @@ import * as XLSX from "xlsx";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import * as ImagePicker from "expo-image-picker";
+import DateTimePicker from "react-native-ui-datepicker";
+import { TextInput } from "react-native-gesture-handler";
 const MainScreen = ({ navigation }) => {
   // Generate an array of page numbers from 2 to 28
   const pages = Array.from({ length: 27 }, (_, i) => i + 2);
@@ -336,6 +338,13 @@ const MainScreen = ({ navigation }) => {
     });
   }, [navigation]);
 
+  const date = new Date().toLocaleDateString("en-IN")
+  
+  React.useEffect(()=>{
+    setFormData((prev)=>({...prev,date:date}))
+  },[])
+
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* App Title */}
@@ -344,88 +353,11 @@ const MainScreen = ({ navigation }) => {
       <View style={styles.buttonContainer}>
         <Button title="Make Sheet" onPress={() => exportJsonToExcel()} />
         {/* Buttons for Navigation */}
-        <View style={styles.buttonContainer}>
-          <Button
-            title="1. Start Duty Handover"
-            onPress={() => navigation.navigate("DutyHandover")}
-            color="#2196F3"
-          />
-          <Button
-            title="2. Guard Details"
-            onPress={() => navigation.navigate("GuardDetails")}
-            color="#2196F3"
-          />
-          <Button
-            title="3. MT Briefing"
-            onPress={() => navigation.navigate("MTBriefing")}
-            color="#2196F3"
-          />
-          <Button
-            title="4. Guard Check"
-            onPress={() => navigation.navigate("GuardCheck")}
-            color="#2196F3"
-          />
-          <Button
-            title="5. Office Store Sealing"
-            onPress={() => navigation.navigate("OfficeStoreSealing")}
-            color="#2196F3"
-          />
-          <Button
-            title="6. Ration Check"
-            onPress={() => navigation.navigate("RationCheck")}
-            color="#2196F3"
-          />
-          <Button
-            title="7. Cook House Observations"
-            onPress={() => navigation.navigate("CookHouseObservations")}
-            color="#2196F3"
-          />
-          <Button
-            title="8. Fire Equipment Check"
-            onPress={() => navigation.navigate("FireEquipmentCheck")}
-            color="#2196F3"
-          />
-
-          <Button
-            title="9. Food Tasting"
-            onPress={() => navigation.navigate("FoodTasting")}
-            color="#2196F3"
-          />
-
-          <Button
-            title="10. Health & Hygiene"
-            onPress={() => navigation.navigate("HealthHygiene")}
-            color="#2196F3"
-          />
-
-          <Button
-            title="11. Land Matters"
-            onPress={() => navigation.navigate("LandMatters")}
-            color="#2196F3"
-          />
-
-          <Button
-            title="12. Defence Land Survey"
-            onPress={() => navigation.navigate("DefenseLandSurvey")}
-            color="#2196F3"
-          />
-          <Button
-            title="17. Security And Measure"
-            onPress={() => navigation.navigate("SecurityMeasure")}
-            color="#2196F3"
-          />
-
-          <Button
-            title="18. CCTV Location"
-            onPress={() => navigation.navigate("CCTVLocation")}
-            color="#2196F3"
-          />
-          <Button
-            title="19. MH Devlali Visit"
-            onPress={() => navigation.navigate("MedicalScreen")}
-            color="#2196F3"
-          />
-        </View>
+          
+       <View style={{gap:5,padding:10,border:"solid",borderColor:"black",borderWidth:1,width:"100%",height:"fit-content",display:"flex",alignItems:"center",justifyContent:"center"}}>
+       <Text>Current Date</Text>
+       <Text style={{fontSize:20}}>{date}</Text>
+       </View> 
 
         <Button
           title="1. Start Duty Handover"
@@ -514,6 +446,12 @@ const MainScreen = ({ navigation }) => {
           onPress={() => navigation.navigate("TSS")}
           color="#2196F3"
         />
+
+        <Button
+            title="17. Security And Measure"
+            onPress={() => navigation.navigate("SecurityMeasures")}
+            color="#2196F3"
+          />
 
         <Button
           title="18.CCTV Location"

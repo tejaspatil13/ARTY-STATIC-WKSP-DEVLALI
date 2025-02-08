@@ -111,7 +111,7 @@ const TSSPage = ({ navigation }) => {
       {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
         <Button title="← Previous" onPress={() => navigation.navigate('CSDSampleChecks')} color="#757575" />
-        <Button title="Next →" onPress={() => navigation.navigate('CCTVLocation')} color="#2196F3" />
+        <Button title="Next →" onPress={() => navigation.navigate('SecurityMeasures')} color="#2196F3" />
       </View>
     </ScrollView>
   );
