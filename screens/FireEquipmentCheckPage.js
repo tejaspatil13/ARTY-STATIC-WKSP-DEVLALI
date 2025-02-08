@@ -92,7 +92,7 @@ const FireEquipmentCheckPage = ({ navigation }) => {
 
       {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
-        <Button title="← Previous" onPress={() => navigation.goBack()} color="#757575" />
+        <Button title="← Previous" onPress={() => navigation.navigate('CookHouseObservations')} color="#757575" />
         <Button title="Next →" onPress={() => navigation.navigate('FoodTasting')} color="#2196F3" />
       </View>
     </ScrollView>

@@ -78,7 +78,7 @@ const HealthHygienePage = ({ navigation }) => {
 
       {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
-        <Button title="← Previous" onPress={() => navigation.goBack()} color="#757575" />
+        <Button title="← Previous" onPress={() => navigation.navigate('FoodTasting')} color="#757575" />
         <Button title="Next →" onPress={() => navigation.navigate('LandMatters')} color="#2196F3" />
       </View>
     </ScrollView>
