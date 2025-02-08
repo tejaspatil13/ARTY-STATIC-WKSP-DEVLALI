@@ -55,7 +55,7 @@ const OfficeStoreSealingPage = ({ navigation }) => {
 
       {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
-        <Button title="← Previous" onPress={() => navigation.goBack()} color="#757575" />
+        <Button title="← Previous" onPress={() => navigation.navigate('GuardCheck')} color="#757575" />
         <Button title="Next →" onPress={() => navigation.navigate('RationCheck')} color="#2196F3" />
       </View>
     </ScrollView>

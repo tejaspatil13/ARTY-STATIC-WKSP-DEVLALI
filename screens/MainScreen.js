@@ -342,6 +342,7 @@ const MainScreen = ({ navigation }) => {
       <Text style={styles.title}>DUTY JCO FORM</Text>
 
       <View style={styles.buttonContainer}>
+<<<<<<< HEAD
         <Button title="Make Sheet" onPress={() => exportJsonToExcel()} />
         {/* Buttons for Navigation */}
         <View style={styles.buttonContainer}>
@@ -428,6 +429,89 @@ const MainScreen = ({ navigation }) => {
         </View>
 
         <Button
+=======
+        <Button
+          title="1. Start Duty Handover"
+          onPress={() => navigation.navigate('DutyHandover')}
+          color="#2196F3"
+        />
+        <Button
+          title="2. Guard Details"
+          onPress={() => navigation.navigate('GuardDetails')}
+          color="#2196F3"
+        />
+        <Button
+          title="3. MT Briefing"
+          onPress={() => navigation.navigate('MTBriefing')}
+          color="#2196F3"
+        />
+        <Button
+          title="4. Guard Check"
+          onPress={() => navigation.navigate('GuardCheck')}
+          color="#2196F3"
+        />
+        <Button
+          title="5. Office Store Sealing"
+          onPress={() => navigation.navigate('OfficeStoreSealing')}
+          color="#2196F3"
+        />
+        <Button
+          title="6. Ration Check"
+          onPress={() => navigation.navigate('RationCheck')}
+          color="#2196F3"
+        />
+        <Button
+          title="7. Cook House Observations"
+          onPress={() => navigation.navigate('CookHouseObservations')}
+          color="#2196F3"
+        />
+        <Button
+          title="8. Fire Equipment Check"
+          onPress={() => navigation.navigate('FireEquipmentCheck')}
+          color="#2196F3"
+        />
+
+        <Button
+          title="9. Food Tasting"
+          onPress={() => navigation.navigate('FoodTasting')}
+          color="#2196F3"
+        />
+
+        <Button
+          title="10. Health & Hygiene"
+          onPress={() => navigation.navigate('HealthHygiene')}
+          color="#2196F3"
+        />
+        
+
+        <Button
+          title="11.Land Matters"
+          onPress={() => navigation.navigate('LandMatters')}
+          color="#2196F3"
+        />
+
+        <Button
+          title="12.Defence Land Survey"
+          onPress={() => navigation.navigate('DefenseLandSurvey')}
+          color="#2196F3"
+        />
+
+        <Button
+          title="18.CCTV Location"
+          onPress={() => navigation.navigate('CCTVLocation')}
+          color="#2196F3"
+        />
+
+  
+        
+        <Button
+          title="19.MH Devlali Visit"
+          onPress={() => navigation.navigate('MedicalVisit')}
+          color="#2196F3"
+        />  
+     
+        <Button
+>>>>>>> 7e0555e9bb5d9959f29eecdecefad2ecf62e12db
           title="20. Roll Call"
           onPress={() => navigation.navigate("RollCall")}
           color="#2196F3"
@@ -468,6 +552,10 @@ const MainScreen = ({ navigation }) => {
           color="#2196F3"
         />
       </View>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7e0555e9bb5d9959f29eecdecefad2ecf62e12db
     </ScrollView>
   );
 };

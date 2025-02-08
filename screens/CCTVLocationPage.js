@@ -43,7 +43,7 @@ const CCTVLocationPage = ({ navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.sectionTitle}>CCTV Locations</Text>
+      <Text style={styles.sectionTitle}>18. CCTV Locations</Text>
       {locations.map((loc) => (
         <View key={loc.id} style={styles.fieldGroup}>
           <TextInput
@@ -90,8 +90,8 @@ const CCTVLocationPage = ({ navigation }) => {
       </TouchableOpacity>
 
       <View style={styles.buttonContainer}>
-        <Button title="← Previous" onPress={() => navigation.goBack()} color="#757575" />
-        <Button title="Next →" onPress={() => navigation.navigate('NextPage')} color="#2196F3" />
+        <Button title="← Previous" onPress={() => navigation.navigate('CCTVLocation')} color="#757575" />
+        <Button title="Next →" onPress={() => navigation.navigate('MedicalVisit')} color="#2196F3" />
       </View>
     </ScrollView>
   );

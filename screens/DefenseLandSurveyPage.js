@@ -83,6 +83,7 @@ const SecurityMeasuresPage = ({ navigation }) => {
 
       {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
+<<<<<<< HEAD
         <Button
           title="← Previous"
           onPress={() => navigation.goBack()}
@@ -93,6 +94,10 @@ const SecurityMeasuresPage = ({ navigation }) => {
           onPress={() => navigation.navigate("NextPage")}
           color="#2196F3"
         />
+=======
+        <Button title="← Previous" onPress={() => navigation.navigate('LandMatters')} color="#757575" />
+        <Button title="Next →" onPress={() => navigation.navigate('CCTVLocation')} color="#2196F3" />
+>>>>>>> 7e0555e9bb5d9959f29eecdecefad2ecf62e12db
       </View>
     </ScrollView>
   );
