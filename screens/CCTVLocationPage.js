@@ -75,7 +75,7 @@ const CCTVLocationPage = ({ navigation }) => {
             onChangeText={(text) => handleInputChange(loc.id, 'remarks', text)}
           />
           <TouchableOpacity onPress={() => removeLocationField(loc.id)} style={styles.removeButton}>
-            <Text style={styles.removeButtonText}>X</Text>
+            <Text style={styles.removeButtonText}>Remove Entry</Text>
           </TouchableOpacity>
         </View>
       ))}
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   removeButton: {
-    backgroundColor: 'red',
+    backgroundColor: '#ff5c5c',
     paddingVertical: 8,
     borderRadius: 5,
     alignItems: 'center',

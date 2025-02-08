@@ -1,37 +1,17 @@
-import React, { useContext, useState } from 'react';
-import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
-import { FormContext } from '../utils/FormContext';
+import React, { useContext, useState, useEffect } from 'react';
+import { View, Text, TextInput, ScrollView, StyleSheet, TouchableOpacity, Button } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { FormContext } from '../utils/FormContext';
 
 const QtrVisitPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
   const [rows, setRows] = useState(formData.qtrVisitRows || [{ id: 1, qtrNo: '', problem: '', remarks: '' }]);
 
-  // Add a new row
-  const addRow = () => {
-    const newRow = { id: rows.length + 1, qtrNo: '', problem: '', remarks: '' };
-    const updatedRows = [...rows, newRow];
-    setRows(updatedRows);
-    setFormData(prev => ({ ...prev, qtrVisitRows: updatedRows }));
-  };
-
-  // Handle input change for a specific row and field
-  const handleInputChange = (id, field, value) => {
-    const updatedRows = rows.map(row => (row.id === id ? { ...row, [field]: value } : row));
-    setRows(updatedRows);
-    setFormData(prev => ({ ...prev, qtrVisitRows: updatedRows }));
-  };
-
-  // Set up the home icon and center the title
-  React.useLayoutEffect(() => {
+  useEffect(() => {
     navigation.setOptions({
       headerTitle: 'QTR Visit',
       headerTitleAlign: 'center',
-      headerTitleStyle: {
-        fontSize: 22,
-        fontWeight: 'bold',
-        color: '#333',
-      },
+      headerTitleStyle: { fontSize: 22, fontWeight: 'bold', color: '#333' },
       headerLeft: () => (
         <TouchableOpacity onPress={() => navigation.navigate('Main')} style={styles.homeButton}>
           <Ionicons name="home" size={28} color="#000" />
@@ -40,48 +20,65 @@ const QtrVisitPage = ({ navigation }) => {
     });
   }, [navigation]);
 
+  const handleInputChange = (id, field, value) => {
+    const updatedRows = rows.map(row => (row.id === id ? { ...row, [field]: value } : row));
+    setRows(updatedRows);
+    setFormData(prev => ({ ...prev, qtrVisitRows: updatedRows }));
+  };
+
+  const addRow = () => {
+    const newRow = { id: rows.length + 1, qtrNo: '', problem: '', remarks: '' };
+    const updatedRows = [...rows, newRow];
+    setRows(updatedRows);
+    setFormData(prev => ({ ...prev, qtrVisitRows: updatedRows }));
+  };
+
+  const removeRow = (id) => {
+    const updatedRows = rows.filter(row => row.id !== id);
+    setRows(updatedRows);
+    setFormData(prev => ({ ...prev, qtrVisitRows: updatedRows }));
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* QTR Visit Section */}
       <Text style={styles.sectionTitle}>22. QTR Visit</Text>
 
-      {/* Table Header */}
-      <View style={styles.tableHeader}>
-        <Text style={styles.headerText}>S/No.</Text>
-        <Text style={styles.headerText}>Qtr No & Loc</Text>
-        <Text style={styles.headerText}>Problem</Text>
-        <Text style={styles.headerText}>Remarks</Text>
-      </View>
-
-      {/* Table Rows */}
       {rows.map((row, index) => (
-        <View key={row.id} style={styles.tableRow}>
-          <Text style={styles.rowText}>{index + 1}</Text>
+        <View key={row.id} style={styles.card}>
+          <Text style={styles.label}>Qtr No & Location</Text>
           <TextInput
-            style={styles.rowInput}
-            placeholder="Qtr No & Loc"
+            style={styles.input}
+            placeholder="Enter Qtr No & Location"
             value={row.qtrNo}
-            onChangeText={t => handleInputChange(row.id, 'qtrNo', t)}
+            onChangeText={text => handleInputChange(row.id, 'qtrNo', text)}
           />
+
+          <Text style={styles.label}>Problem</Text>
           <TextInput
-            style={styles.rowInput}
-            placeholder="Problem"
+            style={styles.input}
+            placeholder="Describe the Problem"
             value={row.problem}
-            onChangeText={t => handleInputChange(row.id, 'problem', t)}
+            onChangeText={text => handleInputChange(row.id, 'problem', text)}
           />
+
+          <Text style={styles.label}>Remarks</Text>
           <TextInput
-            style={styles.rowInput}
-            placeholder="Remarks"
+            style={styles.input}
+            placeholder="Add Remarks"
             value={row.remarks}
-            onChangeText={t => handleInputChange(row.id, 'remarks', t)}
+            onChangeText={text => handleInputChange(row.id, 'remarks', text)}
           />
+
+          <TouchableOpacity onPress={() => removeRow(row.id)} style={styles.removeButton}>
+            <Text style={styles.removeButtonText}>Remove Entry</Text>
+          </TouchableOpacity>
         </View>
       ))}
 
-      {/* Add Row Button */}
-      <Button title="Add Row" onPress={addRow} color="#2196F3" />
+      <TouchableOpacity onPress={addRow} style={styles.addButton}>
+        <Text style={styles.addButtonText}>Add Another Entry</Text>
+      </TouchableOpacity>
 
-      {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
         <Button title="← Previous" onPress={() => navigation.navigate('SaleCSD')} color="#757575" />
         <Button title="Next →" onPress={() => navigation.navigate('MobileCheck')} color="#2196F3" />
@@ -90,7 +87,6 @@ const QtrVisitPage = ({ navigation }) => {
   );
 };
 
-// Styles
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
@@ -103,38 +99,51 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: '#333',
   },
-  tableHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10,
+  card: {
+    backgroundColor: '#fff',
+    padding: 15,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+    marginBottom: 15,
   },
-  headerText: {
-    fontSize: 12,
+  label: {
+    fontSize: 14,
     fontWeight: 'bold',
+    marginBottom: 5,
     color: '#555',
-    flex: 1,
-    textAlign: 'center',
   },
-  tableRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-  },
-  rowText: {
-    fontSize: 12,
-    color: '#333',
-    flex: 1,
-    textAlign: 'center',
-    alignSelf: 'center',
-  },
-  rowInput: {
-    flex: 1,
+  input: {
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
-    padding: 5,
-    marginHorizontal: 2,
+    padding: 10,
+    marginBottom: 15,
     backgroundColor: '#fff',
+  },
+  removeButton: {
+    padding: 10,
+    backgroundColor: '#ff5c5c',
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  removeButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  addButton: {
+    padding: 12,
+    backgroundColor: '#34d399',
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  addButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
   buttonContainer: {
     flexDirection: 'row',

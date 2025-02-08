@@ -33,7 +33,7 @@ const MedicalVisitPage = ({ navigation }) => {
 
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: 'Medical Visit (MH Devlali)',
+      headerTitle: 'MH Devlali Visit',
       headerTitleAlign: 'center',
       headerTitleStyle: {
         fontSize: 22,
@@ -50,7 +50,7 @@ const MedicalVisitPage = ({ navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.sectionTitle}>19. Medical Visit (MH Devlali)</Text>
+      <Text style={styles.sectionTitle}>19. MH Devlali Visit</Text>
 
       <Text style={styles.label}>Time</Text>
       <TextInput

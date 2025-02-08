@@ -84,7 +84,7 @@ const FireEquipmentCheckPage = ({ navigation }) => {
             onChangeText={t => handleInputChange(index, 'observations', t)}
           />
 
-          <Button title="Remove" onPress={() => handleRemoveField(index)} color="red" />
+          <Button title="Remove" onPress={() => handleRemoveField(index)} color="#ff5c5c" />
         </View>
       ))}
 

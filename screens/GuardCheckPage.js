@@ -76,7 +76,7 @@ const GuardCheckPage = ({ navigation }) => {
             onChangeText={(value) => handleGuardChange(index, 'night', value)}
           />
 
-          <Button title="Remove" onPress={() => removeGuard(guard.id)} color="red" />
+          <Button title="Remove" onPress={() => removeGuard(guard.id)} color="#ff5c5c" />
         </View>
       ))}
 
