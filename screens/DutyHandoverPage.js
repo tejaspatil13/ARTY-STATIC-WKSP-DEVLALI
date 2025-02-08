@@ -3,27 +3,18 @@ import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity
 import { Ionicons } from '@expo/vector-icons';  
 import { FormContext } from '../utils/FormContext';
 
-
 const DutyHandoverPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
- 
 
-
-
-  // Set up the home icon and center the title
   useEffect(() => {
     navigation.setOptions({
       headerTitle: 'Duty Handover', 
-      headerTitleAlign: 'center',  // Center the title
-      headerTitleStyle: { 
-        fontSize: 22, 
-        fontWeight: 'bold', 
-        color: '#333' 
-      },
+      headerTitleAlign: 'center', 
+      headerTitleStyle: { fontSize: 22, fontWeight: 'bold', color: '#333' },
       headerLeft: () => (
         <TouchableOpacity onPress={() => navigation.navigate('Main')} style={styles.homeButton}>
           <Ionicons name="home" size={28} color="#000" />
@@ -34,13 +25,12 @@ const DutyHandoverPage = ({ navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* Duty JCO Handover Section */}
       <Text style={styles.sectionTitle}>1. Duty JCO Handover</Text>
 
-      <Text style={styles.label}>JC</Text>
+      <Text style={styles.label}>JC No.</Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter JC"
+        placeholder="Enter JC No."
         value={formData.jcNumber}
         onChangeText={t => handleInputChange('jcNumber', t)}
       />
@@ -95,10 +85,10 @@ const DutyHandoverPage = ({ navigation }) => {
 
       <Text style={styles.subSection}>Took Over Duty From</Text>
 
-      <Text style={styles.label}>Previous JC</Text>
+      <Text style={styles.label}>Previous JC No.</Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter Previous JC"
+        placeholder="Enter Previous JC No."
         value={formData.prevJCNumber}
         onChangeText={t => handleInputChange('prevJCNumber', t)}
       />
@@ -121,7 +111,12 @@ const DutyHandoverPage = ({ navigation }) => {
 
       {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
-        <Button title="Next →" onPress={() => navigation.navigate('GuardDetails')} color="#2196F3" />
+        <View style={styles.buttonWrapperLeft}>
+          <Button title="← Previous" onPress={() => navigation.navigate('Main')} color="#757575" />
+        </View>
+        <View style={styles.buttonWrapperRight}>
+          <Button title="Next →" onPress={() => navigation.navigate('GuardDetails')} color="#2196F3" />
+        </View>
       </View>
     </ScrollView>
   );
@@ -138,7 +133,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#333', // Keep section title left-aligned
+    color: '#333',
   },
   label: {
     fontSize: 14,
@@ -175,6 +170,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 30,
+  },
+  buttonWrapperLeft: {
+    flex: 1,
+    alignItems: 'flex-start',
+  },
+  buttonWrapperRight: {
+    flex: 1,
+    alignItems: 'flex-end',
   },
   homeButton: {
     marginLeft: 15,
