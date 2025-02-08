@@ -90,7 +90,7 @@ const CCTVLocationPage = ({ navigation }) => {
       </TouchableOpacity>
 
       <View style={styles.buttonContainer}>
-        <Button title="← Previous" onPress={() => navigation.navigate('CCTVLocation')} color="#757575" />
+        <Button title="← Previous" onPress={() => navigation.navigate('TSS')} color="#757575" />
         <Button title="Next →" onPress={() => navigation.navigate('MedicalVisit')} color="#2196F3" />
       </View>
     </ScrollView>

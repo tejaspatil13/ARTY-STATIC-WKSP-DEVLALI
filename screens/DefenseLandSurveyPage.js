@@ -96,8 +96,12 @@ const SecurityMeasuresPage = ({ navigation }) => {
         />
 =======
         <Button title="← Previous" onPress={() => navigation.navigate('LandMatters')} color="#757575" />
+<<<<<<< HEAD
         <Button title="Next →" onPress={() => navigation.navigate('CCTVLocation')} color="#2196F3" />
 >>>>>>> 7e0555e9bb5d9959f29eecdecefad2ecf62e12db
+=======
+        <Button title="Next →" onPress={() => navigation.navigate('QuarterGdKote')} color="#2196F3" />
+>>>>>>> 7c370f8ff1cc60a946e54683ab56f90bd418e5f2
       </View>
     </ScrollView>
   );

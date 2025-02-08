@@ -28,7 +28,6 @@ import SaleCSDPage from '../screens/SaleCSDPage';
 import QtrVisitPage from '../screens/QtrVisitPage';
 import MobileCheckPage from '../screens/MobileCheckPage';
 
->>>>>>> 8cccddd1c8570eec7b440f80aa71bb1be261f0ec
 
 
 
@@ -64,6 +63,11 @@ const AppNavigator = () => {
       <Stack.Screen name="QtrVisit" component={QtrVisitPage} options={{ title: 'QtrVisit' }} />
       <Stack.Screen name="MobileCheck" component={MobileCheckPage} options={{ title: 'MobileCheck' }} />
 
+
+      <Stack.Screen name="CSDSampleChecks" component={CSDSampleChecksPage} options={{ title: 'CSDSampleChecks' }} />
+      <Stack.Screen name="QuarterGdKote" component={QuarterGdKotePage} options={{ title: 'QuarterGdKotePage' }} />
+      <Stack.Screen name="AmnMagazine" component={AmnMagazinePage} options={{ title: 'AmnMagazine' }} />
+      <Stack.Screen name="TSS" component={TSSPage} options={{ title: 'TSS' }} />
 
 
 
