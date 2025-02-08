@@ -226,7 +226,7 @@ const AppNavigator = () => {
         options={{ title: "AmnMagazine" }}
       />
       <Stack.Screen name="TSS" component={TSSPage} options={{ title: "TSS" }} />
-      8cccddd1c8570eec7b440f80aa71bb1be261f0ec
+      
     </Stack.Navigator>
   );
 };
