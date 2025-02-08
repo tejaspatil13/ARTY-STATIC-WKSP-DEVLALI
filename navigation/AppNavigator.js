@@ -125,6 +125,11 @@ const AppNavigator = () => {
         component={MobileCheckPage}
         options={{ title: "MobileCheck" }}
       />
+      <Stack.Screen
+        name="SecurityMeasure"
+        component={SecurityMeasuresPage}
+        options={{ title: "SecurityMeasure" }}
+      />
     </Stack.Navigator>
   );
 };

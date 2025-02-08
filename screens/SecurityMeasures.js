@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -8,66 +8,115 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { RadioButton } from "react-native-paper";
 import { FormContext } from "../utils/FormContext";
 
 const SecurityMeasuresPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
+  const [securityMeasures, setSecurityMeasures] = useState(
+    formData.securityMeasures || []
+  );
 
-  const handleInputChange = (index, field, value) => {
-    const updatedMeasures = [...formData.securityMeasures];
-    updatedMeasures[index][field] = value;
-    setFormData((prev) => ({ ...prev, securityMeasures: updatedMeasures }));
-  };
-
-  const handleAddRow = () => {
-    setFormData((prev) => ({
-      ...prev,
-      securityMeasures: [
-        ...(prev.securityMeasures || []),
-        { timeChecked: "", description: "" },
-      ],
-    }));
-  };
-
-  const handleRemoveRow = (index) => {
-    const updatedMeasures = formData.securityMeasures.filter(
-      (_, i) => i !== index
+  const handleInputChange = (id, value) => {
+    const updatedMeasures = securityMeasures.map((item) =>
+      item.id === id ? { ...item, description: value } : item
     );
+    setSecurityMeasures(updatedMeasures);
     setFormData((prev) => ({ ...prev, securityMeasures: updatedMeasures }));
   };
 
-  const getSerialLetter = (index) => String.fromCharCode(97 + index) + ".";
+  const toggleRadioButton = (id, value) => {
+    setFormData((prev) => {
+      const updatedValues = { ...prev.securityMeasuresRadios };
+      updatedValues[id] = value;
+      return { ...prev, securityMeasuresRadios: updatedValues };
+    });
+  };
+
+  const addMeasure = () => {
+    const newId = securityMeasures.length + 1;
+    const newMeasure = { id: newId, description: "" };
+    const updatedMeasures = [...securityMeasures, newMeasure];
+    setSecurityMeasures(updatedMeasures);
+    setFormData((prev) => ({ ...prev, securityMeasures: updatedMeasures }));
+  };
+
+  const removeMeasure = (id) => {
+    const updatedMeasures = securityMeasures.filter((item) => item.id !== id);
+    setSecurityMeasures(updatedMeasures);
+    setFormData((prev) => ({ ...prev, securityMeasures: updatedMeasures }));
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.sectionTitle}>17. Security Measures</Text>
       <Text style={styles.subTitle}>
-        I have checked the premises of ASW AOR at .............hrs as under:
+        I have checked the premises of ASW AOR at
       </Text>
+      <TextInput
+        style={styles.inputTime}
+        placeholder="HH:MM"
+        keyboardType="numeric"
+        value={formData.securityMeasuresTime || ""}
+        onChangeText={(text) =>
+          setFormData((prev) => ({ ...prev, securityMeasuresTime: text }))
+        }
+      />
+      <Text style={styles.subTitle}> hrs as under:</Text>
 
-      {formData.securityMeasures.map((row, index) => (
+      {[
+        "Any Salesmen/Beggars found in AOR",
+        "I have checked unit AoR for unauthorized occupation of def land",
+      ].map((text, index) => (
         <View key={index} style={styles.card}>
-          <Text style={styles.label}>{getSerialLetter(index)} Observation</Text>
+          <Text style={styles.label}>{String.fromCharCode(97 + index)})</Text>
+          <Text style={styles.fixedText}>{text}</Text>
+          <RadioButton.Group
+            onValueChange={(value) => toggleRadioButton(text, value)}
+            value={formData.securityMeasuresRadios?.[text] || ""}
+          >
+            <View style={styles.radioButtonContainer}>
+              <RadioButton value="yes" />
+              <Text>Yes</Text>
+              <RadioButton value="no" />
+              <Text>No</Text>
+            </View>
+          </RadioButton.Group>
+        </View>
+      ))}
+
+      {securityMeasures.map((measure, index) => (
+        <View key={measure.id} style={styles.card}>
+          <Text style={styles.label}>{String.fromCharCode(99 + index)})</Text>
           <TextInput
             style={styles.input}
-            placeholder="Enter observation"
-            value={row.description}
-            onChangeText={(text) =>
-              handleInputChange(index, "description", text)
-            }
+            placeholder="Enter additional measure"
+            value={measure.description}
+            onChangeText={(text) => handleInputChange(measure.id, text)}
           />
-
+          <RadioButton.Group
+            onValueChange={(value) => toggleRadioButton(measure.id, value)}
+            value={formData.securityMeasuresRadios?.[measure.id] || ""}
+          >
+            <View style={styles.radioButtonContainer}>
+              <RadioButton value="yes" />
+              <Text>Yes</Text>
+              <RadioButton value="no" />
+              <Text>No</Text>
+            </View>
+          </RadioButton.Group>
           <TouchableOpacity
-            onPress={() => handleRemoveRow(index)}
+            onPress={() => removeMeasure(measure.id)}
             style={styles.removeButton}
           >
-            <Text style={styles.removeButtonText}>Delete</Text>
+            <Ionicons name="trash" size={20} color="red" />
           </TouchableOpacity>
         </View>
       ))}
 
-      <TouchableOpacity onPress={handleAddRow} style={styles.addButton}>
-        <Text style={styles.addButtonText}>Add Another Entry</Text>
+      <TouchableOpacity onPress={addMeasure} style={styles.addButton}>
+        <Text style={styles.addButtonText}>+ Add More</Text>
       </TouchableOpacity>
 
       {/* Navigation Buttons */}
@@ -102,10 +151,21 @@ const styles = StyleSheet.create({
   },
   subTitle: {
     fontSize: 16,
-    marginBottom: 20,
     color: "#555",
   },
+  inputTime: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: 5,
+    backgroundColor: "#fff",
+    marginBottom: 10,
+    textAlign: "center",
+    width: 80,
+  },
   card: {
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: "#fff",
     padding: 15,
     borderRadius: 10,
@@ -118,27 +178,22 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: "bold",
-    marginBottom: 5,
+    marginRight: 10,
     color: "#555",
   },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 15,
-    backgroundColor: "#fff",
+  fixedText: {
+    flex: 1,
+    fontSize: 14,
+    color: "#555",
+  },
+  radioButtonContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft: 10,
   },
   removeButton: {
     padding: 10,
-    backgroundColor: "#ff5c5c",
-    borderRadius: 5,
-    alignItems: "center",
-    marginTop: 10,
-  },
-  removeButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
+    marginLeft: 10,
   },
   addButton: {
     padding: 12,

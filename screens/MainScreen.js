@@ -330,8 +330,8 @@ const MainScreen = ({ navigation }) => {
   // Set navigation options to remove the back button and center the title
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitle: 'MAIN PAGE', // Set the title
-      headerTitleAlign: 'center', // Center the title
+      headerTitle: "MAIN PAGE", // Set the title
+      headerTitleAlign: "center", // Center the title
       headerLeft: () => null, // Remove the back button
     });
   }, [navigation]);
@@ -341,147 +341,130 @@ const MainScreen = ({ navigation }) => {
       {/* App Title */}
       <Text style={styles.title}>DUTY JCO FORM</Text>
 
-
       <View style={styles.buttonContainer}>
-        <Button
-          title="Make Sheet"
-          onPress={() => exportJsonToExcel()}
+        <Button title="Make Sheet" onPress={() => exportJsonToExcel()} />
+        {/* Buttons for Navigation */}
+        <View style={styles.buttonContainer}>
+          <Button
+            title="1. Start Duty Handover"
+            onPress={() => navigation.navigate("DutyHandover")}
+            color="#2196F3"
           />
-      {/* Buttons for Navigation */}
-      <View style={styles.buttonContainer}>
-        <Button
-          title="1. Start Duty Handover"
-          onPress={() => navigation.navigate('DutyHandover')}
-          color="#2196F3"
-        />
-        <Button
-          title="2. Guard Details"
-          onPress={() => navigation.navigate('GuardDetails')}
-          color="#2196F3"
-        />
-        <Button
-          title="3. MT Briefing"
-          onPress={() => navigation.navigate('MTBriefing')}
-          color="#2196F3"
-        />
-        <Button
-          title="4. Guard Check"
-          onPress={() => navigation.navigate('GuardCheck')}
-          color="#2196F3"
-        />
-        <Button
-          title="5. Office Store Sealing"
-          onPress={() => navigation.navigate('OfficeStoreSealing')}
-          color="#2196F3"
-        />
-        <Button
-          title="6. Ration Check"
-          onPress={() => navigation.navigate('RationCheck')}
-          color="#2196F3"
-        />
-        <Button
-          title="7. Cook House Observations"
-          onPress={() => navigation.navigate('CookHouseObservations')}
-          color="#2196F3"
-        />
-        <Button
-          title="8. Fire Equipment Check"
-          onPress={() => navigation.navigate('FireEquipmentCheck')}
-          color="#2196F3"
-        />
+          <Button
+            title="2. Guard Details"
+            onPress={() => navigation.navigate("GuardDetails")}
+            color="#2196F3"
+          />
+          <Button
+            title="3. MT Briefing"
+            onPress={() => navigation.navigate("MTBriefing")}
+            color="#2196F3"
+          />
+          <Button
+            title="4. Guard Check"
+            onPress={() => navigation.navigate("GuardCheck")}
+            color="#2196F3"
+          />
+          <Button
+            title="5. Office Store Sealing"
+            onPress={() => navigation.navigate("OfficeStoreSealing")}
+            color="#2196F3"
+          />
+          <Button
+            title="6. Ration Check"
+            onPress={() => navigation.navigate("RationCheck")}
+            color="#2196F3"
+          />
+          <Button
+            title="7. Cook House Observations"
+            onPress={() => navigation.navigate("CookHouseObservations")}
+            color="#2196F3"
+          />
+          <Button
+            title="8. Fire Equipment Check"
+            onPress={() => navigation.navigate("FireEquipmentCheck")}
+            color="#2196F3"
+          />
 
+          <Button
+            title="9. Food Tasting"
+            onPress={() => navigation.navigate("FoodTasting")}
+            color="#2196F3"
+          />
 
-        <Button
-          title="Food Tasting"
-          onPress={() => navigation.navigate('FoodTasting')}
+          <Button
+            title="10. Health & Hygiene"
+            onPress={() => navigation.navigate("HealthHygiene")}
+            color="#2196F3"
+          />
 
-          color="#2196F3"
-        />
+          <Button
+            title="11. Land Matters"
+            onPress={() => navigation.navigate("LandMatters")}
+            color="#2196F3"
+          />
 
-        <Button
-          title="Health & Hygiene"
-          onPress={() => navigation.navigate('HealthHygiene')}
-          color="#2196F3"
-        />
+          <Button
+            title="12. Defence Land Survey"
+            onPress={() => navigation.navigate("DefenseLandSurvey")}
+            color="#2196F3"
+          />
+          <Button
+            title="17. Security And Measure"
+            onPress={() => navigation.navigate("SecurityMeasure")}
+            color="#2196F3"
+          />
 
-        <Button
-          title="Land Matters"
-          onPress={() => navigation.navigate('LandMatters')}
-          color="#2196F3"
-        />
+          <Button
+            title="18. CCTV Location"
+            onPress={() => navigation.navigate("CCTVLocation")}
+            color="#2196F3"
+          />
+          <Button
+            title="19. MH Devlali Visit"
+            onPress={() => navigation.navigate("MedicalScreen")}
+            color="#2196F3"
+          />
+        </View>
 
-        <Button
-          title="Defence Land Survey"
-          onPress={() => navigation.navigate('DefenseLandSurvey')}
-          color="#2196F3"
-        />
-
-        <Button
-          title="MH Devlali Visit"
-          onPress={() => navigation.navigate('MedicalScreen')}
-          color="#2196F3"
-        />
-
-        <Button
-          title="CCTV Location"
-          onPress={() => navigation.navigate('CCTVLocation')}
-          color="#2196F3"
-        />
-
-      </View>
-
-
-   
-     
-
-        <Button
-          title="9. Food Tasting"
-          onPress={() => navigation.navigate('FoodTasting')}
-          color="#2196F3"
-        />
-        <Button
-          title="10. Health & Hygiene"
-          onPress={() => navigation.navigate('HealthHygiene')}
-          color="#2196F3"
-        />
         <Button
           title="20. Roll Call"
-          onPress={() => navigation.navigate('RollCall')}
+          onPress={() => navigation.navigate("RollCall")}
           color="#2196F3"
         />
         <Button
           title="21. Sale of CSD"
-          onPress={() => navigation.navigate('SaleCSD')}
+          onPress={() => navigation.navigate("SaleCSD")}
           color="#2196F3"
         />
         <Button
           title="22. Qtr Visit Page"
-          onPress={() => navigation.navigate('QtrVisit')}
+          onPress={() => navigation.navigate("QtrVisit")}
           color="#2196F3"
         />
         <Button
           title="23. Mobile Check"
-          onPress={() => navigation.navigate('MobileCheck')}
+          onPress={() => navigation.navigate("MobileCheck")}
           color="#2196F3"
         />
         <Button
           title="24. Liquor Issue"
-          onPress={() => navigation.navigate('LiquorIssue')}
+          onPress={() => navigation.navigate("LiquorIssue")}
           color="#2196F3"
         />
         <Button
           title="25. Improvement in Wksp"
-          onPress={() => navigation.navigate('Improvement')}
+          onPress={() => navigation.navigate("Improvement")}
           color="#2196F3"
         />
         <Button
           title="26. Awareness"
-          onPress={() => navigation.navigate('Awareness')}
+          onPress={() => navigation.navigate("Awareness")}
           color="#2196F3"
         />
         <Button
           title="27. Handover Duties"
-          onPress={() => navigation.navigate('HandoverDuties')}
+          onPress={() => navigation.navigate("HandoverDuties")}
           color="#2196F3"
         />
       </View>
@@ -506,7 +489,7 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   buttonContainer: {
-    width: '80%',
+    width: "80%",
     marginVertical: 70,
     gap: 30,
     borderRadius: 5,
