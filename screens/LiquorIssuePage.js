@@ -7,8 +7,8 @@ const LiquorIssuePage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
 
   // Handle input change for liquor issue report
-  const handleInputChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const handleInputChange = (value) => {
+    setFormData(prev => ({ ...prev, liquorIssueReport: value }));
   };
 
   // Set up the home icon and center the title
@@ -42,10 +42,10 @@ const LiquorIssuePage = ({ navigation }) => {
         style={styles.largeInput}
         placeholder="Enter your report here..."
         value={formData.liquorIssueReport}
-        onChangeText={t => handleInputChange('liquorIssueReport', t)}
-        multiline={true} // Allow multiple lines
-        numberOfLines={10} // Set initial number of lines
-        textAlignVertical="top" // Align text to the top
+        onChangeText={handleInputChange}
+        multiline
+        numberOfLines={10}
+        textAlignVertical="top"
       />
 
       {/* Navigation Buttons */}

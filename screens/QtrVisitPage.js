@@ -5,19 +5,19 @@ import { Ionicons } from '@expo/vector-icons';
 
 const QtrVisitPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
-  const [rows, setRows] = useState([{ id: 1, qtrNo: '', problem: '', remarks: '' }]);
+  const [rows, setRows] = useState(formData.qtrVisitRows || [{ id: 1, qtrNo: '', problem: '', remarks: '' }]);
 
   // Add a new row
   const addRow = () => {
     const newRow = { id: rows.length + 1, qtrNo: '', problem: '', remarks: '' };
-    setRows([...rows, newRow]);
+    const updatedRows = [...rows, newRow];
+    setRows(updatedRows);
+    setFormData(prev => ({ ...prev, qtrVisitRows: updatedRows }));
   };
 
   // Handle input change for a specific row and field
   const handleInputChange = (id, field, value) => {
-    const updatedRows = rows.map(row =>
-      row.id === id ? { ...row, [field]: value } : row
-    );
+    const updatedRows = rows.map(row => (row.id === id ? { ...row, [field]: value } : row));
     setRows(updatedRows);
     setFormData(prev => ({ ...prev, qtrVisitRows: updatedRows }));
   };

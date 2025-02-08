@@ -20,7 +20,13 @@ const HealthHygienePage = ({ navigation }) => {
   ];
 
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prev => ({
+      ...prev,
+      healthHygiene: { 
+        ...prev.healthHygiene, 
+        [field]: value 
+      },
+    }));
   };
 
   // Set up the home icon and center the title
@@ -62,15 +68,15 @@ const HealthHygienePage = ({ navigation }) => {
             <TextInput
               style={styles.input}
               placeholder="Observation"
-              value={formData[`observation_${index}`] || ''}
-              onChangeText={text => handleInputChange(`observation_${index}`, text)}
+              value={formData.healthHygiene?.[item] || ''}
+              onChangeText={text => handleInputChange(item, text)}
             />
 
             <TextInput
               style={styles.input}
               placeholder="Remarks"
-              value={formData[`remark_${index}`] || ''}
-              onChangeText={text => handleInputChange(`remark_${index}`, text)}
+              value={formData.healthHygiene?.[`remark_${item}`] || ''}
+              onChangeText={text => handleInputChange(`remark_${item}`, text)}
             />
           </View>
         ))}

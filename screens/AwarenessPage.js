@@ -6,9 +6,12 @@ import { Ionicons } from '@expo/vector-icons';
 const AwarenessPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
 
-  // Handle input change for GFO, Duty Officer, QRT JCO, and Duty NCO
+  // Handle input change for Awareness Page fields
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      awareness: { ...prev.awareness, [field]: value },
+    }));
   };
 
   // Set up the home icon and center the title
@@ -39,15 +42,15 @@ const AwarenessPage = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholder="Enter GFO Rank and Name"
-        value={formData.gfo}
-        onChangeText={t => handleInputChange('gfo', t)}
+        value={formData.awareness.gfo}
+        onChangeText={(t) => handleInputChange('gfo', t)}
       />
       <Text style={styles.label}>Unit</Text>
       <TextInput
         style={styles.input}
         placeholder="Unit"
-        value={formData.gfo}
-        onChangeText={t => handleInputChange('gfo', t)}
+        value={formData.awareness.gfoUnit}
+        onChangeText={(t) => handleInputChange('gfoUnit', t)}
       />
 
       {/* Duty Officer */}
@@ -55,8 +58,8 @@ const AwarenessPage = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholder="Enter Duty Officer Rank and Name"
-        value={formData.dutyOfficer}
-        onChangeText={t => handleInputChange('dutyOfficer', t)}
+        value={formData.awareness.dutyOfficer}
+        onChangeText={(t) => handleInputChange('dutyOfficer', t)}
       />
 
       {/* QRT JCO */}
@@ -64,8 +67,8 @@ const AwarenessPage = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholder="Enter QRT JCO Rank and Name"
-        value={formData.qrtJco}
-        onChangeText={t => handleInputChange('qrtJco', t)}
+        value={formData.awareness.qrtJco}
+        onChangeText={(t) => handleInputChange('qrtJco', t)}
       />
 
       {/* Duty NCO */}
@@ -73,8 +76,8 @@ const AwarenessPage = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholder="Enter Duty NCO Rank and Name"
-        value={formData.dutyNco}
-        onChangeText={t => handleInputChange('dutyNco', t)}
+        value={formData.awareness.dutyNco}
+        onChangeText={(t) => handleInputChange('dutyNco', t)}
       />
 
       {/* Navigation Buttons */}

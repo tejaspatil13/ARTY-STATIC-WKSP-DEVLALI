@@ -8,13 +8,16 @@ const SaleCSDPage = ({ navigation }) => {
 
   // Handle input change for CSD sale
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
   };
 
   // Set up the home icon and center the title
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitle: 'Sale of CSD ',
+      headerTitle: 'Sale of CSD',
       headerTitleAlign: 'center',
       headerTitleStyle: {
         fontSize: 22,
@@ -40,7 +43,7 @@ const SaleCSDPage = ({ navigation }) => {
         style={styles.input}
         placeholder="Enter amount"
         value={formData.csdGrocerySale}
-        onChangeText={t => handleInputChange('csdGrocerySale', t)}
+        onChangeText={(text) => handleInputChange('csdGrocerySale', text)}
         keyboardType="numeric"
       />
 
@@ -50,14 +53,18 @@ const SaleCSDPage = ({ navigation }) => {
         style={styles.input}
         placeholder="Enter amount"
         value={formData.csdLiquorSale}
-        onChangeText={t => handleInputChange('csdLiquorSale', t)}
+        onChangeText={(text) => handleInputChange('csdLiquorSale', text)}
         keyboardType="numeric"
       />
 
       {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
-        <Button title="← Previous" onPress={() => navigation.navigate('RollCall')} color="#757575" />
-        <Button title="Next →" onPress={() => navigation.navigate('QtrVisit')} color="#2196F3" />
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('RollCall')}>
+          <Text style={styles.buttonText}>← Previous</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.button, styles.nextButton]} onPress={() => navigation.navigate('QtrVisit')}>
+          <Text style={styles.buttonText}>Next →</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -94,6 +101,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 30,
+  },
+  button: {
+    flex: 1,
+    padding: 12,
+    borderRadius: 5,
+    alignItems: 'center',
+    backgroundColor: '#757575',
+    marginHorizontal: 5,
+  },
+  nextButton: {
+    backgroundColor: '#2196F3',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   homeButton: {
     marginLeft: 15,

@@ -1,24 +1,22 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { FormContext } from '../utils/FormContext';
 import { Ionicons } from '@expo/vector-icons';
 
 const MobileCheckPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
-  const [rows, setRows] = useState([{ id: 1, rank: '', name: '', makeType: '', mobNo: '', bannedApp: '', remarks: '' }]);
 
   // Add a new row
   const addRow = () => {
-    const newRow = { id: rows.length + 1, rank: '', name: '', makeType: '', mobNo: '', bannedApp: '', remarks: '' };
-    setRows([...rows, newRow]);
+    const newRow = { id: formData.mobileCheckRows.length + 1, rank: '', name: '', makeType: '', mobNo: '', bannedApp: '', remarks: '' };
+    setFormData(prev => ({ ...prev, mobileCheckRows: [...prev.mobileCheckRows, newRow] }));
   };
 
   // Handle input change for a specific row and field
   const handleInputChange = (id, field, value) => {
-    const updatedRows = rows.map(row =>
+    const updatedRows = formData.mobileCheckRows.map(row =>
       row.id === id ? { ...row, [field]: value } : row
     );
-    setRows(updatedRows);
     setFormData(prev => ({ ...prev, mobileCheckRows: updatedRows }));
   };
 
@@ -58,7 +56,7 @@ const MobileCheckPage = ({ navigation }) => {
       </View>
 
       {/* Table Rows */}
-      {rows.map((row, index) => (
+      {formData.mobileCheckRows.map((row, index) => (
         <View key={row.id} style={styles.tableRow}>
           <Text style={styles.rowText}>{index + 1}</Text>
           <TextInput

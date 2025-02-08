@@ -1,31 +1,26 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { View, Text, TextInput, Button, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { FormContext } from '../utils/FormContext';
 
 const CCTVLocationPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
-  const [locations, setLocations] = useState(formData.cctvLocations || [{ id: 1, location: '', total: '', serviceable: '', unserviceable: '', remarks: '' }]);
+  const locations = formData.cctvLocations;
 
   const handleInputChange = (id, field, value) => {
     const updatedLocations = locations.map((loc) =>
       loc.id === id ? { ...loc, [field]: value } : loc
     );
-    setLocations(updatedLocations);
     setFormData((prev) => ({ ...prev, cctvLocations: updatedLocations }));
   };
 
   const addLocationField = () => {
     const newField = { id: locations.length + 1, location: '', total: '', serviceable: '', unserviceable: '', remarks: '' };
-    const updatedFields = [...locations, newField];
-    setLocations(updatedFields);
-    setFormData((prev) => ({ ...prev, cctvLocations: updatedFields }));
+    setFormData((prev) => ({ ...prev, cctvLocations: [...locations, newField] }));
   };
 
   const removeLocationField = (id) => {
-    const updatedFields = locations.filter((field) => field.id !== id);
-    setLocations(updatedFields);
-    setFormData((prev) => ({ ...prev, cctvLocations: updatedFields }));
+    setFormData((prev) => ({ ...prev, cctvLocations: locations.filter((field) => field.id !== id) }));
   };
 
   useEffect(() => {

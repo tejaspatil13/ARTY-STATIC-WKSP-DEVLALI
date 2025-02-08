@@ -5,23 +5,30 @@ import { FormContext } from '../utils/FormContext';
 
 const MedicalVisitPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
-  const [observations, setObservations] = useState(formData.medicalVisitObservations || [{ id: 1, text: '' }]);
+  const [observations, setObservations] = useState(formData.medicalVisitObservations || []);
 
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const addObservation = () => {
-    const newObservation = { id: observations.length + 1, text: '' };
-    const updatedObservations = [...observations, newObservation];
+    const newObservations = [...observations, { id: observations.length + 1, text: '' }];
+    setObservations(newObservations);
+    setFormData((prev) => ({ ...prev, medicalVisitObservations: newObservations }));
+  };
+
+  const updateObservation = (id, text) => {
+    const updatedObservations = observations.map((obs) =>
+      obs.id === id ? { ...obs, text } : obs
+    );
     setObservations(updatedObservations);
-    setFormData(prev => ({ ...prev, medicalVisitObservations: updatedObservations }));
+    setFormData((prev) => ({ ...prev, medicalVisitObservations: updatedObservations }));
   };
 
   const removeObservation = (id) => {
-    const updatedObservations = observations.filter(obs => obs.id !== id);
+    const updatedObservations = observations.filter((obs) => obs.id !== id);
     setObservations(updatedObservations);
-    setFormData(prev => ({ ...prev, medicalVisitObservations: updatedObservations }));
+    setFormData((prev) => ({ ...prev, medicalVisitObservations: updatedObservations }));
   };
 
   useEffect(() => {
@@ -56,27 +63,22 @@ const MedicalVisitPage = ({ navigation }) => {
       <Text style={styles.label}>Observations</Text>
       {observations.map((obs, index) => (
         <View key={obs.id} style={styles.observationRow}>
+          <Text style={styles.observationLabel}>{index + 1}.</Text>
           <TextInput
-            style={styles.input}
+            style={styles.observationInput}
             placeholder={`Observation ${index + 1}`}
             value={obs.text}
-            onChangeText={(text) => {
-              const updatedObservations = [...observations];
-              updatedObservations[index].text = text;
-              setObservations(updatedObservations);
-              setFormData(prev => ({ ...prev, medicalVisitObservations: updatedObservations }));
-            }}
+            onChangeText={(text) => updateObservation(obs.id, text)}
           />
-          <TouchableOpacity onPress={() => removeObservation(obs.id)} style={styles.removeButton}>
-            <Text style={styles.removeButtonText}>X</Text>
+          <TouchableOpacity onPress={() => removeObservation(obs.id)} style={styles.deleteButton}>
+            <Ionicons name="trash" size={20} color="red" />
           </TouchableOpacity>
         </View>
       ))}
 
-      <TouchableOpacity onPress={addObservation} style={styles.addButton}>
-        <Text style={styles.addButtonText}>+ Add Observation</Text>
-      </TouchableOpacity>
+      <Button title="Add Observation" onPress={addObservation} color="#2196F3" />
 
+      {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
         <Button title="← Previous" onPress={() => navigation.navigate('DefenseLandSurvey')} color="#757575" />
         <Button title="Next →" onPress={() => navigation.navigate('RollCall')} color="#2196F3" />
@@ -98,9 +100,9 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   label: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 5,
+    marginBottom: 10,
     color: '#555',
   },
   input: {
@@ -108,37 +110,31 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 5,
     padding: 10,
-    marginBottom: 15,
     backgroundColor: '#fff',
+    fontSize: 16,
+    marginBottom: 10,
   },
   observationRow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
   },
-  removeButton: {
-    backgroundColor: 'red',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 5,
-    marginLeft: 10,
-  },
-  removeButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 14,
-  },
-  addButton: {
-    backgroundColor: '#007BFF',
-    paddingVertical: 10,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  addButtonText: {
-    color: 'white',
+  observationLabel: {
     fontSize: 16,
     fontWeight: 'bold',
+    marginRight: 10,
+  },
+  observationInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    backgroundColor: '#fff',
+  },
+  deleteButton: {
+    marginLeft: 10,
+    padding: 5,
   },
   buttonContainer: {
     flexDirection: 'row',

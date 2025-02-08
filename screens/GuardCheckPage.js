@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { Ionicons } from '@expo/vector-icons';
@@ -6,17 +6,13 @@ import { FormContext } from '../utils/FormContext';
 
 const GuardCheckPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
-  const [guards, setGuards] = useState(formData.guards || [{ id: 1, type: '', day: '', night: '' }]);
+  const guards = formData.guards;
 
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: 'Guard Check', 
-      headerTitleAlign: 'center',  
-      headerTitleStyle: { 
-        fontSize: 22, 
-        fontWeight: 'bold', 
-        color: '#333' 
-      },
+      headerTitle: 'Guard Check',
+      headerTitleAlign: 'center',
+      headerTitleStyle: { fontSize: 22, fontWeight: 'bold', color: '#333' },
       headerLeft: () => (
         <TouchableOpacity onPress={() => navigation.navigate('Main')} style={styles.homeButton}>
           <Ionicons name="home" size={28} color="#000" />
@@ -28,19 +24,16 @@ const GuardCheckPage = ({ navigation }) => {
   const handleGuardChange = (index, field, value) => {
     const updatedGuards = [...guards];
     updatedGuards[index][field] = value;
-    setGuards(updatedGuards);
     setFormData((prev) => ({ ...prev, guards: updatedGuards }));
   };
 
   const addGuard = () => {
     const newGuard = { id: guards.length + 1, type: '', day: '', night: '' };
-    setGuards([...guards, newGuard]);
     setFormData((prev) => ({ ...prev, guards: [...guards, newGuard] }));
   };
 
   const removeGuard = (id) => {
     const filteredGuards = guards.filter((guard) => guard.id !== id);
-    setGuards(filteredGuards);
     setFormData((prev) => ({ ...prev, guards: filteredGuards }));
   };
 

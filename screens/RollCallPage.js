@@ -57,7 +57,7 @@ const RollCallPage = ({ navigation }) => {
 
       {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
-        <Button title="← Previous" onPress={() => navigation.navigate('Main')} color="#757575" />
+        <Button title="← Previous" onPress={() => navigation.navigate('MedicalVisit')} color="#757575" />
         <Button title="Next →" onPress={() => navigation.navigate('SaleCSD')} color="#2196F3" />
       </View>
     </ScrollView>
