@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // Consistent home icon
+import { Ionicons } from '@expo/vector-icons'; // Importing Ionicons
 import { FormContext } from '../utils/FormContext';
 
 const MTBriefingPage = ({ navigation }) => {
@@ -24,7 +24,6 @@ const MTBriefingPage = ({ navigation }) => {
     setFormData(prev => ({ ...prev, mtStrengthFields: updatedFields }));
   };
 
-  // Set navigation options dynamically
   useEffect(() => {
     navigation.setOptions({
       headerTitle: 'MT Briefing',
@@ -70,8 +69,8 @@ const MTBriefingPage = ({ navigation }) => {
       {strengthFields.map((field, index) => (
         <View key={field.id} style={styles.fieldRow}>
           <TextInput
-            style={styles.input}
-            placeholder={`(${String.fromCharCode(97 + index)})`}
+            style={styles.fullWidthInput}
+            placeholder={`(${String.fromCharCode(97 + index)}) Enter details`}
             value={field.name}
             onChangeText={(text) => {
               const updatedFields = [...strengthFields];
@@ -81,7 +80,7 @@ const MTBriefingPage = ({ navigation }) => {
             }}
           />
           <TouchableOpacity onPress={() => removeStrengthField(field.id)} style={styles.removeButton}>
-            <Text style={styles.removeButtonText}>X</Text>
+            <Ionicons name="trash" size={24} color="white" /> {/* Trash bin icon */}
           </TouchableOpacity>
         </View>
       ))}
@@ -131,18 +130,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
+    width: '100%',
+  },
+  fullWidthInput: {
+    flex: 1, // Makes the input take full width
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    backgroundColor: '#fff',
   },
   removeButton: {
-    backgroundColor: 'red',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    backgroundColor: '#ff5c5c',
+    padding: 10,
     borderRadius: 5,
     marginLeft: 10,
-  },
-  removeButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   addButton: {
     backgroundColor: '#007BFF',
