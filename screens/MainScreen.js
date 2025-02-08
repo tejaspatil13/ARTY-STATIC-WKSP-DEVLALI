@@ -576,17 +576,14 @@ const MainScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-<<<<<<< HEAD
     justifyContent: 'center',
     alignItems: 'center',
     padding: 30,
     backgroundColor: '#f5f5f5',
-=======
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
     backgroundColor: "#f5f5f5",
->>>>>>> 056432efe15155ff128074d08d91050719d8b4d8
   },
   title: {
     fontSize: 24,
