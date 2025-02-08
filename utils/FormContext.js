@@ -256,8 +256,9 @@ export const FormProvider = ({ children }) => {
     liquorIssueReport: '',
 
     // ✅ Improvement Page Data
-    improvementPointA: '',
-    improvementPointB: '',
+    improvementPoints: [
+      { id: 1, text: '' },
+      { id: 2, text: '' },],
 
     // ✅ Awareness Page Data
     awareness: {

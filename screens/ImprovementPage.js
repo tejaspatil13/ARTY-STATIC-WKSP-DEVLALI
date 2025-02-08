@@ -1,26 +1,47 @@
-import React, { useContext } from 'react';
-import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useContext, useEffect } from 'react';
+import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
 import { FormContext } from '../utils/FormContext';
 import { Ionicons } from '@expo/vector-icons';
 
 const ImprovementPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
 
-  // Handle input change for improvement points
-  const handleInputChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  useEffect(() => {
+    if (!formData.improvementPoints || formData.improvementPoints.length < 2) {
+      setFormData(prev => ({
+        ...prev,
+        improvementPoints: [
+          { id: Date.now() + 1, text: '' },
+          { id: Date.now() + 2, text: '' },
+        ],
+      }));
+    }
+  }, []);
+
+  const addPoint = () => {
+    setFormData(prev => ({
+      ...prev,
+      improvementPoints: [
+        ...prev.improvementPoints,
+        { id: Date.now(), text: '' },
+      ],
+    }));
   };
 
-  // Set up the home icon and center the title
-  React.useLayoutEffect(() => {
+  const removePoint = (id) => {
+    if (formData.improvementPoints.length > 2) {
+      setFormData(prev => ({
+        ...prev,
+        improvementPoints: prev.improvementPoints.filter(point => point.id !== id),
+      }));
+    }
+  };
+
+  useEffect(() => {
     navigation.setOptions({
-      headerTitle: 'Improvement in Wksp Tech Processes',
+      headerTitle: 'Improvement Page',
       headerTitleAlign: 'center',
-      headerTitleStyle: {
-        fontSize: 22,
-        fontWeight: 'bold',
-        color: '#333',
-      },
+      headerTitleStyle: { fontSize: 22, fontWeight: 'bold', color: '#333' },
       headerLeft: () => (
         <TouchableOpacity onPress={() => navigation.navigate('Main')} style={styles.homeButton}>
           <Ionicons name="home" size={28} color="#000" />
@@ -30,78 +51,62 @@ const ImprovementPage = ({ navigation }) => {
   }, [navigation]);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {/* Improvement Section */}
-      <Text style={styles.sectionTitle}>25. Improvement in Wksp Tech Processes and Functioning/Welfare of Tps.</Text>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.sectionTitle}>
+          25. Improvement in Wksp Tech Processes and Functioning/Welfare of Tps.
+        </Text>
 
-      {/* Points Observed */}
-      <Text style={styles.label}>Points observed are as follows (Min two compulsory):</Text>
+        {formData.improvementPoints?.map((point, index) => (
+          <View key={point.id} style={styles.inputRow}>
+            <Text style={styles.subLabel}>{`(${String.fromCharCode(97 + index)})`}</Text>
+            <TextInput
+              style={styles.input}
+              placeholder={`Enter improvement point (${String.fromCharCode(97 + index)})`}
+              value={point.text}
+              onChangeText={t => {
+                const updatedPoints = formData.improvementPoints.map(p =>
+                  p.id === point.id ? { ...p, text: t } : p
+                );
+                setFormData(prev => ({ ...prev, improvementPoints: updatedPoints }));
+              }}
+            />
+            {formData.improvementPoints.length > 2 && (
+              <TouchableOpacity onPress={() => removePoint(point.id)} style={styles.deleteButton}>
+                <Ionicons name="trash" size={24} color="red" />
+              </TouchableOpacity>
+            )}
+          </View>
+        ))}
 
-      {/* Point (a) */}
-      <Text style={styles.subLabel}>(a)</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter improvement point (a)"
-        value={formData.improvementPointA}
-        onChangeText={t => handleInputChange('improvementPointA', t)}
-      />
+        <TouchableOpacity onPress={addPoint} style={styles.addButton}>
+          <Text style={styles.addButtonText}>Add Improvement Point</Text>
+        </TouchableOpacity>
 
-      {/* Point (b) */}
-      <Text style={styles.subLabel}>(b)</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter improvement point (b)"
-        value={formData.improvementPointB}
-        onChangeText={t => handleInputChange('improvementPointB', t)}
-      />
-
-      {/* Navigation Buttons */}
-      <View style={styles.buttonContainer}>
-        <Button title="← Previous" onPress={() => navigation.navigate('LiquorIssue')} color="#757575" />
-        <Button title="Next →" onPress={() => navigation.navigate('Awareness')} color="#2196F3" />
-      </View>
-    </ScrollView>
+        <View style={styles.buttonContainer}>
+          <Button title="← Previous" onPress={() => navigation.navigate('LiquorIssue')} color="#757575" />
+          <Button title="Next →" onPress={() => navigation.navigate('Awareness')} color="#2196F3" />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
-// Styles
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    padding: 20,
-    backgroundColor: '#f5f5f5',
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#333',
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    color: '#555',
-  },
-  subLabel: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    marginBottom: 5,
-    color: '#555',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 15,
-    backgroundColor: '#fff',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 30,
-  },
+  safeArea: { flex: 1, backgroundColor: '#f5f5f5' }, 
+  container: { flexGrow: 1, padding: 20 },
+  
+  sectionTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: 20, color: '#333' },
+  subLabel: { fontSize: 14, fontWeight: 'bold', marginBottom: 5, color: '#555' },
+  inputRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
+  input: { flex: 1, borderWidth: 1, borderColor: '#ccc', borderRadius: 5, padding: 10, backgroundColor: '#fff' },
+  deleteButton: { marginLeft: 10 },
+  
+  addButton: { padding: 12, backgroundColor: '#34d399', borderRadius: 5, alignItems: 'center', marginTop: 20 },
+  addButtonText: { color: '#fff', fontWeight: 'bold' },
+
+  buttonContainer: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 30 },
+  
   homeButton: {
     marginLeft: 15,
   },

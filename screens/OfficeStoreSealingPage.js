@@ -37,7 +37,7 @@ const OfficeStoreSealingPage = ({ navigation }) => {
       <Text style={styles.label}>Office Sealed At</Text>
       <TextInput
         style={styles.input}
-        placeholder="HH:MM AM/PM"
+        placeholder="HH:MM"
         value={formData.office_sealed}
         onChangeText={t => handleInputChange('office_sealed', t)}
         keyboardType="numeric"
@@ -47,7 +47,7 @@ const OfficeStoreSealingPage = ({ navigation }) => {
       <Text style={styles.label}>Store Sealed At</Text>
       <TextInput
         style={styles.input}
-        placeholder="HH:MM AM/PM"
+        placeholder="HH:MM "
         value={formData.store_sealed}
         onChangeText={t => handleInputChange('store_sealed', t)}
         keyboardType="numeric"

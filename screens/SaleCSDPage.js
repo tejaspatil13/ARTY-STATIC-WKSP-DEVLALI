@@ -59,13 +59,9 @@ const SaleCSDPage = ({ navigation }) => {
 
       {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('RollCall')}>
-          <Text style={styles.buttonText}>← Previous</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, styles.nextButton]} onPress={() => navigation.navigate('QtrVisit')}>
-          <Text style={styles.buttonText}>Next →</Text>
-        </TouchableOpacity>
-      </View>
+              <Button title="← Previous" onPress={() => navigation.navigate('RollCall')} color="#757575" />
+              <Button title="Next →" onPress={() => navigation.navigate('QtrVisit')} color="#2196F3" />
+            </View>
     </ScrollView>
   );
 };
@@ -112,6 +108,9 @@ const styles = StyleSheet.create({
   },
   nextButton: {
     backgroundColor: '#2196F3',
+  },
+  previousButton: {
+    backgroundColor: '#757575',
   },
   buttonText: {
     color: '#fff',
