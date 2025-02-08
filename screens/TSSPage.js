@@ -1,39 +1,37 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
-import { FormContext } from '../utils/FormContext';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { FormContext } from '../utils/FormContext';
 
 const TSSPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
-  const [rows, setRows] = useState(formData.tssItems);
 
-  // Function to handle input change in the dynamic table
-  const handleInputChange = (id, field, value) => {
-    const updatedRows = rows.map(row =>
-      row.id === id ? { ...row, [field]: value } : row
-    );
-    setRows(updatedRows);
-    setFormData(prev => ({ ...prev, tssItems: updatedRows }));
+  // Function to handle input change in a specific row
+  const handleInputChange = (index, field, value) => {
+    const updatedRows = [...formData.tssItems];
+    updatedRows[index][field] = value;
+    setFormData((prev) => ({ ...prev, tssItems: updatedRows }));
   };
 
   // Function to add a new row
-  const addNewRow = () => {
-    const newRow = {
-      id: rows.length + 1,
-      ser: '',
-      item: '',
-      catPartNo: '',
-      grndBal: '',
-      ledgerBal: '',
-      remarks: '',
-    };
-    setRows([...rows, newRow]);
-    setFormData(prev => ({ ...prev, tssItems: [...prev.tssItems, newRow] }));
+  const handleAddRow = () => {
+    setFormData((prev) => ({
+      ...prev,
+      tssItems: [
+        ...prev.tssItems,
+        { ser: '', item: '', catPartNo: '', grndBal: '', ledgerBal: '', remarks: '' },
+      ],
+    }));
   };
 
-  // Set up the home icon and center the title
-  React.useLayoutEffect(() => {
+  // Function to remove a row
+  const handleRemoveRow = (index) => {
+    const updatedRows = formData.tssItems.filter((_, i) => i !== index);
+    setFormData((prev) => ({ ...prev, tssItems: updatedRows }));
+  };
+
+  // Set up the title and home icon
+  useEffect(() => {
     navigation.setOptions({
       headerTitle: 'TSS - Sample Items',
       headerTitleAlign: 'center',
@@ -58,55 +56,67 @@ const TSSPage = ({ navigation }) => {
         and matched the ground and ledger balance:
       </Text>
 
-      {/* Table Header */}
-      <View style={styles.tableHeader}>
-        <Text style={styles.headerText}>Ser</Text>
-        <Text style={styles.headerText}>Item</Text>
-        <Text style={styles.headerText}>Cat Part No</Text>
-        <Text style={styles.headerText}>Grnd Bal</Text>
-        <Text style={styles.headerText}>Ledger Bal</Text>
-        <Text style={styles.headerText}>Remarks</Text>
-      </View>
+      {formData.tssItems.map((row, index) => (
+        <View key={index} style={styles.card}>
+          <Text style={styles.label}>Serial No.</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter Serial No"
+            value={row.ser}
+            onChangeText={(text) => handleInputChange(index, 'ser', text)}
+          />
 
-      {/* Table Rows */}
-      {rows.map((row, index) => (
-        <View key={row.id} style={styles.tableRow}>
-          <Text style={styles.rowText}>{index + 1}</Text>
+          <Text style={styles.label}>Item</Text>
           <TextInput
-            style={styles.rowInput}
-            placeholder="Item"
+            style={styles.input}
+            placeholder="Enter Item"
             value={row.item}
-            onChangeText={t => handleInputChange(row.id, 'item', t)}
+            onChangeText={(text) => handleInputChange(index, 'item', text)}
           />
+
+          <Text style={styles.label}>Cat Part No.</Text>
           <TextInput
-            style={styles.rowInput}
-            placeholder="Cat Part No"
+            style={styles.input}
+            placeholder="Enter Cat Part No."
             value={row.catPartNo}
-            onChangeText={t => handleInputChange(row.id, 'catPartNo', t)}
+            onChangeText={(text) => handleInputChange(index, 'catPartNo', text)}
           />
+
+          <Text style={styles.label}>Ground Balance</Text>
           <TextInput
-            style={styles.rowInput}
-            placeholder="Grnd Bal"
+            style={styles.input}
+            placeholder="Enter Ground Balance"
             value={row.grndBal}
-            onChangeText={t => handleInputChange(row.id, 'grndBal', t)}
+            onChangeText={(text) => handleInputChange(index, 'grndBal', text)}
           />
+
+          <Text style={styles.label}>Ledger Balance</Text>
           <TextInput
-            style={styles.rowInput}
-            placeholder="Ledger Bal"
+            style={styles.input}
+            placeholder="Enter Ledger Balance"
             value={row.ledgerBal}
-            onChangeText={t => handleInputChange(row.id, 'ledgerBal', t)}
+            onChangeText={(text) => handleInputChange(index, 'ledgerBal', text)}
           />
+
+          <Text style={styles.label}>Remarks</Text>
           <TextInput
-            style={styles.rowInput}
-            placeholder="Remarks"
+            style={styles.input}
+            placeholder="Enter Remarks"
             value={row.remarks}
-            onChangeText={t => handleInputChange(row.id, 'remarks', t)}
+            onChangeText={(text) => handleInputChange(index, 'remarks', text)}
           />
+
+          {/* Remove Row Button */}
+          <TouchableOpacity onPress={() => handleRemoveRow(index)} style={styles.removeButton}>
+            <Ionicons name="trash" size={24} color="white" />
+          </TouchableOpacity>
         </View>
       ))}
 
       {/* Add Row Button */}
-      <Button title="Add Column" onPress={addNewRow} color="#4CAF50" />
+      <TouchableOpacity onPress={handleAddRow} style={styles.addButton}>
+        <Text style={styles.addButtonText}>+ Add Another Entry</Text>
+      </TouchableOpacity>
 
       {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
@@ -134,42 +144,44 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 5,
     color: '#555',
-    textAlign: 'center',
   },
-  tableHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10,
+  card: {
+    backgroundColor: '#fff',
+    padding: 15,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+    marginBottom: 15,
   },
-  headerText: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: '#555',
-    flex: 1,
-    textAlign: 'center',
-  },
-  tableRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-  },
-  rowText: {
-    fontSize: 12,
-    color: '#333',
-    flex: 1,
-    textAlign: 'center',
-    alignSelf: 'center',
-  },
-  rowInput: {
-    flex: 1,
+  input: {
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
-    padding: 5,
-    marginHorizontal: 2,
+    padding: 10,
+    marginBottom: 10,
     backgroundColor: '#fff',
+  },
+  removeButton: {
+    padding: 10,
+    backgroundColor: '#ff5c5c',
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  addButton: {
+    padding: 12,
+    backgroundColor: '#34d399',
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  addButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
   buttonContainer: {
     flexDirection: 'row',

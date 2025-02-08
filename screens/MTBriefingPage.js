@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   removeButton: {
-    backgroundColor: 'red',
+    backgroundColor: '#ff5c5c',
     padding: 10,
     borderRadius: 5,
     marginLeft: 10,
