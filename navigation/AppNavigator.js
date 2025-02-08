@@ -13,12 +13,10 @@ import CookHouseObservationsPage from '../screens/CookHouseObservationsPage';
 import FireEquipmentCheckPage from '../screens/FireEquipmentCheckPage';
 import FoodTastingPage from '../screens/FoodTastingPage'; 
 import HealthHygienePage from '../screens/HealthHygienePage';
-<<<<<<< HEAD
 import LandMattersPage from '../screens/LandMattersPage';
 import DefenseLandSurveyPage from '../screens/DefenseLandSurveyPage';
 import MedicalVisitPage from '../screens/MedicalVisitPage';
 import CCTVLocationPage from '../screens/CCTVLocationPage';
-=======
 import HandoverDutiesPage from '../screens/HandoverDutiesPage';
 import AwarenessPage from '../screens/AwarenessPage';
 import ImprovementPage from '../screens/ImprovementPage';
@@ -28,7 +26,6 @@ import SaleCSDPage from '../screens/SaleCSDPage';
 import QtrVisitPage from '../screens/QtrVisitPage';
 import MobileCheckPage from '../screens/MobileCheckPage';
 
->>>>>>> 8cccddd1c8570eec7b440f80aa71bb1be261f0ec
 
 
 
@@ -49,12 +46,10 @@ const AppNavigator = () => {
       <Stack.Screen name="FoodTasting" component={FoodTastingPage} options={{ title: 'Food Tasting' }} />
       <Stack.Screen name="HealthHygiene" component={HealthHygienePage} options={{ title: 'Health & Hygiene' }} />
       <Stack.Screen name="MainScreen" component={MainScreen} options={{ title: 'MainScreen' }} />
-<<<<<<< HEAD
       <Stack.Screen name="LandMatters" component={LandMattersPage} options={{ title: 'Land Matters' }} />
       <Stack.Screen name="DefenseLandSurvey" component={DefenseLandSurveyPage} options={{ title: 'Defence Land Survey' }} />
       <Stack.Screen name="MedicalVisit" component={MedicalVisitPage} options={{ title: 'MH Devlali Visit' }} />
       <Stack.Screen name="CCTVLocation" component={CCTVLocationPage} options={{ title: 'CCTV Location' }} />
-=======
       <Stack.Screen name="HandoverDuties" component={HandoverDutiesPage} options={{ title: 'HandoverDuties' }} />
       <Stack.Screen name="Awareness" component={AwarenessPage} options={{ title: 'Awareness' }} />
       <Stack.Screen name="Improvement" component={ImprovementPage} options={{ title: 'Improvement' }} />
@@ -69,7 +64,6 @@ const AppNavigator = () => {
 
 
 
->>>>>>> 8cccddd1c8570eec7b440f80aa71bb1be261f0ec
     </Stack.Navigator>
   );
 };

@@ -58,7 +58,6 @@ const MainScreen = ({ navigation }) => {
           onPress={() => navigation.navigate('FireEquipmentCheck')}
           color="#2196F3"
         />
-<<<<<<< HEAD
 
         <Button
           title="Food Tasting"
@@ -85,33 +84,17 @@ const MainScreen = ({ navigation }) => {
         />
 
         <Button
-          title="MH Devlali Visit"
-          onPress={() => navigation.navigate('MedicalScreen')}
-          color="#2196F3"
-        />
-
-        <Button
           title="CCTV Location"
           onPress={() => navigation.navigate('CCTVLocation')}
           color="#2196F3"
         />
 
-      </View>
-
-
-   
+        <Button
+          title="MH Devlali Visit"
+          onPress={() => navigation.navigate('MedicalScreen')}
+          color="#2196F3"
+        />  
      
-=======
-        <Button
-          title="9. Food Tasting"
-          onPress={() => navigation.navigate('FoodTasting')}
-          color="#2196F3"
-        />
-        <Button
-          title="10. Health & Hygiene"
-          onPress={() => navigation.navigate('HealthHygiene')}
-          color="#2196F3"
-        />
         <Button
           title="20. Roll Call"
           onPress={() => navigation.navigate('RollCall')}
@@ -153,7 +136,6 @@ const MainScreen = ({ navigation }) => {
           color="#2196F3"
         />
       </View>
->>>>>>> 8cccddd1c8570eec7b440f80aa71bb1be261f0ec
     </ScrollView>
   );
 };

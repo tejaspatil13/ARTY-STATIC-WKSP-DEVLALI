@@ -78,8 +78,8 @@ const MedicalVisitPage = ({ navigation }) => {
       </TouchableOpacity>
 
       <View style={styles.buttonContainer}>
-        <Button title="← Previous" onPress={() => navigation.goBack()} color="#757575" />
-        <Button title="Next →" onPress={() => navigation.navigate('CCTVLocation')} color="#2196F3" />
+        <Button title="← Previous" onPress={() => navigation.navigate('DefenseLandSurvey')} color="#757575" />
+        <Button title="Next →" onPress={() => navigation.navigate('RollCall')} color="#2196F3" />
       </View>
     </ScrollView>
   );
