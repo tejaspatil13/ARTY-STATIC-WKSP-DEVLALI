@@ -73,16 +73,42 @@ const MainScreen = ({ navigation }) => {
         
 
         <Button
-          title="11.Land Matters"
+          title="11. Land Matters"
           onPress={() => navigation.navigate('LandMatters')}
           color="#2196F3"
         />
 
         <Button
-          title="12.Defence Land Survey"
+          title="12. Defence Land Survey"
           onPress={() => navigation.navigate('DefenseLandSurvey')}
           color="#2196F3"
         />
+
+       <Button
+          title="13. Quarter Gd Kote "
+          onPress={() => navigation.navigate('QuarterGdKote')}
+          color="#2196F3"
+        />
+
+       <Button
+          title="14. Amn Magazine Page"
+          onPress={() => navigation.navigate('AmnMagazine')}
+          color="#2196F3"
+        />
+
+        <Button
+          title="15. CSD Sample Checks"
+          onPress={() => navigation.navigate('CSDSampleChecks')}
+          color="#2196F3"
+        />
+        <Button
+          title="16. TSS "
+          onPress={() => navigation.navigate('TSS')}
+          color="#2196F3"
+        />
+
+
+
 
         <Button
           title="18.CCTV Location"

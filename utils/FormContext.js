@@ -15,49 +15,110 @@ export const FormProvider = ({ children }) => {
     prevJCNumber: '',
     prevRank: '',
     prevName: '',
-    
+
     // Page 2: Kote Guard Details
     koteGuardTime: '',
     koteGuardFindings: '',
-    
+
     // MT Briefing Page Data
     mt_time: '',
     mt_strength: '',
-    mtStrengthFields: [{ id: 1, name: '' }], // Dynamic strength fields
+    mtStrengthFields: [{ id: 1, name: '' }],
 
-    //office sealling
-  office_sealed: '',
-  store_sealed: '',
+    // Office Sealing
+    office_sealed: '',
+    store_sealed: '',
 
-    //ration checking
+    // Ration Checking
     ration_observations: '',
 
-    //cook houses
+    // Cook Houses
     cookHouseObservations: [{ cook_house: '', appliances: '', staff: '' }],
 
-    // Fire Equipment Check Page
+    // Fire Equipment Check
     fireEquipment: [{ fire_point_location: '', fire_type: '', fire_serviceability: '', observations: '' }],
 
-    //food tasting
+    // Food Tasting
     foodTasting: [
-    { cookHouse: "A PI", meal: "Breakfast", quality: "", improvement: "" },
-    { cookHouse: "A PI", meal: "Lunch", quality: "", improvement: "" },
-    { cookHouse: "A PI", meal: "Dinner", quality: "", improvement: "" },
-    { cookHouse: "B PI", meal: "Breakfast", quality: "", improvement: "" },
-    { cookHouse: "B PI", meal: "Lunch", quality: "", improvement: "" },
-    { cookHouse: "B PI", meal: "Dinner", quality: "", improvement: "" },  ],
+      { cookHouse: "A PI", meal: "Breakfast", quality: "", improvement: "" },
+      { cookHouse: "A PI", meal: "Lunch", quality: "", improvement: "" },
+      { cookHouse: "A PI", meal: "Dinner", quality: "", improvement: "" },
+      { cookHouse: "B PI", meal: "Breakfast", quality: "", improvement: "" },
+      { cookHouse: "B PI", meal: "Lunch", quality: "", improvement: "" },
+      { cookHouse: "B PI", meal: "Dinner", quality: "", improvement: "" },
+    ],
 
-    // land matters
+    // Mobile Check Page
+    mobileCheckRows: [
+      { id: 1, rank: '', name: '', makeType: '', mobNo: '', bannedApp: '', remarks: '' }
+    ],
+
+    // QTR Visit Page
+    qtrVisitRows: [
+      { id: 1, qtrNo: '', problem: '', remarks: '' }
+    ],
+
+    // Roll Call Page
+    rollCallLocation: '',
+    rollCallBriefing: '',
+
+    // Sale of CSD
+    csdGrocerySale: '',
+    csdLiquorSale: '',
+
+    // Liquor Issue
+    liquorIssueReport: '',
+
+    // Improvement Page
+    improvementPointA: '',
+    improvementPointB: '',
+
+    // Awareness Page
+    gfo: '',
+    dutyOfficer: '',
+    qrtJco: '',
+    dutyNco: '',
+
+    // Handover Duties
+    handoverNo: '',
+    handoverRank: '',
+    handoverName: '',
+    handoverDate: '',
+    handoverTime: '',
+
+    // Quarter Gd & Kote
+    koteCheckDate: '',
+    quarterGdKoteRows: [
+      { id: 1, held: '', armsOut: '', armsIn: '', remarks: '' }
+    ],
+
+    // Amn Magazine
+    amnMagazineDate: '',
+    amnMagazineRows: [
+      { id: 1, amn: '', firstLine: '', secondLine: '', trg: '', usedCartridges: '', remarks: '' }
+    ],
+
+    // CSD Sample Checks
+    csdItem1: '',
+    csdItem2: '',
+    csdItem3: '',
+    cardItem1: '',
+    cardItem2: '',
+    cardItem3: '',
+
+    // Defense Land
     defense_land_check: '',
     remarks: '',
-
-    //defenseLandSurvey
     defenseLandSurvey: {
       RP: false,
       QM: false,
       observations: [],
     },
 
+    // **TSS Page (New)**
+    tssItems: [
+      { id: 1, ser: '', item: '', catPartNo: '', grndBal: '', ledgerBal: '', remarks: '' }
+    ]
   });
 
   return (
