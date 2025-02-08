@@ -4,6 +4,9 @@ export const FormContext = createContext();
 
 export const FormProvider = ({ children }) => {
   const [formData, setFormData] = useState({
+
+    date:"",
+
     // Page 1: Duty Handover Details
     jcNumber: '',
     rank: '',
