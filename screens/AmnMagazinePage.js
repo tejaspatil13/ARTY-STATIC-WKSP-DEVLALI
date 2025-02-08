@@ -22,6 +22,13 @@ const AmnMagazinePage = ({ navigation }) => {
     setFormData(prev => ({ ...prev, amnMagazineRows: updatedRows }));
   };
 
+  // Delete a row
+  const deleteRow = (id) => {
+    const updatedRows = rows.filter(row => row.id !== id);
+    setRows(updatedRows);
+    setFormData(prev => ({ ...prev, amnMagazineRows: updatedRows }));
+  };
+
   // Set up the home icon and center the title
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -42,7 +49,6 @@ const AmnMagazinePage = ({ navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* Amn Magazine Section */}
       <Text style={styles.sectionTitle}>14. Amn Magazine</Text>
       <Text style={styles.label}>I have physically checked the Amn Magazine on:</Text>
       <TextInput
@@ -52,53 +58,46 @@ const AmnMagazinePage = ({ navigation }) => {
         onChangeText={t => setFormData(prev => ({ ...prev, amnMagazineDate: t }))}
       />
 
-      {/* Table Header */}
-      <View style={styles.tableHeader}>
-        <Text style={styles.headerText}>Ser</Text>
-        <Text style={styles.headerText}>Amn</Text>
-        <Text style={styles.headerText}>1st Line</Text>
-        <Text style={styles.headerText}>2nd Line</Text>
-        <Text style={styles.headerText}>Trg</Text>
-        <Text style={styles.headerText}>Used Cartridges</Text>
-        <Text style={styles.headerText}>Remarks</Text>
-      </View>
-
-      {/* Table Rows */}
       {rows.map((row, index) => (
-        <View key={row.id} style={styles.tableRow}>
-          <Text style={styles.rowText}>{index + 1}</Text>
+        <View key={row.id} style={styles.card}>
+          <View style={styles.rowHeader}>
+            <Text style={styles.label}>Entry {index + 1}</Text>
+            <TouchableOpacity onPress={() => deleteRow(row.id)}>
+              <Ionicons name="trash" size={24} color="red" />
+            </TouchableOpacity>
+          </View>
           <TextInput
-            style={styles.rowInput}
+            style={styles.input}
             placeholder="Amn"
             value={row.amn}
             onChangeText={t => handleInputChange(row.id, 'amn', t)}
           />
           <TextInput
-            style={styles.rowInput}
+            style={styles.input}
             placeholder="1st Line"
             value={row.firstLine}
             onChangeText={t => handleInputChange(row.id, 'firstLine', t)}
           />
           <TextInput
-            style={styles.rowInput}
+            style={styles.input}
             placeholder="2nd Line"
             value={row.secondLine}
             onChangeText={t => handleInputChange(row.id, 'secondLine', t)}
           />
           <TextInput
-            style={styles.rowInput}
+            style={styles.input}
             placeholder="Trg"
             value={row.trg}
             onChangeText={t => handleInputChange(row.id, 'trg', t)}
           />
           <TextInput
-            style={styles.rowInput}
+            style={styles.input}
             placeholder="Used Cartridges"
             value={row.usedCartridges}
             onChangeText={t => handleInputChange(row.id, 'usedCartridges', t)}
           />
           <TextInput
-            style={styles.rowInput}
+            style={styles.input}
             placeholder="Remarks"
             value={row.remarks}
             onChangeText={t => handleInputChange(row.id, 'remarks', t)}
@@ -106,10 +105,10 @@ const AmnMagazinePage = ({ navigation }) => {
         </View>
       ))}
 
-      {/* Add Row Button */}
-      <Button title="Add Row" onPress={addRow} color="#2196F3" />
+      <TouchableOpacity onPress={addRow} style={styles.addButton}>
+        <Text style={styles.addButtonText}>Add Another Entry</Text>
+      </TouchableOpacity>
 
-      {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
         <Button title="← Previous" onPress={() => navigation.navigate('QuarterGdKote')} color="#757575" />
         <Button title="Next →" onPress={() => navigation.navigate('CSDSampleChecks')} color="#2196F3" />
@@ -118,7 +117,6 @@ const AmnMagazinePage = ({ navigation }) => {
   );
 };
 
-// Styles (same as QuarterGdKotePage)
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
@@ -145,38 +143,15 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     backgroundColor: '#fff',
   },
-  tableHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-  },
-  headerText: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: '#555',
-    flex: 1,
-    textAlign: 'center',
-  },
-  tableRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-  },
-  rowText: {
-    fontSize: 12,
-    color: '#333',
-    flex: 1,
-    textAlign: 'center',
-    alignSelf: 'center',
-  },
-  rowInput: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 5,
-    marginHorizontal: 2,
+  card: {
     backgroundColor: '#fff',
+    padding: 15,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+    marginBottom: 15,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -185,6 +160,23 @@ const styles = StyleSheet.create({
   },
   homeButton: {
     marginLeft: 15,
+  },
+  addButton: {
+    padding: 12,
+    backgroundColor: '#34d399',
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  addButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  rowHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
   },
 });
 

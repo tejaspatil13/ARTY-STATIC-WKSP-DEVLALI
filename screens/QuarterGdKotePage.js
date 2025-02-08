@@ -5,11 +5,11 @@ import { Ionicons } from '@expo/vector-icons';
 
 const QuarterGdKotePage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
-  const [rows, setRows] = useState([{ id: 1, held: '', armsOut: '', armsIn: '', remarks: '' }]);
+  const [rows, setRows] = useState([{ id: 1, typeOfArms: '', held: '', armsOut: '', armsIn: '', remarks: '' }]);
 
   // Add a new row
   const addRow = () => {
-    const newRow = { id: rows.length + 1, held: '', armsOut: '', armsIn: '', remarks: '' };
+    const newRow = { id: rows.length + 1, typeOfArms: '', held: '', armsOut: '', armsIn: '', remarks: '' };
     setRows([...rows, newRow]);
   };
 
@@ -18,6 +18,13 @@ const QuarterGdKotePage = ({ navigation }) => {
     const updatedRows = rows.map(row =>
       row.id === id ? { ...row, [field]: value } : row
     );
+    setRows(updatedRows);
+    setFormData(prev => ({ ...prev, quarterGdKoteRows: updatedRows }));
+  };
+
+  // Delete a row
+  const deleteRow = (id) => {
+    const updatedRows = rows.filter(row => row.id !== id);
     setRows(updatedRows);
     setFormData(prev => ({ ...prev, quarterGdKoteRows: updatedRows }));
   };
@@ -52,39 +59,49 @@ const QuarterGdKotePage = ({ navigation }) => {
         onChangeText={t => setFormData(prev => ({ ...prev, koteCheckDate: t }))}
       />
 
-      {/* Table Header */}
-      <View style={styles.tableHeader}>
-        <Text style={styles.headerText}>Ser</Text>
-        <Text style={styles.headerText}>Held</Text>
-        <Text style={styles.headerText}>Arms Out of Kote</Text>
-        <Text style={styles.headerText}>Arms In Kote</Text>
-        <Text style={styles.headerText}>Remarks</Text>
-      </View>
-
       {/* Table Rows */}
       {rows.map((row, index) => (
-        <View key={row.id} style={styles.tableRow}>
-          <Text style={styles.rowText}>{index + 1}</Text>
+        <View key={row.id} style={styles.card}>
+          <View style={styles.rowHeader}>
+            <Text style={styles.label}>Type of Arms</Text>
+            <TouchableOpacity onPress={() => deleteRow(row.id)}>
+              <Ionicons name="trash" size={24} color="red" />
+            </TouchableOpacity>
+          </View>
           <TextInput
-            style={styles.rowInput}
+            style={styles.input}
+            placeholder="Enter Type of Arms"
+            value={row.typeOfArms}
+            onChangeText={t => handleInputChange(row.id, 'typeOfArms', t)}
+          />
+
+          <Text style={styles.label}>Held</Text>
+          <TextInput
+            style={styles.input}
             placeholder="Held"
             value={row.held}
             onChangeText={t => handleInputChange(row.id, 'held', t)}
           />
+
+          <Text style={styles.label}>Arms Out of Kote</Text>
           <TextInput
-            style={styles.rowInput}
+            style={styles.input}
             placeholder="Arms Out"
             value={row.armsOut}
             onChangeText={t => handleInputChange(row.id, 'armsOut', t)}
           />
+
+          <Text style={styles.label}>Arms In Kote</Text>
           <TextInput
-            style={styles.rowInput}
+            style={styles.input}
             placeholder="Arms In"
             value={row.armsIn}
             onChangeText={t => handleInputChange(row.id, 'armsIn', t)}
           />
+
+          <Text style={styles.label}>Remarks</Text>
           <TextInput
-            style={styles.rowInput}
+            style={styles.input}
             placeholder="Remarks"
             value={row.remarks}
             onChangeText={t => handleInputChange(row.id, 'remarks', t)}
@@ -93,7 +110,9 @@ const QuarterGdKotePage = ({ navigation }) => {
       ))}
 
       {/* Add Row Button */}
-      <Button title="Add Row" onPress={addRow} color="#2196F3" />
+      <TouchableOpacity onPress={addRow} style={styles.addButton}>
+        <Text style={styles.addButtonText}>Add Another Entry</Text>
+      </TouchableOpacity>
 
       {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
@@ -131,38 +150,15 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     backgroundColor: '#fff',
   },
-  tableHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-  },
-  headerText: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: '#555',
-    flex: 1,
-    textAlign: 'center',
-  },
-  tableRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-  },
-  rowText: {
-    fontSize: 12,
-    color: '#333',
-    flex: 1,
-    textAlign: 'center',
-    alignSelf: 'center',
-  },
-  rowInput: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 5,
-    marginHorizontal: 2,
+  card: {
     backgroundColor: '#fff',
+    padding: 15,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+    marginBottom: 15,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -171,6 +167,23 @@ const styles = StyleSheet.create({
   },
   homeButton: {
     marginLeft: 15,
+  },
+  addButton: {
+    padding: 12,
+    backgroundColor: '#34d399',
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  addButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  rowHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
   },
 });
 

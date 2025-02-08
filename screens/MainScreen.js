@@ -10,7 +10,8 @@ import { TextInput } from "react-native-gesture-handler";
 const MainScreen = ({ navigation }) => {
   // Generate an array of page numbers from 2 to 28
   const pages = Array.from({ length: 27 }, (_, i) => i + 2);
-  const { formData, setFormData } = useContext(FormContext);
+  const { fData, setFormData } = useContext(FormContext);
+  const formData = [fData]
 
   // const exportJsonToExcel = async () => {
   //   try {
@@ -26,38 +27,38 @@ const MainScreen = ({ navigation }) => {
   //     addSheet("Duty Handover", [{ ...formData }]);
   //     addSheet("Kote Guard Details", [
   //       {
-  //         koteGuardTime: formData.koteGuardTime,
-  //         koteGuardFindings: formData.koteGuardFindings,
+  //         koteGuardTime: formData?.koteGuardTime,
+  //         koteGuardFindings: formData?.koteGuardFindings,
   //       },
   //     ]);
   //     addSheet(
   //       "MT Briefing",
-  //       formData.mtStrengthFields.map((item) => ({
-  //         mt_time: formData.mt_time,
-  //         mt_strength: formData.mt_strength,
+  //       formData?.mtStrengthFields.map((item) => ({
+  //         mt_time: formData?.mt_time,
+  //         mt_strength: formData?.mt_strength,
   //         id: item.id,
   //         name: item.name,
   //       }))
   //     );
   //     addSheet("Office & Store Sealing", [
   //       {
-  //         office_sealed: formData.office_sealed,
-  //         store_sealed: formData.store_sealed,
+  //         office_sealed: formData?.office_sealed,
+  //         store_sealed: formData?.store_sealed,
   //       },
   //     ]);
   //     addSheet("Ration Checking", [
-  //       { ration_observations: formData.ration_observations },
+  //       { ration_observations: formData?.ration_observations },
   //     ]);
-  //     addSheet("Cook House Observations", formData.cookHouseObservations);
-  //     addSheet("Fire Equipment Check", formData.fireEquipment);
-  //     addSheet("Food Tasting", formData.foodTasting);
+  //     addSheet("Cook House Observations", formData?.cookHouseObservations);
+  //     addSheet("Fire Equipment Check", formData?.fireEquipment);
+  //     addSheet("Food Tasting", formData?.foodTasting);
 
   //     // Convert workbook to binary string
   //     const excelData = XLSX.write(workbook, {
   //       type: "base64",
   //       bookType: "xlsx",
   //     });
-  //     const fileUri = FileSystem.documentDirectory + "data.xlsx";
+  //     const fileUri = FileSystem.documentDirectory + "data?.xlsx";
 
   //     // Write the file
   //     await FileSystem.writeAsStringAsync(fileUri, excelData, {
@@ -166,7 +167,7 @@ const MainScreen = ({ navigation }) => {
 
   const exportJsonToExcel = async () => {
     try {
-      const fileUri = FileSystem.documentDirectory + "data.xlsx";
+      const fileUri = FileSystem.documentDirectory + "data?.xlsx";
       let workbook;
 
       // Check if the file exists
@@ -190,7 +191,7 @@ const MainScreen = ({ navigation }) => {
           let existingSheetData =
             XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]) || [];
           // Merge the existing data with the new data
-          const mergedData = existingSheetData.concat(newData);
+          const mergedData = existingSheetData?.concat(newData);
           // Convert merged data to a new worksheet
           const newWorksheet = XLSX.utils.json_to_sheet(mergedData);
           // Update the sheet in the workbook
@@ -203,55 +204,55 @@ const MainScreen = ({ navigation }) => {
       };
 
       // Prepare your sheet data arrays
-      const dutyHandoverData = jsonDataArray.map((data) => ({
-        Date: data.startDate,
+      const dutyHandoverData = formData?.map((data) => ({
+        Date: data?.startDate,
         ...data,
       }));
-      const koteGuardData = jsonDataArray.map((data) => ({
-        Date: data.startDate,
-        koteGuardTime: data.koteGuardTime,
-        koteGuardFindings: data.koteGuardFindings,
+      const koteGuardData = formData?.map((data) => ({
+        Date: data?.startDate,
+        koteGuardTime: data?.koteGuardTime,
+        koteGuardFindings: data?.koteGuardFindings,
       }));
-      const mtBriefingData = jsonDataArray.flatMap((data) =>
-        data.mtStrengthFields.map((item) => ({
-          Date: data.startDate,
-          mt_time: data.mt_time,
-          mt_strength: data.mt_strength,
+      const mtBriefingData = formData?.flatMap((data) =>
+        data?.mtStrengthFields.map((item) => ({
+          Date: data?.startDate,
+          mt_time: data?.mt_time,
+          mt_strength: data?.mt_strength,
           id: item.id,
           name: item.name,
         }))
       );
-      const officeStoreData = jsonDataArray.map((data) => ({
-        Date: data.startDate,
-        office_sealed: data.office_sealed,
-        store_sealed: data.store_sealed,
+      const officeStoreData = formData?.map((data) => ({
+        Date: data?.startDate,
+        office_sealed: data?.office_sealed,
+        store_sealed: data?.store_sealed,
       }));
-      const rationData = jsonDataArray.map((data) => ({
-        Date: data.startDate,
-        ration_observations: data.ration_observations,
+      const rationData = formData?.map((data) => ({
+        Date: data?.startDate,
+        ration_observations: data?.ration_observations,
       }));
-      const cookHouseData = jsonDataArray.flatMap((data) =>
-        data.cookHouseObservations.map((item) => ({
-          Date: data.startDate,
+      const cookHouseData = formData?.flatMap((data) =>
+        data?.cookHouseObservations.map((item) => ({
+          Date: data?.startDate,
           ...item,
         }))
       );
-      const fireEquipmentData = jsonDataArray.flatMap((data) =>
-        data.fireEquipment.map((item) => ({
-          Date: data.startDate,
+      const fireEquipmentData = formData?.flatMap((data) =>
+        data?.fireEquipment.map((item) => ({
+          Date: data?.startDate,
           ...item,
         }))
       );
-      const foodTastingData = jsonDataArray.flatMap((data) =>
-        data.foodTasting.map((item) => ({
-          Date: data.startDate,
+      const foodTastingData = formData?.flatMap((data) =>
+        data?.foodTasting.map((item) => ({
+          Date: data?.startDate,
           ...item,
         }))
       );
-      const imageData = jsonDataArray.map((data) => ({
-        Date: data.startDate,
-        Image_Path: data.imagePath,
-      }));
+      // const imageData = formData?.map((data) => ({
+      //   Date: data?.startDate,
+      //   Image_Path: data?.imagePath,
+      // }));
 
       // Append or add each sheet
       addOrAppendSheet("Duty Handover", dutyHandoverData);
@@ -262,7 +263,7 @@ const MainScreen = ({ navigation }) => {
       addOrAppendSheet("Cook House Observations", cookHouseData);
       addOrAppendSheet("Fire Equipment Check", fireEquipmentData);
       addOrAppendSheet("Food Tasting", foodTastingData);
-      addOrAppendSheet("Images", imageData);
+      // addOrAppendSheet("Images", imageData);
 
       // Convert the updated workbook to binary string
       const excelData = XLSX.write(workbook, {
@@ -286,23 +287,23 @@ const MainScreen = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
-    console.log(jsonDataArray[0].imagePath);
-  }, [jsonDataArray]);
+  // useEffect(() => {
+  //   console.log(formData[0].imagePath);
+  // }, [formData]);
 
   // const exportJsonToExcel = async () => {
   //   try {
   //     const workbook = XLSX.utils.book_new();
 
-  //     jsonDataArray.forEach((data) => {
-  //       const sheetName = data.date;
+  //     formData?.forEach((data) => {
+  //       const sheetName = data?.date;
   //       const sheetData = [
   //         {
   //           ...data,
-  //           mtStrengthFields: JSON.stringify(data.mtStrengthFields),
-  //           cookHouseObservations: JSON.stringify(data.cookHouseObservations),
-  //           fireEquipment: JSON.stringify(data.fireEquipment),
-  //           foodTasting: JSON.stringify(data.foodTasting),
+  //           mtStrengthFields: JSON.stringify(data?.mtStrengthFields),
+  //           cookHouseObservations: JSON.stringify(data?.cookHouseObservations),
+  //           fireEquipment: JSON.stringify(data?.fireEquipment),
+  //           foodTasting: JSON.stringify(data?.foodTasting),
   //         },
   //       ];
 
@@ -314,7 +315,7 @@ const MainScreen = ({ navigation }) => {
   //       type: "base64",
   //       bookType: "xlsx",
   //     });
-  //     const fileUri = FileSystem.documentDirectory + "data.xlsx";
+  //     const fileUri = FileSystem.documentDirectory + "data?.xlsx";
 
   //     await FileSystem.writeAsStringAsync(fileUri, excelData, {
   //       encoding: FileSystem.EncodingType.Base64,
@@ -339,7 +340,7 @@ const MainScreen = ({ navigation }) => {
   }, [navigation]);
 
   const date = new Date().toLocaleDateString("en-IN")
-  
+
   React.useEffect(()=>{
     setFormData((prev)=>({...prev,date:date}))
   },[])
