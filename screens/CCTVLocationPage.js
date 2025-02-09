@@ -5,22 +5,47 @@ import { FormContext } from '../utils/FormContext';
 
 const CCTVLocationPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
-  const locations = formData.cctvLocations;
 
-  const handleInputChange = (id, field, value) => {
-    const updatedLocations = locations.map((loc) =>
-      loc.id === id ? { ...loc, [field]: value } : loc
-    );
-    setFormData((prev) => ({ ...prev, cctvLocations: updatedLocations }));
+  // Ensure cctv_locations structure exists
+  const cctvLocations = formData[0]?.cctv_locations || [{ location: "", total: "", serviceable: "", unserviceable: "", remarks: "" }];
+
+  // Handle input change for CCTV locations
+  const handleInputChange = (index, field, value) => {
+    setFormData(prev => {
+      const updatedFormData = [...prev];
+
+      if (!updatedFormData[0]) {
+        updatedFormData[0] = { cctv_locations: [] };
+      }
+
+      updatedFormData[0].cctv_locations[index] = {
+        ...updatedFormData[0].cctv_locations[index],
+        [field]: value,
+      };
+
+      return updatedFormData;
+    });
   };
 
+  // Add new location field
   const addLocationField = () => {
-    const newField = { id: locations.length + 1, location: '', total: '', serviceable: '', unserviceable: '', remarks: '' };
-    setFormData((prev) => ({ ...prev, cctvLocations: [...locations, newField] }));
+    setFormData(prev => {
+      const updatedFormData = [...prev];
+      if (!updatedFormData[0].cctv_locations) {
+        updatedFormData[0].cctv_locations = [];
+      }
+      updatedFormData[0].cctv_locations.push({ location: "", total: "", serviceable: "", unserviceable: "", remarks: "" });
+      return updatedFormData;
+    });
   };
 
-  const removeLocationField = (id) => {
-    setFormData((prev) => ({ ...prev, cctvLocations: locations.filter((field) => field.id !== id) }));
+  // Remove location field
+  const removeLocationField = index => {
+    setFormData(prev => {
+      const updatedFormData = [...prev];
+      updatedFormData[0].cctv_locations = updatedFormData[0].cctv_locations.filter((_, i) => i !== index);
+      return updatedFormData;
+    });
   };
 
   useEffect(() => {
@@ -39,42 +64,42 @@ const CCTVLocationPage = ({ navigation }) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.sectionTitle}>18. CCTV Locations</Text>
-      {locations.map((loc) => (
-        <View key={loc.id} style={styles.fieldGroup}>
+      {cctvLocations.map((loc, index) => (
+        <View key={index} style={styles.fieldGroup}>
           <TextInput
             style={styles.input}
             placeholder="Location"
             value={loc.location}
-            onChangeText={(text) => handleInputChange(loc.id, 'location', text)}
+            onChangeText={text => handleInputChange(index, 'location', text)}
           />
           <TextInput
             style={styles.input}
             placeholder="Total"
             keyboardType="numeric"
             value={loc.total}
-            onChangeText={(text) => handleInputChange(loc.id, 'total', text)}
+            onChangeText={text => handleInputChange(index, 'total', text)}
           />
           <TextInput
             style={styles.input}
             placeholder="Serviceable"
             keyboardType="numeric"
             value={loc.serviceable}
-            onChangeText={(text) => handleInputChange(loc.id, 'serviceable', text)}
+            onChangeText={text => handleInputChange(index, 'serviceable', text)}
           />
           <TextInput
             style={styles.input}
             placeholder="Unserviceable"
             keyboardType="numeric"
             value={loc.unserviceable}
-            onChangeText={(text) => handleInputChange(loc.id, 'unserviceable', text)}
+            onChangeText={text => handleInputChange(index, 'unserviceable', text)}
           />
           <TextInput
             style={styles.input}
             placeholder="Remarks"
             value={loc.remarks}
-            onChangeText={(text) => handleInputChange(loc.id, 'remarks', text)}
+            onChangeText={text => handleInputChange(index, 'remarks', text)}
           />
-          <TouchableOpacity onPress={() => removeLocationField(loc.id)} style={styles.removeButton}>
+          <TouchableOpacity onPress={() => removeLocationField(index)} style={styles.removeButton}>
             <Text style={styles.removeButtonText}>Remove Entry</Text>
           </TouchableOpacity>
         </View>
@@ -93,63 +118,16 @@ const CCTVLocationPage = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    padding: 20,
-    backgroundColor: '#f5f5f5',
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#333',
-  },
-  fieldGroup: {
-    marginBottom: 15,
-    backgroundColor: '#fff',
-    padding: 10,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#ccc',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-    backgroundColor: '#fff',
-  },
-  removeButton: {
-    backgroundColor: '#ff5c5c',
-    paddingVertical: 8,
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  removeButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  addButton: {
-    backgroundColor: '#007BFF',
-    paddingVertical: 10,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  addButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 30,
-  },
-  homeButton: {
-    marginLeft: 15,
-  },
+  container: { flexGrow: 1, padding: 20, backgroundColor: '#f5f5f5' },
+  sectionTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: 20, color: '#333' },
+  fieldGroup: { marginBottom: 15, backgroundColor: '#fff', padding: 10, borderRadius: 5, borderWidth: 1, borderColor: '#ccc' },
+  input: { borderWidth: 1, borderColor: '#ccc', borderRadius: 5, padding: 10, marginBottom: 10, backgroundColor: '#fff' },
+  removeButton: { backgroundColor: '#ff5c5c', paddingVertical: 8, borderRadius: 5, alignItems: 'center' },
+  removeButtonText: { color: 'white', fontWeight: 'bold' },
+  addButton: { backgroundColor: '#007BFF', paddingVertical: 10, borderRadius: 8, alignItems: 'center', marginTop: 10 },
+  addButtonText: { color: 'white', fontSize: 16, fontWeight: 'bold' },
+  buttonContainer: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 30 },
+  homeButton: { marginLeft: 15 },
 });
 
 export default CCTVLocationPage;
