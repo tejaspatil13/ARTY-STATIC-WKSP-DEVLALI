@@ -4,14 +4,11 @@ import { FormContext } from "../utils/FormContext";
 import * as XLSX from "xlsx";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
-import * as ImagePicker from "expo-image-picker";
-import DateTimePicker from "react-native-ui-datepicker";
-import { TextInput } from "react-native-gesture-handler";
 const MainScreen = ({ navigation }) => {
   // Generate an array of page numbers from 2 to 28
   const pages = Array.from({ length: 27 }, (_, i) => i + 2);
   const { fData, setFormData } = useContext(FormContext);
-  const formData = [fData]
+  const formData = [fData];
 
   // const exportJsonToExcel = async () => {
   //   try {
@@ -177,27 +174,21 @@ const MainScreen = ({ navigation }) => {
         const existingData = await FileSystem.readAsStringAsync(fileUri, {
           encoding: FileSystem.EncodingType.Base64,
         });
-        // Parse the existing workbook
         workbook = XLSX.read(existingData, { type: "base64" });
       } else {
-        // Create a new workbook if file doesn't exist
         workbook = XLSX.utils.book_new();
       }
 
-      // Function to add or append data to a sheet
       const addOrAppendSheet = (sheetName, newData) => {
         if (workbook.Sheets[sheetName]) {
-          // Retrieve existing data from the sheet (if any)
           let existingSheetData =
             XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]) || [];
           // Merge the existing data with the new data
           const mergedData = existingSheetData?.concat(newData);
           // Convert merged data to a new worksheet
           const newWorksheet = XLSX.utils.json_to_sheet(mergedData);
-          // Update the sheet in the workbook
           workbook.Sheets[sheetName] = newWorksheet;
         } else {
-          // Create a new worksheet if sheet doesn't exist
           const newWorksheet = XLSX.utils.json_to_sheet(newData);
           XLSX.utils.book_append_sheet(workbook, newWorksheet, sheetName);
         }
@@ -254,7 +245,6 @@ const MainScreen = ({ navigation }) => {
       //   Image_Path: data?.imagePath,
       // }));
 
-      // Append or add each sheet
       addOrAppendSheet("Duty Handover", dutyHandoverData);
       addOrAppendSheet("Kote Guard Details", koteGuardData);
       addOrAppendSheet("MT Briefing", mtBriefingData);
@@ -263,20 +253,20 @@ const MainScreen = ({ navigation }) => {
       addOrAppendSheet("Cook House Observations", cookHouseData);
       addOrAppendSheet("Fire Equipment Check", fireEquipmentData);
       addOrAppendSheet("Food Tasting", foodTastingData);
-      // addOrAppendSheet("Images", imageData);
+      addOrAppendSheet("Mobile Check", mobileCheckData);
+      addOrAppendSheet("Quarter Visit", qtrVisitData);
+      addOrAppendSheet("CCTV Check", cctvData);
+      addOrAppendSheet("Guard Check", guardCheckData);
 
-      // Convert the updated workbook to binary string
       const excelData = XLSX.write(workbook, {
         type: "base64",
         bookType: "xlsx",
       });
 
-      // Write the updated data back to the file
       await FileSystem.writeAsStringAsync(fileUri, excelData, {
         encoding: FileSystem.EncodingType.Base64,
       });
 
-      // Share the file
       if (await Sharing.isAvailableAsync()) {
         await Sharing.shareAsync(fileUri);
       } else {
@@ -287,49 +277,6 @@ const MainScreen = ({ navigation }) => {
     }
   };
 
-  // useEffect(() => {
-  //   console.log(formData[0].imagePath);
-  // }, [formData]);
-
-  // const exportJsonToExcel = async () => {
-  //   try {
-  //     const workbook = XLSX.utils.book_new();
-
-  //     formData?.forEach((data) => {
-  //       const sheetName = data?.date;
-  //       const sheetData = [
-  //         {
-  //           ...data,
-  //           mtStrengthFields: JSON.stringify(data?.mtStrengthFields),
-  //           cookHouseObservations: JSON.stringify(data?.cookHouseObservations),
-  //           fireEquipment: JSON.stringify(data?.fireEquipment),
-  //           foodTasting: JSON.stringify(data?.foodTasting),
-  //         },
-  //       ];
-
-  //       const worksheet = XLSX.utils.json_to_sheet(sheetData);
-  //       XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
-  //     });
-
-  //     const excelData = XLSX.write(workbook, {
-  //       type: "base64",
-  //       bookType: "xlsx",
-  //     });
-  //     const fileUri = FileSystem.documentDirectory + "data?.xlsx";
-
-  //     await FileSystem.writeAsStringAsync(fileUri, excelData, {
-  //       encoding: FileSystem.EncodingType.Base64,
-  //     });
-
-  //     if (await Sharing.isAvailableAsync()) {
-  //       await Sharing.shareAsync(fileUri);
-  //     } else {
-  //       alert("Sharing is not available on this device");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error exporting to Excel:", error);
-  //   }
-  // };
   // Set navigation options to remove the back button and center the title
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -339,12 +286,11 @@ const MainScreen = ({ navigation }) => {
     });
   }, [navigation]);
 
-  const date = new Date().toLocaleDateString("en-IN")
+  const date = new Date().toLocaleDateString("en-IN");
 
-  React.useEffect(()=>{
-    setFormData((prev)=>({...prev,date:date}))
-  },[])
-
+  // React.useEffect(() => {
+  //   setFormData((prev) => ({ ...prev, date: date }));
+  // }, []);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -354,11 +300,24 @@ const MainScreen = ({ navigation }) => {
       <View style={styles.buttonContainer}>
         <Button title="Make Sheet" onPress={() => exportJsonToExcel()} />
         {/* Buttons for Navigation */}
-          
-       <View style={{gap:5,padding:10,border:"solid",borderColor:"black",borderWidth:1,width:"100%",height:"fit-content",display:"flex",alignItems:"center",justifyContent:"center"}}>
-       <Text>Current Date</Text>
-       <Text style={{fontSize:20}}>{date}</Text>
-       </View> 
+
+        <View
+          style={{
+            gap: 5,
+            padding: 10,
+            border: "solid",
+            borderColor: "black",
+            borderWidth: 1,
+            width: "100%",
+            height: "fit-content",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Text>Current Date</Text>
+          <Text style={{ fontSize: 20 }}>{date}</Text>
+        </View>
 
         <Button
           title="1. Start Duty Handover"
@@ -449,10 +408,10 @@ const MainScreen = ({ navigation }) => {
         />
 
         <Button
-            title="17. Security And Measure"
-            onPress={() => navigation.navigate("SecurityMeasures")}
-            color="#2196F3"
-          />
+          title="17. Security And Measure"
+          onPress={() => navigation.navigate("SecurityMeasures")}
+          color="#2196F3"
+        />
 
         <Button
           title="18.CCTV Location"
@@ -515,10 +474,10 @@ const MainScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 30,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: "#f5f5f5",
     justifyContent: "center",
     alignItems: "center",
     padding: 20,

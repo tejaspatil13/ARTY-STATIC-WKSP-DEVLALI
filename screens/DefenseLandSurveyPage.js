@@ -1,12 +1,22 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import Checkbox from 'expo-checkbox';
-import { FormContext } from '../utils/FormContext';
+import React, { useContext, useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import Checkbox from "expo-checkbox";
+import { FormContext } from "../utils/FormContext";
 
 const DefenseLandSurveyPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
-  const [observations, setObservations] = useState(formData.defenseLandSurvey.observations || []);
+  const [observations, setObservations] = useState(
+    formData.defenseLandSurvey.observations || []
+  );
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({
@@ -26,11 +36,17 @@ const DefenseLandSurveyPage = ({ navigation }) => {
   };
 
   const addObservation = () => {
-    const newObservations = [...observations, { id: observations.length + 1, text: '' }];
+    const newObservations = [
+      ...observations,
+      { id: observations.length + 1, text: "" },
+    ];
     setObservations(newObservations);
     setFormData((prev) => ({
       ...prev,
-      defenseLandSurvey: { ...prev.defenseLandSurvey, observations: newObservations },
+      defenseLandSurvey: {
+        ...prev.defenseLandSurvey,
+        observations: newObservations,
+      },
     }));
   };
 
@@ -41,17 +57,23 @@ const DefenseLandSurveyPage = ({ navigation }) => {
     setObservations(newObservations);
     setFormData((prev) => ({
       ...prev,
-      defenseLandSurvey: { ...prev.defenseLandSurvey, observations: newObservations },
+      defenseLandSurvey: {
+        ...prev.defenseLandSurvey,
+        observations: newObservations,
+      },
     }));
   };
 
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: 'Defense Land Survey',
-      headerTitleAlign: 'center',
-      headerTitleStyle: { fontSize: 22, fontWeight: 'bold', color: '#333' },
+      headerTitle: "Defense Land Survey",
+      headerTitleAlign: "center",
+      headerTitleStyle: { fontSize: 22, fontWeight: "bold", color: "#333" },
       headerLeft: () => (
-        <TouchableOpacity onPress={() => navigation.navigate('Main')} style={styles.homeButton}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Main")}
+          style={styles.homeButton}
+        >
           <Ionicons name="home" size={28} color="#000" />
         </TouchableOpacity>
       ),
@@ -63,7 +85,9 @@ const DefenseLandSurveyPage = ({ navigation }) => {
       <Text style={styles.sectionTitle}>12. Defense Land Survey</Text>
 
       <Text style={styles.label}>
-        I visited def land survey No. 36,38,40,41,43,59 along with a rep of the RP/QM and made entry in the Def land visit register. I have the following to report:
+        I visited def land survey No. 36,38,40,41,43,59 along with a rep of the
+        RP/QM and made entry in the Def land visit register. I have the
+        following to report:
       </Text>
 
       {/* Checkbox Section */}
@@ -71,14 +95,14 @@ const DefenseLandSurveyPage = ({ navigation }) => {
         <View style={styles.checkboxRow}>
           <Checkbox
             value={formData.defenseLandSurvey.RP || false}
-            onValueChange={() => toggleCheckbox('RP')}
+            onValueChange={() => toggleCheckbox("RP")}
           />
           <Text style={styles.checkboxLabel}>RP (Regimental Police)</Text>
         </View>
         <View style={styles.checkboxRow}>
           <Checkbox
             value={formData.defenseLandSurvey.QM || false}
-            onValueChange={() => toggleCheckbox('QM')}
+            onValueChange={() => toggleCheckbox("QM")}
           />
           <Text style={styles.checkboxLabel}>QM (Quartermaster)</Text>
         </View>
@@ -98,12 +122,24 @@ const DefenseLandSurveyPage = ({ navigation }) => {
         </View>
       ))}
 
-      <Button title="Add Observation" onPress={addObservation} color="#2196F3" />
+      <Button
+        title="Add Observation"
+        onPress={addObservation}
+        color="#2196F3"
+      />
 
       {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
-        <Button title="← Previous" onPress={() => navigation.navigate('LandMatters')} color="#757575" />
-        <Button title="Next →" onPress={() => navigation.navigate('QuarterGdKote')} color="#2196F3" />
+        <Button
+          title="← Previous"
+          onPress={() => navigation.navigate("LandMatters")}
+          color="#757575"
+        />
+        <Button
+          title="Next →"
+          onPress={() => navigation.navigate("QuarterGdKote")}
+          color="#2196F3"
+        />
       </View>
     </ScrollView>
   );
@@ -114,64 +150,64 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: "#f5f5f5",
   },
   sectionTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
-    color: '#333',
+    color: "#333",
   },
   label: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
-    color: '#555',
+    color: "#555",
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 5,
     padding: 10,
     marginBottom: 15,
-    backgroundColor: '#fff',
-    textAlignVertical: 'top',
+    backgroundColor: "#fff",
+    textAlignVertical: "top",
   },
   checkboxContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 20,
   },
   checkboxRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   checkboxLabel: {
     marginLeft: 8,
     fontSize: 14,
-    color: '#555',
+    color: "#555",
   },
   observationRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 10,
   },
   observationLabel: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginRight: 10,
   },
   observationInput: {
     flex: 1,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 5,
     padding: 10,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 30,
   },
   homeButton: {
@@ -179,5 +215,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DefenseLandSurveyPage; 
-
+export default DefenseLandSurveyPage;
