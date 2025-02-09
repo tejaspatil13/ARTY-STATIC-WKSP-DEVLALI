@@ -47,8 +47,6 @@ const DutyHandoverPage = ({ navigation }) => {
     });
   }, [navigation]);
 
-  console.log(formData[0].duty_handover.jcNumber);
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.sectionTitle}>1. Duty JCO Handover</Text>
