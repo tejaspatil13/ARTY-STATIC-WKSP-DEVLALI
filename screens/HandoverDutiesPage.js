@@ -6,12 +6,32 @@ import { Ionicons } from '@expo/vector-icons';
 const HandoverDutiesPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
 
-  // Handle input change
+  // Ensure `handoverDuties` exists in `formData[0]`
+  const handoverDuties = formData[0]?.handoverDuties || {
+    no: '',
+    rank: '',
+    name: '',
+    date: '',
+    time: '',
+  };
+
+  // Handle input change while keeping the array structure intact
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      handoverDuties: { ...prev.handoverDuties, [field]: value },
-    }));
+    setFormData(prev => {
+      if (!prev[0]) return [{ handoverDuties: { [field]: value } }]; // Ensure first entry exists
+
+      return prev.map((item, index) =>
+        index === 0
+          ? {
+              ...item,
+              handoverDuties: {
+                ...item.handoverDuties,
+                [field]: value,
+              },
+            }
+          : item
+      );
+    });
   };
 
   // Set up the home icon and center the title
@@ -41,24 +61,24 @@ const HandoverDutiesPage = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholder="Enter No"
-        value={formData.handoverDuties.handoverNo}
-        onChangeText={t => handleInputChange('handoverNo', t)}
+        value={handoverDuties.no}
+        onChangeText={t => handleInputChange('no', t)}
       />
 
       <Text style={styles.label}>Rank</Text>
       <TextInput
         style={styles.input}
         placeholder="Enter Rank"
-        value={formData.handoverDuties.handoverRank}
-        onChangeText={t => handleInputChange('handoverRank', t)}
+        value={handoverDuties.rank}
+        onChangeText={t => handleInputChange('rank', t)}
       />
 
       <Text style={styles.label}>Name</Text>
       <TextInput
         style={styles.input}
         placeholder="Enter Name"
-        value={formData.handoverDuties.handoverName}
-        onChangeText={t => handleInputChange('handoverName', t)}
+        value={handoverDuties.name}
+        onChangeText={t => handleInputChange('name', t)}
       />
 
       {/* Date and Time Input */}
@@ -66,16 +86,16 @@ const HandoverDutiesPage = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholder="Enter Date (DD/MM/YYYY)"
-        value={formData.handoverDuties.handoverDate}
-        onChangeText={t => handleInputChange('handoverDate', t)}
+        value={handoverDuties.date}
+        onChangeText={t => handleInputChange('date', t)}
       />
 
       <Text style={styles.label}>Time</Text>
       <TextInput
         style={styles.input}
         placeholder="Enter Time (HH:MM)"
-        value={formData.handoverDuties.handoverTime}
-        onChangeText={t => handleInputChange('handoverTime', t)}
+        value={handoverDuties.time}
+        onChangeText={t => handleInputChange('time', t)}
       />
 
       {/* Navigation Buttons */}

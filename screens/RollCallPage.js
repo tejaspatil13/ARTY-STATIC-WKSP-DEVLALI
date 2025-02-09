@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { FormContext } from '../utils/FormContext';
 import { Ionicons } from '@expo/vector-icons';
@@ -6,9 +6,31 @@ import { Ionicons } from '@expo/vector-icons';
 const RollCallPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
 
+  // Add debug logging for roll_call data
+  useEffect(() => {
+    console.log('Roll Call Data:', formData[0]?.roll_call);
+  }, [formData]);
+
   // Handle input change for roll call location and briefing
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prevData => {
+      // Make sure we have the first form data object
+      if (!prevData[0]) {
+        prevData[0] = {};
+      }
+
+      // Create a deep copy of the first form data object
+      const updatedForm = {
+        ...prevData[0],
+        roll_call: {
+          ...(prevData[0].roll_call || {}),
+          [field]: value
+        }
+      };
+
+      // Return new array with updated first form
+      return [updatedForm, ...prevData.slice(1)];
+    });
   };
 
   // Set up the home icon and center the title
@@ -29,6 +51,22 @@ const RollCallPage = ({ navigation }) => {
     });
   }, [navigation]);
 
+  // Initialize roll_call if it doesn't exist
+  useEffect(() => {
+    if (!formData[0]?.roll_call) {
+      setFormData(prevData => {
+        const updatedForm = {
+          ...prevData[0],
+          roll_call: {
+            location: '',
+            details: ''
+          }
+        };
+        return [updatedForm, ...prevData.slice(1)];
+      });
+    }
+  }, []);
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Roll Call Section */}
@@ -39,8 +77,8 @@ const RollCallPage = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholder="Enter Roll Call Location"
-        value={formData.rollCallLocation}
-        onChangeText={t => handleInputChange('rollCallLocation', t)}
+        value={formData[0]?.roll_call?.location || ''}
+        onChangeText={value => handleInputChange('location', value)}
       />
 
       {/* Briefing Details */}
@@ -48,8 +86,8 @@ const RollCallPage = ({ navigation }) => {
       <TextInput
         style={styles.largeInput}
         placeholder="Enter briefing details..."
-        value={formData.rollCallBriefing}
-        onChangeText={t => handleInputChange('rollCallBriefing', t)}
+        value={formData[0]?.roll_call?.details || ''}
+        onChangeText={value => handleInputChange('details', value)}
         multiline={true}
         numberOfLines={10}
         textAlignVertical="top"
@@ -64,7 +102,6 @@ const RollCallPage = ({ navigation }) => {
   );
 };
 
-// Styles
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,

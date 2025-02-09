@@ -6,12 +6,19 @@ import { Ionicons } from '@expo/vector-icons';
 const SaleCSDPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
 
+  // Ensure safe access to sale_of_csd
+  const sale_of_csd = formData[0]?.sale_of_csd || { grocery_amount: "", liquor_amount: "" };
+
   // Handle input change for CSD sale
   const handleInputChange = (field, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    setFormData((prev) => {
+      const newFormData = [...prev];
+      newFormData[0] = {
+        ...newFormData[0],
+        sale_of_csd: { ...newFormData[0].sale_of_csd, [field]: value },
+      };
+      return newFormData;
+    });
   };
 
   // Set up the home icon and center the title
@@ -42,8 +49,8 @@ const SaleCSDPage = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholder="Enter amount"
-        value={formData.csdGrocerySale}
-        onChangeText={(text) => handleInputChange('csdGrocerySale', text)}
+        value={sale_of_csd.grocery_amount}
+        onChangeText={(text) => handleInputChange('grocery_amount', text)}
         keyboardType="numeric"
       />
 
@@ -52,16 +59,16 @@ const SaleCSDPage = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholder="Enter amount"
-        value={formData.csdLiquorSale}
-        onChangeText={(text) => handleInputChange('csdLiquorSale', text)}
+        value={sale_of_csd.liquor_amount}
+        onChangeText={(text) => handleInputChange('liquor_amount', text)}
         keyboardType="numeric"
       />
 
       {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
-              <Button title="← Previous" onPress={() => navigation.navigate('RollCall')} color="#757575" />
-              <Button title="Next →" onPress={() => navigation.navigate('QtrVisit')} color="#2196F3" />
-            </View>
+        <Button title="← Previous" onPress={() => navigation.navigate('RollCall')} color="#757575" />
+        <Button title="Next →" onPress={() => navigation.navigate('QtrVisit')} color="#2196F3" />
+      </View>
     </ScrollView>
   );
 };
@@ -97,25 +104,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 30,
-  },
-  button: {
-    flex: 1,
-    padding: 12,
-    borderRadius: 5,
-    alignItems: 'center',
-    backgroundColor: '#757575',
-    marginHorizontal: 5,
-  },
-  nextButton: {
-    backgroundColor: '#2196F3',
-  },
-  previousButton: {
-    backgroundColor: '#757575',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
   homeButton: {
     marginLeft: 15,

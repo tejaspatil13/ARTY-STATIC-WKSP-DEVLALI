@@ -6,9 +6,19 @@ import { Ionicons } from '@expo/vector-icons';
 const LiquorIssuePage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
 
+  // Ensure default data structure
+  const liquorIssue = formData[0]?.liquorIssue || { text: '' };
+
   // Handle input change for liquor issue report
   const handleInputChange = (value) => {
-    setFormData(prev => ({ ...prev, liquorIssueReport: value }));
+    setFormData(prev => {
+      const newFormData = [...prev];
+      newFormData[0] = {
+        ...newFormData[0],
+        liquorIssue: { ...newFormData[0].liquorIssue, text: value },
+      };
+      return newFormData;
+    });
   };
 
   // Set up the home icon and center the title
@@ -41,7 +51,7 @@ const LiquorIssuePage = ({ navigation }) => {
       <TextInput
         style={styles.largeInput}
         placeholder="Enter your report here..."
-        value={formData.liquorIssueReport}
+        value={liquorIssue.text}
         onChangeText={handleInputChange}
         multiline
         numberOfLines={10}
