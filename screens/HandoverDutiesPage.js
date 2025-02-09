@@ -122,7 +122,7 @@ const HandoverDutiesPage = ({ navigation }) => {
         />
         <Button
           title=" Submit "
-          onPress={() => navigation.navigate("Main")}
+          onPress={() => navigation.navigate("PDFPreview")}
           color="#07d363"
         />
       </View>

@@ -22,6 +22,7 @@ const QuarterGdKotePage = ({ navigation }) => {
   const addRow = () => {
     const newRow = {
       id: rows.length + 1,
+      type: "",
       held: "",
       armsOut: "",
       armsIn: "",
@@ -138,7 +139,14 @@ const QuarterGdKotePage = ({ navigation }) => {
             )}
           </View>
 
-          <Text style={styles.label}>Held</Text>
+          <Text style={styles.label}>Type</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter Type"
+            value={row.type}
+            onChangeText={(t) => handleInputChange(row.id, "type", t)}
+          />
+           <Text style={styles.label}>Held</Text>
           <TextInput
             style={styles.input}
             placeholder="Enter Held"

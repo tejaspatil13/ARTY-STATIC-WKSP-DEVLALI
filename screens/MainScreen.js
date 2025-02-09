@@ -4,7 +4,7 @@ import { FormContext } from "../utils/FormContext";
 import * as FileSystem from "expo-file-system";
 import XLSX from "xlsx";
 import { shareAsync } from "expo-sharing";
-import createAndAppendExcel from "../utils/generator";
+import createAndAppendExcel, { requestPermission } from "../utils/generator";
 
 const fileName = "Daily_Report.xlsx";
 const downloadsUri = FileSystem.documentDirectory + fileName; // Internal storage
@@ -16,6 +16,8 @@ const MainScreen = ({ navigation }) => {
 
   const fileName = "Daily_Report.xlsx";
   const fileUri = FileSystem.documentDirectory + fileName;
+  const pFileUri =
+    "file:///data/user/0/host.exp.exponent/files/Daily_Report.xlsx";
 
   const deleteExcelFile = async () => {
     try {
@@ -237,12 +239,15 @@ const MainScreen = ({ navigation }) => {
       <Text style={styles.title}>DUTY JCO FORM</Text>
 
       <View style={styles.buttonContainer}>
-        <Button
+        {/* <Button
           title="Make Sheet"
           onPress={() => createAndAppendExcel(formData)}
-        />
+        /> */}
 
-        <Button title="Delete Sheet" onPress={() => deleteExcelFile()} />
+        <Button
+          title="Export File"
+          onPress={() => requestPermission(pFileUri)}
+        />
         {/* Buttons for Navigation */}
 
         <View
@@ -410,6 +415,11 @@ const MainScreen = ({ navigation }) => {
           color="#2196F3"
         />
       </View>
+      {/* <Button
+        title="PDF Preview"
+        onPress={() => navigation.navigate("PDFPreview")}
+        color="#2196F3"
+      /> */}
     </ScrollView>
   );
 };
@@ -420,7 +430,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 30,
     backgroundColor: "#f5f5f5",
     justifyContent: "center",
     alignItems: "center",
@@ -430,7 +439,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 30,
     textAlign: "center",
     color: "#333",
   },

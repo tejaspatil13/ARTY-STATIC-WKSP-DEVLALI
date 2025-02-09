@@ -1,6 +1,8 @@
 import * as FileSystem from "expo-file-system";
 import XLSX from "xlsx";
 import { shareAsync } from "expo-sharing";
+import * as fs from "expo-file-system";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const fileName = "Daily_Report.xlsx";
 const fileUri = FileSystem.documentDirectory + fileName;
@@ -537,27 +539,69 @@ export const createAndAppendExcel = async (formData) => {
       encoding: FileSystem.EncodingType.Base64,
     });
 
-    console.log("Excel file updated successfully with all 27 sheets:", fileUri);
+    // console.log("Excel file updated successfully with all 27 sheets:", fileUri);
 
     // Save the file to the Downloads folder
-    await FileSystem.makeDirectoryAsync(downloadDirectory, {
-      intermediates: true,
-    }); // Ensure Downloads directory exists
-    const downloadFileUri = downloadDirectory + fileName; // Full path for Downloads folder
-    await FileSystem.writeAsStringAsync(downloadFileUri, wbOut, {
-      encoding: FileSystem.EncodingType.Base64,
-    });
-
-    console.log("Excel file saved to Downloads folder:", downloadFileUri);
+    // requestPermission(fileUri);
 
     // Share the file
-    await shareAsync(fileUri, {
-      mimeType:
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    });
+    // await shareAsync(fileUri, {
+    //   mimeType:
+    //     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    // });
   } catch (error) {
-    console.error("Error updating Excel file:", error);
-    throw error;
+    alert("Error updating Excel file, Contact the maker!");
+  }
+};
+
+export const requestPermission = async (uri) => {
+  try {
+    const status =
+      await fs.StorageAccessFramework.requestDirectoryPermissionsAsync();
+
+    if (status.granted) {
+      const base64 = await fs.readAsStringAsync(uri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      // Get list of files in the directory
+      const files = await fs.StorageAccessFramework.readDirectoryAsync(
+        status.directoryUri
+      );
+
+      // Look for existing file with same name
+      const existingFile = files.find((file) => {
+        const fileName = file.split("/").pop(); // Get filename from path
+        return fileName === "All_Data.xlsx";
+      });
+
+      if (existingFile) {
+        // If file exists, delete it first
+        await fs.StorageAccessFramework.deleteAsync(existingFile);
+      }
+
+      const date = new Date().toLocaleDateString("en-IN");
+
+      // Create new file
+      const newFileUri =
+        await FileSystem.StorageAccessFramework.createFileAsync(
+          status.directoryUri,
+          `All_Data(${date}).xlsx`,
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        );
+
+      // Write content to new file
+      await fs.writeAsStringAsync(newFileUri, base64, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      console.log("File saved successfully");
+    }
+  } catch (error) {
+    console.error("Error saving file:", error);
+    alert(
+      "Something went wrong, make sure you have added initial data or contact maker!"
+    );
   }
 };
 

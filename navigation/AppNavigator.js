@@ -30,6 +30,7 @@ import AmnMagazinePage from "../screens/AmnMagazinePage";
 import TSSPage from "../screens/TSSPage";
 import SecurityMeasuresPage from "../screens/SecurityMeasuresPage";
 import DefenseLandSurveyPage from "../screens/DefenseLandSurveyPage";
+import PDFPreviewPage from "../screens/PDFPreviewPage";
 
 const Stack = createStackNavigator();
 
@@ -64,6 +65,8 @@ const AppNavigator = () => {
       <Stack.Screen name="QuarterGdKote" component={QuarterGdKotePage} options={{ title: "Quarter GD Kote" }} />
       <Stack.Screen name="AmnMagazine" component={AmnMagazinePage} options={{ title: "Ammunition Magazine" }} />
       <Stack.Screen name="TSS" component={TSSPage} options={{ title: "TSS" }} />
+      <Stack.Screen name="PDFPreview" component={PDFPreviewPage} options={{ title: "PDFPreview" }} />
+
     </Stack.Navigator>
   );
 };
