@@ -5,7 +5,10 @@ import { FormContext } from '../utils/FormContext';
 
 const QtrVisitPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
-  const [rows, setRows] = useState(formData.qtrVisitRows || [{ id: 1, qtrNo: '', problem: '', remarks: '' }]);
+  
+  // Ensure correct data access
+  const qtrVisitData = formData[0]?.qtr_visit || [{ id: 1, qtr_no_and_location: "", problem: "", remarks: "" }];
+  const [rows, setRows] = useState(qtrVisitData);
 
   useEffect(() => {
     navigation.setOptions({
@@ -20,23 +23,38 @@ const QtrVisitPage = ({ navigation }) => {
     });
   }, [navigation]);
 
+  // Handle Input Change
   const handleInputChange = (id, field, value) => {
     const updatedRows = rows.map(row => (row.id === id ? { ...row, [field]: value } : row));
     setRows(updatedRows);
-    setFormData(prev => ({ ...prev, qtrVisitRows: updatedRows }));
+    updateFormData(updatedRows);
   };
 
+  // Add New Row
   const addRow = () => {
-    const newRow = { id: rows.length + 1, qtrNo: '', problem: '', remarks: '' };
+    const newRow = { id: rows.length + 1, qtr_no_and_location: "", problem: "", remarks: "" };
     const updatedRows = [...rows, newRow];
     setRows(updatedRows);
-    setFormData(prev => ({ ...prev, qtrVisitRows: updatedRows }));
+    updateFormData(updatedRows);
   };
 
+  // Remove Row
   const removeRow = (id) => {
     const updatedRows = rows.filter(row => row.id !== id);
     setRows(updatedRows);
-    setFormData(prev => ({ ...prev, qtrVisitRows: updatedRows }));
+    updateFormData(updatedRows);
+  };
+
+  // Update Form Data
+  const updateFormData = (updatedRows) => {
+    setFormData(prev => {
+      const newFormData = [...prev];
+      newFormData[0] = {
+        ...newFormData[0],
+        qtr_visit: updatedRows,
+      };
+      return newFormData;
+    });
   };
 
   return (
@@ -49,8 +67,8 @@ const QtrVisitPage = ({ navigation }) => {
           <TextInput
             style={styles.input}
             placeholder="Enter Qtr No & Location"
-            value={row.qtrNo}
-            onChangeText={text => handleInputChange(row.id, 'qtrNo', text)}
+            value={row.qtr_no_and_location}
+            onChangeText={text => handleInputChange(row.id, 'qtr_no_and_location', text)}
           />
 
           <Text style={styles.label}>Problem</Text>

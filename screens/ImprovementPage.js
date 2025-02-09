@@ -6,37 +6,53 @@ import { Ionicons } from '@expo/vector-icons';
 const ImprovementPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
 
+  // Ensure the data structure is initialized properly
   useEffect(() => {
-    if (!formData.improvementPoints || formData.improvementPoints.length < 2) {
-      setFormData(prev => ({
-        ...prev,
-        improvementPoints: [
-          { id: Date.now() + 1, text: '' },
-          { id: Date.now() + 2, text: '' },
-        ],
-      }));
+    if (!formData[0]?.improvement_in_wksp_tech || formData[0].improvement_in_wksp_tech.length < 2) {
+      setFormData(prev => {
+        const newFormData = [...prev];
+        newFormData[0] = {
+          ...newFormData[0],
+          improvement_in_wksp_tech: [
+            { id: Date.now() + 1, point: '' },
+            { id: Date.now() + 2, point: '' },
+          ],
+        };
+        return newFormData;
+      });
     }
   }, []);
 
+  // Function to add a new improvement point
   const addPoint = () => {
-    setFormData(prev => ({
-      ...prev,
-      improvementPoints: [
-        ...prev.improvementPoints,
-        { id: Date.now(), text: '' },
-      ],
-    }));
+    setFormData(prev => {
+      const newFormData = [...prev];
+      newFormData[0] = {
+        ...newFormData[0],
+        improvement_in_wksp_tech: [
+          ...newFormData[0].improvement_in_wksp_tech,
+          { id: Date.now(), point: '' },
+        ],
+      };
+      return newFormData;
+    });
   };
 
+  // Function to remove an improvement point
   const removePoint = (id) => {
-    if (formData.improvementPoints.length > 2) {
-      setFormData(prev => ({
-        ...prev,
-        improvementPoints: prev.improvementPoints.filter(point => point.id !== id),
-      }));
+    if (formData[0].improvement_in_wksp_tech.length > 2) {
+      setFormData(prev => {
+        const newFormData = [...prev];
+        newFormData[0] = {
+          ...newFormData[0],
+          improvement_in_wksp_tech: newFormData[0].improvement_in_wksp_tech.filter(point => point.id !== id),
+        };
+        return newFormData;
+      });
     }
   };
 
+  // Configure navigation header
   useEffect(() => {
     navigation.setOptions({
       headerTitle: 'Improvement Page',
@@ -57,21 +73,25 @@ const ImprovementPage = ({ navigation }) => {
           25. Improvement in Wksp Tech Processes and Functioning/Welfare of Tps.
         </Text>
 
-        {formData.improvementPoints?.map((point, index) => (
+        {formData[0]?.improvement_in_wksp_tech?.map((point, index) => (
           <View key={point.id} style={styles.inputRow}>
             <Text style={styles.subLabel}>{`(${String.fromCharCode(97 + index)})`}</Text>
             <TextInput
               style={styles.input}
               placeholder={`Enter improvement point (${String.fromCharCode(97 + index)})`}
-              value={point.text}
+              value={point.point}
               onChangeText={t => {
-                const updatedPoints = formData.improvementPoints.map(p =>
-                  p.id === point.id ? { ...p, text: t } : p
+                const updatedPoints = formData[0].improvement_in_wksp_tech.map(p =>
+                  p.id === point.id ? { ...p, point: t } : p
                 );
-                setFormData(prev => ({ ...prev, improvementPoints: updatedPoints }));
+                setFormData(prev => {
+                  const newFormData = [...prev];
+                  newFormData[0] = { ...newFormData[0], improvement_in_wksp_tech: updatedPoints };
+                  return newFormData;
+                });
               }}
             />
-            {formData.improvementPoints.length > 2 && (
+            {formData[0].improvement_in_wksp_tech.length > 2 && (
               <TouchableOpacity onPress={() => removePoint(point.id)} style={styles.deleteButton}>
                 <Ionicons name="trash" size={24} color="red" />
               </TouchableOpacity>
@@ -92,24 +112,23 @@ const ImprovementPage = ({ navigation }) => {
   );
 };
 
+// Styles
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#f5f5f5' }, 
+  safeArea: { flex: 1, backgroundColor: '#f5f5f5' },
   container: { flexGrow: 1, padding: 20 },
-  
+
   sectionTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: 20, color: '#333' },
   subLabel: { fontSize: 14, fontWeight: 'bold', marginBottom: 5, color: '#555' },
   inputRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
   input: { flex: 1, borderWidth: 1, borderColor: '#ccc', borderRadius: 5, padding: 10, backgroundColor: '#fff' },
   deleteButton: { marginLeft: 10 },
-  
+
   addButton: { padding: 12, backgroundColor: '#34d399', borderRadius: 5, alignItems: 'center', marginTop: 20 },
   addButtonText: { color: '#fff', fontWeight: 'bold' },
 
   buttonContainer: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 30 },
-  
-  homeButton: {
-    marginLeft: 15,
-  },
+
+  homeButton: { marginLeft: 15 },
 });
 
 export default ImprovementPage;

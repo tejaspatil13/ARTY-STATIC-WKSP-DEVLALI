@@ -10,7 +10,10 @@ const AwarenessPage = ({ navigation }) => {
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({
       ...prev,
-      awareness: { ...prev.awareness, [field]: value },
+      [0]:{
+      ...prev[0],
+      awareness: { ...prev[0]?.awareness, [field]: value },
+    }
     }));
   };
 
@@ -37,20 +40,20 @@ const AwarenessPage = ({ navigation }) => {
       {/* Awareness Section */}
       <Text style={styles.sectionTitle}>26. Awareness</Text>
 
-      {/* GFO */}
-      <Text style={styles.label}>(a) GFO: Rank and Name</Text>
+      {/* Rank and Name */}
+      <Text style={styles.label}>(a) Rank and Name:</Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter GFO Rank and Name"
-        value={formData.awareness.gfo}
-        onChangeText={(t) => handleInputChange('gfo', t)}
+        placeholder="Enter Rank and Name"
+        value={formData[0]?.awareness?.rankAndName}
+        onChangeText={(t) => handleInputChange('rankAndName', t)}
       />
       <Text style={styles.label}>Unit</Text>
       <TextInput
         style={styles.input}
         placeholder="Unit"
-        value={formData.awareness.gfoUnit}
-        onChangeText={(t) => handleInputChange('gfoUnit', t)}
+        value={formData[0]?.awareness?.unit}
+        onChangeText={(t) => handleInputChange('unit', t)}
       />
 
       {/* Duty Officer */}
@@ -58,7 +61,7 @@ const AwarenessPage = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholder="Enter Duty Officer Rank and Name"
-        value={formData.awareness.dutyOfficer}
+        value={formData[0]?.awareness?.dutyOfficer}
         onChangeText={(t) => handleInputChange('dutyOfficer', t)}
       />
 
@@ -67,8 +70,8 @@ const AwarenessPage = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholder="Enter QRT JCO Rank and Name"
-        value={formData.awareness.qrtJco}
-        onChangeText={(t) => handleInputChange('qrtJco', t)}
+        value={formData[0]?.awareness?.QRT_JCO}
+        onChangeText={(t) => handleInputChange('QRT_JCO', t)}
       />
 
       {/* Duty NCO */}
@@ -76,8 +79,8 @@ const AwarenessPage = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholder="Enter Duty NCO Rank and Name"
-        value={formData.awareness.dutyNco}
-        onChangeText={(t) => handleInputChange('dutyNco', t)}
+        value={formData[0]?.awareness?.NCO}
+        onChangeText={(t) => handleInputChange('NCO', t)}
       />
 
       {/* Navigation Buttons */}

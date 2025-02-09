@@ -6,21 +6,56 @@ import { FormContext } from '../utils/FormContext';
 const MobileCheckPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
 
+  // Get mobileCheckRows from formData[0]
+  const mobileCheckRows = formData[0]?.mobileCheckRows || [];
+
   const addRow = () => {
-    const newRow = { id: formData.mobileCheckRows.length + 1, rank: '', name: '', makeType: '', mobNo: '', bannedApp: '', remarks: '' };
-    setFormData(prev => ({ ...prev, mobileCheckRows: [...prev.mobileCheckRows, newRow] }));
+    const newRow = {
+      id: mobileCheckRows.length + 1,
+      rank: '',
+      name: '',
+      makeAndType: '',
+      mobNo: '',
+      bannedAppAndPpoCalls: '',
+      remarks: '',
+    };
+
+    setFormData(prev => {
+      const updatedFormData = [...prev];
+      updatedFormData[0] = {
+        ...updatedFormData[0],
+        mobileCheckRows: [...mobileCheckRows, newRow],
+      };
+      return updatedFormData;
+    });
   };
 
   const handleInputChange = (id, field, value) => {
-    const updatedRows = formData.mobileCheckRows.map(row =>
+    const updatedRows = mobileCheckRows.map(row =>
       row.id === id ? { ...row, [field]: value } : row
     );
-    setFormData(prev => ({ ...prev, mobileCheckRows: updatedRows }));
+
+    setFormData(prev => {
+      const updatedFormData = [...prev];
+      updatedFormData[0] = {
+        ...updatedFormData[0],
+        mobileCheckRows: updatedRows,
+      };
+      return updatedFormData;
+    });
   };
 
   const deleteRow = (id) => {
-    const updatedRows = formData.mobileCheckRows.filter(row => row.id !== id);
-    setFormData(prev => ({ ...prev, mobileCheckRows: updatedRows }));
+    const updatedRows = mobileCheckRows.filter(row => row.id !== id);
+
+    setFormData(prev => {
+      const updatedFormData = [...prev];
+      updatedFormData[0] = {
+        ...updatedFormData[0],
+        mobileCheckRows: updatedRows,
+      };
+      return updatedFormData;
+    });
   };
 
   useEffect(() => {
@@ -41,7 +76,7 @@ const MobileCheckPage = ({ navigation }) => {
       <Text style={styles.sectionTitle}>23. Mobile Check</Text>
       <Text style={styles.label}>I have surprised check the mobiles for banned app & PIO calls of fwg pers</Text>
 
-      {formData.mobileCheckRows.map((row) => (
+      {mobileCheckRows.map((row) => (
         <View key={row.id} style={styles.card}>
           <View style={styles.rowHeader}>
             <Text style={styles.label}>Entry {row.id}</Text>
@@ -49,7 +84,7 @@ const MobileCheckPage = ({ navigation }) => {
               <Ionicons name="trash" size={24} color="red" />
             </TouchableOpacity>
           </View>
-          
+
           <Text style={styles.label}>Rank</Text>
           <TextInput
             style={styles.input}
@@ -70,8 +105,8 @@ const MobileCheckPage = ({ navigation }) => {
           <TextInput
             style={styles.input}
             placeholder="Enter Make & Type"
-            value={row.makeType}
-            onChangeText={t => handleInputChange(row.id, 'makeType', t)}
+            value={row.makeAndType}
+            onChangeText={t => handleInputChange(row.id, 'makeAndType', t)}
           />
 
           <Text style={styles.label}>Mob No.</Text>
@@ -86,8 +121,8 @@ const MobileCheckPage = ({ navigation }) => {
           <TextInput
             style={styles.input}
             placeholder="Enter Banned App & PIO Calls"
-            value={row.bannedApp}
-            onChangeText={t => handleInputChange(row.id, 'bannedApp', t)}
+            value={row.bannedAppAndPpoCalls}
+            onChangeText={t => handleInputChange(row.id, 'bannedAppAndPpoCalls', t)}
           />
 
           <Text style={styles.label}>Remarks</Text>
