@@ -143,7 +143,7 @@ export const FormProvider = ({ children }) => {
       quarter_gd_kote: {
         koteCheckDate: "",
         quarterGdKoteRows: [
-          { id: 1, held: "", armsOut: "", armsIn: "", remarks: "" },
+          { id: 1, type: "", held: "", armsOut: "", armsIn: "", remarks: "" },
         ],
       },
 

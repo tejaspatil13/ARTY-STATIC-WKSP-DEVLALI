@@ -466,6 +466,11 @@ const MainScreen = ({ navigation }) => {
           color="#2196F3"
         />
       </View>
+      <Button
+          title="PDF Preview"
+          onPress={() => navigation.navigate("PDFPreview")}
+          color="#2196F3"
+        />
     </ScrollView>
   );
 };
