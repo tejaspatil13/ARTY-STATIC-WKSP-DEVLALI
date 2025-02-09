@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import {
   View,
   Text,
@@ -14,9 +14,6 @@ import { FormContext } from "../utils/FormContext";
 
 const SecurityMeasuresPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
-  const [securityMeasures, setSecurityMeasures] = useState(
-    formData.securityMeasures || []
-  );
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -24,146 +21,231 @@ const SecurityMeasuresPage = ({ navigation }) => {
       headerTitleAlign: "center",
       headerTitleStyle: { fontSize: 22, fontWeight: "bold", color: "#333" },
       headerLeft: () => (
-        <TouchableOpacity onPress={() => navigation.navigate("Main")} style={styles.homeButton}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Main")}
+          style={styles.homeButton}
+        >
           <Ionicons name="home" size={28} color="#000" />
         </TouchableOpacity>
       ),
     });
   }, [navigation]);
 
-  const handleInputChange = (id, value) => {
-    const updatedMeasures = securityMeasures.map((item) =>
-      item.id === id ? { ...item, description: value } : item
-    );
-    setSecurityMeasures(updatedMeasures);
-    setFormData((prev) => ({ ...prev, securityMeasures: updatedMeasures }));
-  };
-
-  const handleObservationChange = (id, value) => {
+  const handleCheckTimeChange = (value) => {
     setFormData((prev) => {
-      const updatedObservations = { ...prev.securityMeasuresObservations };
-      updatedObservations[id] = value;
-      return { ...prev, securityMeasuresObservations: updatedObservations };
+      const newData = [...prev];
+      newData[0].security_measures.checkTime = value;
+      return newData;
     });
   };
 
-  const toggleRadioButton = (id, value) => {
+  const handleMeasureToggle = (index) => {
     setFormData((prev) => {
-      const updatedValues = { ...prev.securityMeasuresRadios };
-      updatedValues[id] = value;
-      return { ...prev, securityMeasuresRadios: updatedValues };
+      const newData = [...prev];
+      newData[0].security_measures.measures[index].check =
+        !newData[0].security_measures.measures[index].check;
+      return newData;
     });
   };
 
-  const addMeasure = () => {
-    const newId = securityMeasures.length + 1;
-    const newMeasure = { id: newId, description: "" };
-    const updatedMeasures = [...securityMeasures, newMeasure];
-    setSecurityMeasures(updatedMeasures);
-    setFormData((prev) => ({ ...prev, securityMeasures: updatedMeasures }));
+  const addCustomMeasure = () => {
+    setFormData((prev) => {
+      const newData = [...prev];
+      newData[0].security_measures.measures.push({
+        text: "",
+        check: false,
+      });
+      return newData;
+    });
   };
 
-  const removeMeasure = (id) => {
-    const updatedMeasures = securityMeasures.filter((item) => item.id !== id);
-    setSecurityMeasures(updatedMeasures);
-    setFormData((prev) => ({ ...prev, securityMeasures: updatedMeasures }));
+  const updateCustomMeasureText = (index, text) => {
+    setFormData((prev) => {
+      const newData = [...prev];
+      newData[0].security_measures.measures[index].text = text;
+      return newData;
+    });
+  };
+
+  const removeMeasure = (index) => {
+    setFormData((prev) => {
+      const newData = [...prev];
+      newData[0].security_measures.measures =
+        newData[0].security_measures.measures.filter((_, i) => i !== index);
+      return newData;
+    });
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.sectionTitle}>17. Security Measures</Text>
-      <Text style={styles.label}>I have checked the premises of ASW AOR at:</Text>
+      <Text style={styles.label}>{formData[0].security_measures.text} at:</Text>
       <TextInput
         style={[styles.input, styles.fullWidth]}
         placeholder="HH:MM"
         keyboardType="numeric"
-        value={formData.securityMeasuresTime || ""}
-        onChangeText={(text) =>
-          setFormData((prev) => ({ ...prev, securityMeasuresTime: text }))
-        }
+        value={formData[0].security_measures.checkTime}
+        onChangeText={handleCheckTimeChange}
       />
 
-      {["Any Salesmen/Beggars found in AOR", "Checked unit AoR for unauthorized occupation of def land"].map((text, index) => (
+      {formData[0].security_measures.measures.map((measure, index) => (
         <View key={index} style={styles.card}>
-          <Text style={styles.serial}>{String.fromCharCode(97 + index)})</Text>
-          <Text style={styles.fixedText}>{text}</Text>
+          <View style={styles.headerRow}>
+            <Text style={styles.serial}>
+              {String.fromCharCode(97 + index)})
+            </Text>
+            <View style={styles.textContainer}>
+              {index < 2 ? (
+                <Text style={styles.fixedText}>{measure.text}</Text>
+              ) : (
+                <TextInput
+                  style={styles.measureInput}
+                  placeholder="Enter additional measure"
+                  value={measure.text}
+                  onChangeText={(text) => updateCustomMeasureText(index, text)}
+                />
+              )}
+            </View>
+            {index >= 2 && (
+              <TouchableOpacity
+                onPress={() => removeMeasure(index)}
+                style={styles.removeButton}
+              >
+                <Ionicons name="trash" size={20} color="red" />
+              </TouchableOpacity>
+            )}
+          </View>
+
           <RadioButton.Group
-            onValueChange={(value) => toggleRadioButton(text, value)}
-            value={formData.securityMeasuresRadios?.[text] || ""}
+            onValueChange={() => handleMeasureToggle(index)}
+            value={measure.check ? "yes" : "no"}
           >
             <View style={styles.radioButtonContainer}>
-              <RadioButton value="yes" /><Text>Yes</Text>
-              <RadioButton value="no" /><Text>No</Text>
+              <View style={styles.radioOption}>
+                <RadioButton value="yes" />
+                <Text>Yes</Text>
+              </View>
+              <View style={styles.radioOption}>
+                <RadioButton value="no" />
+                <Text>No</Text>
+              </View>
             </View>
           </RadioButton.Group>
-          <TextInput
-            style={styles.observationInput}
-            placeholder="Enter observations"
-            multiline
-            value={formData.securityMeasuresObservations?.[text] || ""}
-            onChangeText={(text) => handleObservationChange(text, text)}
-          />
         </View>
       ))}
 
-      {securityMeasures.map((measure, index) => (
-        <View key={measure.id} style={styles.card}>
-          <Text style={styles.serial}>{String.fromCharCode(99 + index)})</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter additional measure"
-            value={measure.description}
-            onChangeText={(text) => handleInputChange(measure.id, text)}
-          />
-          <RadioButton.Group
-            onValueChange={(value) => toggleRadioButton(measure.id, value)}
-            value={formData.securityMeasuresRadios?.[measure.id] || ""}
-          >
-            <View style={styles.radioButtonContainer}>
-              <RadioButton value="yes" /><Text>Yes</Text>
-              <RadioButton value="no" /><Text>No</Text>
-            </View>
-          </RadioButton.Group>
-          <TextInput
-            style={styles.observationInput}
-            placeholder="Enter observations"
-            multiline
-            value={formData.securityMeasuresObservations?.[measure.id] || ""}
-            onChangeText={(text) => handleObservationChange(measure.id, text)}
-          />
-          <TouchableOpacity onPress={() => removeMeasure(measure.id)} style={styles.removeButton}>
-            <Ionicons name="trash" size={20} color="red" />
-          </TouchableOpacity>
-        </View>
-      ))}
-
-      <TouchableOpacity onPress={addMeasure} style={styles.addButton}>
+      <TouchableOpacity onPress={addCustomMeasure} style={styles.addButton}>
         <Text style={styles.addButtonText}>+ Add More</Text>
       </TouchableOpacity>
 
       <View style={styles.buttonContainer}>
-        <Button title="← Previous" onPress={() => navigation.navigate("TSS")} color="#757575" />
-        <Button title="Next →" onPress={() => navigation.navigate("CCTVLocation")} color="#2196F3" />
+        <Button
+          title="← Previous"
+          onPress={() => navigation.navigate("TSS")}
+          color="#757575"
+        />
+        <Button
+          title="Next →"
+          onPress={() => navigation.navigate("CCTVLocation")}
+          color="#2196F3"
+        />
       </View>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  homeButton: { marginLeft: 15 },
-  container: { flexGrow: 1, padding: 20, backgroundColor: "#f5f5f5" },
-  sectionTitle: { fontSize: 20, fontWeight: "bold", marginBottom: 10, color: "#333" },
-  label: { fontSize: 16, color: "#555", marginBottom: 5 },
-  fullWidth: { width: "100%" },
-  input: { borderWidth: 1, borderColor: "#ccc", borderRadius: 5, padding: 10, backgroundColor: "#fff", marginBottom: 10 },
-  card: { backgroundColor: "#fff", padding: 15, borderRadius: 10, elevation: 3, marginBottom: 15 },
-  serial: { fontSize: 16, fontWeight: "bold", color: "#555" },
-  fixedText: { fontSize: 14, color: "#555", flex: 1 },
-  radioButtonContainer: { flexDirection: "row", alignItems: "center" },
-  observationInput: { borderWidth: 1, borderColor: "#ccc", borderRadius: 5, padding: 10, backgroundColor: "#fff", marginTop: 10 },
-  addButton: { padding: 12, backgroundColor: "#34d399", borderRadius: 5, alignItems: "center", marginTop: 20 },
-  addButtonText: { color: "#fff", fontWeight: "bold" },
-  buttonContainer: { flexDirection: "row", justifyContent: "space-between", marginTop: 30 },
+  homeButton: {
+    marginLeft: 15,
+  },
+  container: {
+    flexGrow: 1,
+    padding: 20,
+    backgroundColor: "#f5f5f5",
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+    color: "#333",
+  },
+  label: {
+    fontSize: 16,
+    color: "#555",
+    marginBottom: 5,
+  },
+  fullWidth: {
+    width: "100%",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: 10,
+    backgroundColor: "#fff",
+    marginBottom: 10,
+  },
+  card: {
+    backgroundColor: "#fff",
+    padding: 15,
+    borderRadius: 10,
+    elevation: 3,
+    marginBottom: 15,
+  },
+  headerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  textContainer: {
+    flex: 1,
+    marginRight: 10,
+  },
+  serial: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#555",
+    marginRight: 10,
+  },
+  fixedText: {
+    fontSize: 14,
+    color: "#555",
+  },
+  measureInput: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: 8,
+    backgroundColor: "#fff",
+  },
+  radioButtonContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  radioOption: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 20,
+  },
+  removeButton: {
+    padding: 5,
+  },
+  addButton: {
+    padding: 12,
+    backgroundColor: "#34d399",
+    borderRadius: 5,
+    alignItems: "center",
+    marginTop: 20,
+  },
+  addButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 30,
+  },
 });
 
 export default SecurityMeasuresPage;
