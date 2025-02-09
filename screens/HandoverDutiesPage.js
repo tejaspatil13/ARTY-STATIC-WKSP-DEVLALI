@@ -2,6 +2,8 @@ import React, { useContext } from 'react';
 import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { FormContext } from '../utils/FormContext';
 import { Ionicons } from '@expo/vector-icons';
+import PDFGenerator from "../PDF/PDFGenerator";
+
 
 const HandoverDutiesPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
@@ -101,7 +103,7 @@ const HandoverDutiesPage = ({ navigation }) => {
       {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
         <Button title="← Previous" onPress={() => navigation.navigate('Awareness')} color="#757575" />
-        <Button title=" Submit " onPress={() => navigation.navigate('Main')} color="#07d363" />
+        <Button title=" Submit " onPress={() => PDFGenerator()} color="#07d363" />
       </View>
     </ScrollView>
   );
