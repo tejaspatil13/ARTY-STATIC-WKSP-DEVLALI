@@ -146,6 +146,14 @@ const QuarterGdKotePage = ({ navigation }) => {
             onChangeText={(t) => handleInputChange(row.id, "held", t)}
           />
 
+          <Text style={styles.label}>Type</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter Type"
+            value={row.type}
+            onChangeText={(t) => handleInputChange(row.id, "type", t)}
+          />
+
           <Text style={styles.label}>Arms Out of Kote</Text>
           <TextInput
             style={styles.input}

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useLayoutEffect } from "react";
 import {
   View,
   Text,
@@ -15,127 +15,89 @@ import { Ionicons } from "@expo/vector-icons";
 const CSDSampleChecksPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
 
-  // Initialize or ensure minimum fields on mount
-  useEffect(() => {
-    ensureMinimumFields("csd_items");
-    ensureMinimumFields("card_items");
-  }, []);
-
-  // Ensure minimum 3 fields exist
-  const ensureMinimumFields = (section) => {
-    const currentItems = formData[0]?.csd_checks?.[section] || {};
-    const itemCount = Object.keys(currentItems).length;
-
-    if (itemCount < 3) {
-      const updatedItems = { ...currentItems };
-      for (let i = itemCount + 1; i <= 3; i++) {
-        const fieldName =
-          section === "csd_items" ? `csdItem${i}` : `cardItem${i}`;
-        updatedItems[fieldName] = "";
+  const updateNestedField = (section, field, value) => {
+    setFormData((prevData) => {
+      const newData = [...prevData];
+      if (!newData[0].csd_checks) {
+        newData[0].csd_checks = {
+          csd_items: {},
+          card_items: {},
+        };
       }
-
-      setFormData((prev) => ({
-        ...prev,
-        [0]: {
-          ...prev[0],
-          csd_checks: {
-            ...prev[0].csd_checks,
-            [section]: updatedItems,
+      newData[0] = {
+        ...newData[0],
+        csd_checks: {
+          ...newData[0].csd_checks,
+          [section]: {
+            ...newData[0].csd_checks[section],
+            [field]: value,
           },
         },
-      }));
-    }
+      };
+      return newData;
+    });
   };
 
-  // Add new field
   const addField = (section) => {
     const currentItems = formData[0]?.csd_checks?.[section] || {};
     const itemCount = Object.keys(currentItems).length;
+
+    if (itemCount >= 3) {
+      Alert.alert("Maximum Limit", "Cannot add more than 3 items");
+      return;
+    }
+
     const newFieldName =
       section === "csd_items"
         ? `csdItem${itemCount + 1}`
         : `cardItem${itemCount + 1}`;
 
-    setFormData((prev) => ({
-      ...prev,
-      [0]: {
-        ...prev[0],
-        csd_checks: {
-          ...prev[0].csd_checks,
-          [section]: {
-            ...prev[0].csd_checks[section],
-            [newFieldName]: "",
-          },
-        },
-      },
-    }));
+    updateNestedField(section, newFieldName, "");
   };
 
-  // Remove field
   const removeField = (section, fieldName) => {
     const currentItems = formData[0]?.csd_checks?.[section] || {};
     const itemCount = Object.keys(currentItems).length;
 
     if (itemCount <= 3) {
-      Alert.alert("Cannot Remove", "Minimum 3 fields are required");
+      Alert.alert(
+        "Minimum Required",
+        "Cannot remove. Minimum 3 items required"
+      );
       return;
     }
 
-    const updatedItems = { ...currentItems };
-    delete updatedItems[fieldName];
+    setFormData((prevData) => {
+      const newData = [...prevData];
+      const updatedSection = { ...newData[0].csd_checks[section] };
+      delete updatedSection[fieldName];
 
-    // Reorder remaining fields
-    const reorderedItems = {};
-    let counter = 1;
-    Object.values(updatedItems).forEach((value) => {
-      const newFieldName =
-        section === "csd_items" ? `csdItem${counter}` : `cardItem${counter}`;
-      reorderedItems[newFieldName] = value;
-      counter++;
+      newData[0] = {
+        ...newData[0],
+        csd_checks: {
+          ...newData[0].csd_checks,
+          [section]: updatedSection,
+        },
+      };
+      return newData;
     });
-
-    setFormData((prev) => ({
-      ...prev,
-      [0]: {
-        ...prev[0],
-        csd_checks: {
-          ...prev[0].csd_checks,
-          [section]: reorderedItems,
-        },
-      },
-    }));
   };
 
-  // Handle input change
-  const handleInputChange = (section, field, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      [0]: {
-        ...prev[0],
-        csd_checks: {
-          ...prev[0].csd_checks,
-          [section]: {
-            ...prev[0].csd_checks[section],
-            [field]: value,
-          },
-        },
-      },
-    }));
-  };
-
-  // Render fields dynamically
   const renderFields = (section, label) => {
     const items = formData[0]?.csd_checks?.[section] || {};
+
     return (
       <View style={styles.sectionContainer}>
         <Text style={styles.label}>{label}</Text>
-        {Object.keys(items).map((fieldName, index) => (
+        {Object.entries(items).map(([fieldName, value]) => (
           <View key={fieldName} style={styles.fieldContainer}>
             <TextInput
               style={styles.fieldInput}
-              placeholder={`Item ${index + 1}`}
-              value={items[fieldName]}
-              onChangeText={(t) => handleInputChange(section, fieldName, t)}
+              placeholder={`Item ${fieldName.replace(/[^0-9]/g, "")}`}
+              value={value}
+              onChangeText={(text) =>
+                updateNestedField(section, fieldName, text)
+              }
             />
             {Object.keys(items).length > 3 && (
               <TouchableOpacity
@@ -157,7 +119,7 @@ const CSDSampleChecksPage = ({ navigation }) => {
     );
   };
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: "CSD Sample Checks",
       headerTitleAlign: "center",
