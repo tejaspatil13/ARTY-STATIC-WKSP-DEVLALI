@@ -292,22 +292,23 @@ const PDFPreviewPage = ({ navigation }) => {
 </table>
 
     
-
 <h2>15. CSD Sample Checks</h2>
-<p>I have physically checked the following sample items (minimum three):</p>
+<p>
+  I have physically checked the following sample items (minimum three):
+</p>
 
 <h3>(a) CSD Items</h3>
 <ul>
-  <li>${form.csa_checks?.csa_items?.csdItem1 || "____"}</li>
-  <li>${form.csa_checks?.csa_items?.csdItem2 || "____"}</li>
-  <li>${form.csa_checks?.csa_items?.csdItem3 || "____"}</li>
+  <li>(a) <input type="text" name="csdItem1" value="${form.csd_checks?.csd_items?.csdItem1 || ''}" placeholder="Enter CSD Item 1"></li>
+  <li>(b) <input type="text" name="csdItem2" value="${form.csd_checks?.csd_items?.csdItem2 || ''}" placeholder="Enter CSD Item 2"></li>
+  <li>(c) <input type="text" name="csdItem3" value="${form.csd_checks?.csd_items?.csdItem3 || ''}" placeholder="Enter CSD Item 3"></li>
 </ul>
 
 <h3>(b) Liquor/Grocery Card</h3>
 <ul>
-  <li>${form.csa_checks?.card_items?.cardItem1 || "____"}</li>
-  <li>${form.csa_checks?.card_items?.cardItem2 || "____"}</li>
-  <li>${form.csa_checks?.card_items?.cardItem3 || "____"}</li>
+  <li>(a) <input type="text" name="cardItem1" value="${form.csd_checks?.card_items?.cardItem1 || ''}" placeholder="Enter Card Item 1"></li>
+  <li>(b) <input type="text" name="cardItem2" value="${form.csd_checks?.card_items?.cardItem2 || ''}" placeholder="Enter Card Item 2"></li>
+  <li>(c) <input type="text" name="cardItem3" value="${form.csd_checks?.card_items?.cardItem3 || ''}" placeholder="Enter Card Item 3"></li>
 </ul>
 
 

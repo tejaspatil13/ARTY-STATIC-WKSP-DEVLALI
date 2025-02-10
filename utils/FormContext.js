@@ -8,6 +8,29 @@ export const FormContext = createContext();
 
 export const fileContext = createContext();
 
+
+
+
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const saveFormData = async (data) => {
+  try {
+    await AsyncStorage.setItem("formData", JSON.stringify(data));
+  } catch (error) {
+    console.error("Error saving form data:", error);
+  }
+};
+
+
+
+
+
+
+
+
+
+
 export const FormProvider = ({ children }) => {
   const [formData, setFormData] = useState([
     {

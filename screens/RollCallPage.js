@@ -64,7 +64,8 @@ const RollCallPage = ({ navigation }) => {
         const updatedForm = {
           ...prevData[0],
           roll_call: {
-            location: "",
+            date: "",
+            time: "",
             details: "",
           },
         };
@@ -82,9 +83,15 @@ const RollCallPage = ({ navigation }) => {
       <Text style={styles.label}>I attended the Roll Call at:</Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter Roll Call Location"
-        value={formData[0]?.roll_call?.location || ""}
-        onChangeText={(value) => handleInputChange("location", value)}
+        placeholder="Enter Time"
+        value={formData[0]?.roll_call?.time || ""}
+        onChangeText={(value) => handleInputChange("time", value)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Enter date"
+        value={formData[0]?.roll_call?.date || ""}
+        onChangeText={(value) => handleInputChange("date", value)}
       />
 
       {/* Briefing Details */}
