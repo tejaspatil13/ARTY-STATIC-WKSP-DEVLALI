@@ -1,14 +1,38 @@
 import React, { useContext, useEffect } from "react";
 import { View, Text, Button, ScrollView, StyleSheet } from "react-native";
 import { FormContext } from "../utils/FormContext";
-import * as XLSX from "xlsx";
 import * as FileSystem from "expo-file-system";
-import * as Sharing from "expo-sharing";
+import XLSX from "xlsx";
+import { shareAsync } from "expo-sharing";
+import createAndAppendExcel, { requestPermission } from "../utils/generator";
+
+const fileName = "Daily_Report.xlsx";
+const downloadsUri = FileSystem.documentDirectory + fileName; // Internal storage
+
 const MainScreen = ({ navigation }) => {
   // Generate an array of page numbers from 2 to 28
-  const pages = Array.from({ length: 27 }, (_, i) => i + 2);
-  const { fData, setFormData } = useContext(FormContext);
-  const formData = [fData];
+  // const pages = Array.from({ length: 27 }, (_, i) => i + 2);
+  const { formData, setFormData } = useContext(FormContext);
+
+  const fileName = "Daily_Report.xlsx";
+  const fileUri = FileSystem.documentDirectory + fileName;
+  const pFileUri =
+    "file:///data/user/0/host.exp.exponent/files/Daily_Report.xlsx";
+
+  const deleteExcelFile = async () => {
+    try {
+      const fileExists = await FileSystem.getInfoAsync(fileUri);
+
+      if (fileExists.exists) {
+        await FileSystem.deleteAsync(fileUri);
+        console.log("Excel file deleted successfully.");
+      } else {
+        console.log("No Excel file found to delete.");
+      }
+    } catch (error) {
+      console.error("Error deleting Excel file:", error);
+    }
+  };
 
   // const exportJsonToExcel = async () => {
   //   try {
@@ -73,211 +97,123 @@ const MainScreen = ({ navigation }) => {
   //   }
   // };
 
-  const jsonDataArray = [
-    {
-      date: "2025-02-06",
-      jcNumber: "009",
-      rank: "A",
-      name: "John",
-      startTime: "08:00",
-      startDate: "2025-02-06",
-      endTime: "16:00",
-      endDate: "2025-02-06",
-      prevJCNumber: "000",
-      prevRank: "B",
-      prevName: "Doe",
-      koteGuardTime: "12:00",
-      koteGuardFindings: "All clear",
-      mt_time: "14:00",
-      mt_strength: "10",
-      mtStrengthFields: [{ id: 1, name: "Alex" }],
-      office_sealed: "Yes",
-      store_sealed: "No",
-      ration_observations: "Sufficient",
-      cookHouseObservations: [
-        { cook_house: "A", appliances: "Functional", staff: "3" },
-      ],
-      fireEquipment: [
-        {
-          fire_point_location: "Front",
-          fire_type: "Extinguisher",
-          fire_serviceability: "Good",
-          observations: "None",
-        },
-      ],
-      foodTasting: [
-        {
-          cookHouse: "A PI",
-          meal: "Breakfast",
-          quality: "Good",
-          improvement: "None",
-        },
-        {
-          cookHouse: "A PI",
-          meal: "Lunch",
-          quality: "Average",
-          improvement: "More seasoning",
-        },
-      ],
-    },
-    {
-      date: "2025-02-07",
-      jcNumber: "0010",
-      rank: "B",
-      name: "Jane",
-      startTime: "09:00",
-      startDate: "2025-02-07",
-      endTime: "17:00",
-      endDate: "2025-02-07",
-      prevJCNumber: "001",
-      prevRank: "A",
-      prevName: "John",
-      koteGuardTime: "13:00",
-      koteGuardFindings: "Minor issues",
-      mt_time: "15:00",
-      mt_strength: "12",
-      mtStrengthFields: [{ id: 2, name: "Sam" }],
-      office_sealed: "No",
-      store_sealed: "Yes",
-      ration_observations: "Low stock",
-      cookHouseObservations: [
-        { cook_house: "B", appliances: "Needs repair", staff: "2" },
-      ],
-      fireEquipment: [
-        {
-          fire_point_location: "Back",
-          fire_type: "Hose",
-          fire_serviceability: "Needs maintenance",
-          observations: "Leak detected",
-        },
-      ],
-      foodTasting: [
-        {
-          cookHouse: "B PI",
-          meal: "Dinner",
-          quality: "Excellent",
-          improvement: "None",
-        },
-      ],
-    },
-  ];
+  // const exportJsonToExcel = async () => {
+  //   try {
+  //     const fileUri = FileSystem.documentDirectory + "data?.xlsx";
+  //     let workbook;
 
-  const exportJsonToExcel = async () => {
-    try {
-      const fileUri = FileSystem.documentDirectory + "data?.xlsx";
-      let workbook;
+  //     // Check if the file exists
+  //     const fileInfo = await FileSystem.getInfoAsync(fileUri);
+  //     if (fileInfo.exists) {
+  //       // Read the existing file
+  //       const existingData = await FileSystem.readAsStringAsync(fileUri, {
+  //         encoding: FileSystem.EncodingType.Base64,
+  //       });
+  //       workbook = XLSX.read(existingData, { type: "base64" });
+  //     } else {
+  //       workbook = XLSX.utils.book_new();
+  //     }
 
-      // Check if the file exists
-      const fileInfo = await FileSystem.getInfoAsync(fileUri);
-      if (fileInfo.exists) {
-        // Read the existing file
-        const existingData = await FileSystem.readAsStringAsync(fileUri, {
-          encoding: FileSystem.EncodingType.Base64,
-        });
-        workbook = XLSX.read(existingData, { type: "base64" });
-      } else {
-        workbook = XLSX.utils.book_new();
-      }
+  //     const addOrAppendSheet = (sheetName, newData) => {
+  //       if (workbook.Sheets[sheetName]) {
+  //         let existingSheetData =
+  //           XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]) || [];
+  //         // Merge the existing data with the new data
+  //         const mergedData = existingSheetData?.concat(newData);
+  //         // Convert merged data to a new worksheet
+  //         const newWorksheet = XLSX.utils.json_to_sheet(mergedData);
+  //         workbook.Sheets[sheetName] = newWorksheet;
+  //       } else {
+  //         const newWorksheet = XLSX.utils.json_to_sheet(newData);
+  //         XLSX.utils.book_append_sheet(workbook, newWorksheet, sheetName);
+  //       }
+  //     };
 
-      const addOrAppendSheet = (sheetName, newData) => {
-        if (workbook.Sheets[sheetName]) {
-          let existingSheetData =
-            XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]) || [];
-          // Merge the existing data with the new data
-          const mergedData = existingSheetData?.concat(newData);
-          // Convert merged data to a new worksheet
-          const newWorksheet = XLSX.utils.json_to_sheet(mergedData);
-          workbook.Sheets[sheetName] = newWorksheet;
-        } else {
-          const newWorksheet = XLSX.utils.json_to_sheet(newData);
-          XLSX.utils.book_append_sheet(workbook, newWorksheet, sheetName);
-        }
-      };
+  //     // Prepare your sheet data arrays
+  //     const dutyHandoverData = formData?.map((data) => ({
+  //       Date: data?.startDate,
+  //       ...data,
+  //     }));
+  //     const koteGuardData = formData?.map((data) => ({
+  //       Date: data?.startDate,
+  //       koteGuardTime: data?.koteGuardTime,
+  //       koteGuardFindings: data?.koteGuardFindings,
+  //     }));
+  //     const mtBriefingData = formData?.flatMap((data) =>
+  //       data?.mtStrengthFields.map((item) => ({
+  //         Date: data?.startDate,
+  //         mt_time: data?.mt_time,
+  //         mt_strength: data?.mt_strength,
+  //         id: item.id,
+  //         name: item.name,
+  //       }))
+  //     );
+  //     const officeStoreData = formData?.map((data) => ({
+  //       Date: data?.startDate,
+  //       office_sealed: data?.office_sealed,
+  //       store_sealed: data?.store_sealed,
+  //     }));
+  //     const rationData = formData?.map((data) => ({
+  //       Date: data?.startDate,
+  //       ration_observations: data?.ration_observations,
+  //     }));
+  //     const cookHouseData = formData?.flatMap((data) =>
+  //       data?.cookHouseObservations.map((item) => ({
+  //         Date: data?.startDate,
+  //         ...item,
+  //       }))
+  //     );
+  //     const fireEquipmentData = formData?.flatMap((data) =>
+  //       data?.fireEquipment.map((item) => ({
+  //         Date: data?.startDate,
+  //         ...item,
+  //       }))
+  //     );
+  //     const foodTastingData = formData?.flatMap((data) =>
+  //       data?.foodTasting.map((item) => ({
+  //         Date: data?.startDate,
+  //         ...item,
+  //       }))
+  //     );
+  //     // const imageData = formData?.map((data) => ({
+  //     //   Date: data?.startDate,
+  //     //   Image_Path: data?.imagePath,
+  //     // }));
 
-      // Prepare your sheet data arrays
-      const dutyHandoverData = formData?.map((data) => ({
-        Date: data?.startDate,
-        ...data,
-      }));
-      const koteGuardData = formData?.map((data) => ({
-        Date: data?.startDate,
-        koteGuardTime: data?.koteGuardTime,
-        koteGuardFindings: data?.koteGuardFindings,
-      }));
-      const mtBriefingData = formData?.flatMap((data) =>
-        data?.mtStrengthFields.map((item) => ({
-          Date: data?.startDate,
-          mt_time: data?.mt_time,
-          mt_strength: data?.mt_strength,
-          id: item.id,
-          name: item.name,
-        }))
-      );
-      const officeStoreData = formData?.map((data) => ({
-        Date: data?.startDate,
-        office_sealed: data?.office_sealed,
-        store_sealed: data?.store_sealed,
-      }));
-      const rationData = formData?.map((data) => ({
-        Date: data?.startDate,
-        ration_observations: data?.ration_observations,
-      }));
-      const cookHouseData = formData?.flatMap((data) =>
-        data?.cookHouseObservations.map((item) => ({
-          Date: data?.startDate,
-          ...item,
-        }))
-      );
-      const fireEquipmentData = formData?.flatMap((data) =>
-        data?.fireEquipment.map((item) => ({
-          Date: data?.startDate,
-          ...item,
-        }))
-      );
-      const foodTastingData = formData?.flatMap((data) =>
-        data?.foodTasting.map((item) => ({
-          Date: data?.startDate,
-          ...item,
-        }))
-      );
-      // const imageData = formData?.map((data) => ({
-      //   Date: data?.startDate,
-      //   Image_Path: data?.imagePath,
-      // }));
+  //     addOrAppendSheet("Duty Handover", dutyHandoverData);
+  //     addOrAppendSheet("Kote Guard Details", koteGuardData);
+  //     addOrAppendSheet("MT Briefing", mtBriefingData);
+  //     addOrAppendSheet("Office & Store Sealing", officeStoreData);
+  //     addOrAppendSheet("Ration Checking", rationData);
+  //     addOrAppendSheet("Cook House Observations", cookHouseData);
+  //     addOrAppendSheet("Fire Equipment Check", fireEquipmentData);
+  //     addOrAppendSheet("Food Tasting", foodTastingData);
+  //     addOrAppendSheet("Mobile Check", mobileCheckData);
+  //     addOrAppendSheet("Quarter Visit", qtrVisitData);
+  //     addOrAppendSheet("CCTV Check", cctvData);
+  //     addOrAppendSheet("Guard Check", guardCheckData);
 
-      addOrAppendSheet("Duty Handover", dutyHandoverData);
-      addOrAppendSheet("Kote Guard Details", koteGuardData);
-      addOrAppendSheet("MT Briefing", mtBriefingData);
-      addOrAppendSheet("Office & Store Sealing", officeStoreData);
-      addOrAppendSheet("Ration Checking", rationData);
-      addOrAppendSheet("Cook House Observations", cookHouseData);
-      addOrAppendSheet("Fire Equipment Check", fireEquipmentData);
-      addOrAppendSheet("Food Tasting", foodTastingData);
-      addOrAppendSheet("Mobile Check", mobileCheckData);
-      addOrAppendSheet("Quarter Visit", qtrVisitData);
-      addOrAppendSheet("CCTV Check", cctvData);
-      addOrAppendSheet("Guard Check", guardCheckData);
+  //     const excelData = XLSX.write(workbook, {
+  //       type: "base64",
+  //       bookType: "xlsx",
+  //     });
 
-      const excelData = XLSX.write(workbook, {
-        type: "base64",
-        bookType: "xlsx",
-      });
+  //     await FileSystem.writeAsStringAsync(fileUri, excelData, {
+  //       encoding: FileSystem.EncodingType.Base64,
+  //     });
 
-      await FileSystem.writeAsStringAsync(fileUri, excelData, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-
-      if (await Sharing.isAvailableAsync()) {
-        await Sharing.shareAsync(fileUri);
-      } else {
-        alert("Sharing is not available on this device");
-      }
-    } catch (error) {
-      console.error("Error exporting to Excel:", error);
-    }
-  };
+  //     if (await Sharing.isAvailableAsync()) {
+  //       await Sharing.shareAsync(fileUri);
+  //     } else {
+  //       alert("Sharing is not available on this device");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error exporting to Excel:", error);
+  //   }
+  // };
 
   // Set navigation options to remove the back button and center the title
+
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: "MAIN PAGE", // Set the title
@@ -288,9 +224,14 @@ const MainScreen = ({ navigation }) => {
 
   const date = new Date().toLocaleDateString("en-IN");
 
-  // React.useEffect(() => {
-  //   setFormData((prev) => ({ ...prev, date: date }));
-  // }, []);
+  useEffect(() => {
+    setFormData((prevData) =>
+      prevData?.map((item, index) => ({
+        ...item,
+        date: date,
+      }))
+    );
+  }, []);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -298,7 +239,15 @@ const MainScreen = ({ navigation }) => {
       <Text style={styles.title}>DUTY JCO FORM</Text>
 
       <View style={styles.buttonContainer}>
-        <Button title="Make Sheet" onPress={() => exportJsonToExcel()} />
+        {/* <Button
+          title="Make Sheet"
+          onPress={() => createAndAppendExcel(formData)}
+        /> */}
+
+        {/* <Button
+          title="Export File"
+          onPress={() => requestPermission(pFileUri)}
+        /> */}
         {/* Buttons for Navigation */}
 
         <View
@@ -465,12 +414,16 @@ const MainScreen = ({ navigation }) => {
           onPress={() => navigation.navigate("HandoverDuties")}
           color="#2196F3"
         />
+       <Button
+        title="PDF Preview"
+        onPress={() => navigation.navigate("PDFPreview")}
+        color="#34d399"
+      /> 
+      
+      
+      
       </View>
-      <Button
-          title="PDF Preview"
-          onPress={() => navigation.navigate("PDFPreview")}
-          color="#2196F3"
-        />
+       
     </ScrollView>
   );
 };
@@ -481,7 +434,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 30,
     backgroundColor: "#f5f5f5",
     justifyContent: "center",
     alignItems: "center",
@@ -491,7 +443,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 30,
     textAlign: "center",
     color: "#333",
   },

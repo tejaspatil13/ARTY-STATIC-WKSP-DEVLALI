@@ -1,19 +1,22 @@
-import React, { useContext, useEffect } from 'react';
-import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
-import { FormContext } from '../utils/FormContext';
-import { Ionicons } from '@expo/vector-icons';
+import React, { useContext, useEffect } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
+import { FormContext } from "../utils/FormContext";
+import { Ionicons } from "@expo/vector-icons";
 
 const RollCallPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
 
-  // Add debug logging for roll_call data
-  useEffect(() => {
-    console.log('Roll Call Data:', formData[0]?.roll_call);
-  }, [formData]);
-
   // Handle input change for roll call location and briefing
   const handleInputChange = (field, value) => {
-    setFormData(prevData => {
+    setFormData((prevData) => {
       // Make sure we have the first form data object
       if (!prevData[0]) {
         prevData[0] = {};
@@ -24,8 +27,8 @@ const RollCallPage = ({ navigation }) => {
         ...prevData[0],
         roll_call: {
           ...(prevData[0].roll_call || {}),
-          [field]: value
-        }
+          [field]: value,
+        },
       };
 
       // Return new array with updated first form
@@ -36,15 +39,18 @@ const RollCallPage = ({ navigation }) => {
   // Set up the home icon and center the title
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitle: 'Roll Call',
-      headerTitleAlign: 'center',
+      headerTitle: "Roll Call",
+      headerTitleAlign: "center",
       headerTitleStyle: {
         fontSize: 22,
-        fontWeight: 'bold',
-        color: '#333',
+        fontWeight: "bold",
+        color: "#333",
       },
       headerLeft: () => (
-        <TouchableOpacity onPress={() => navigation.navigate('Main')} style={styles.homeButton}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Main")}
+          style={styles.homeButton}
+        >
           <Ionicons name="home" size={28} color="#000" />
         </TouchableOpacity>
       ),
@@ -54,13 +60,13 @@ const RollCallPage = ({ navigation }) => {
   // Initialize roll_call if it doesn't exist
   useEffect(() => {
     if (!formData[0]?.roll_call) {
-      setFormData(prevData => {
+      setFormData((prevData) => {
         const updatedForm = {
           ...prevData[0],
           roll_call: {
-            location: '',
-            details: ''
-          }
+            location: "",
+            details: "",
+          },
         };
         return [updatedForm, ...prevData.slice(1)];
       });
@@ -77,8 +83,8 @@ const RollCallPage = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholder="Enter Roll Call Location"
-        value={formData[0]?.roll_call?.location || ''}
-        onChangeText={value => handleInputChange('location', value)}
+        value={formData[0]?.roll_call?.location || ""}
+        onChangeText={(value) => handleInputChange("location", value)}
       />
 
       {/* Briefing Details */}
@@ -86,8 +92,8 @@ const RollCallPage = ({ navigation }) => {
       <TextInput
         style={styles.largeInput}
         placeholder="Enter briefing details..."
-        value={formData[0]?.roll_call?.details || ''}
-        onChangeText={value => handleInputChange('details', value)}
+        value={formData[0]?.roll_call?.details || ""}
+        onChangeText={(value) => handleInputChange("details", value)}
         multiline={true}
         numberOfLines={10}
         textAlignVertical="top"
@@ -95,8 +101,16 @@ const RollCallPage = ({ navigation }) => {
 
       {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
-        <Button title="← Previous" onPress={() => navigation.navigate('MedicalVisit')} color="#757575" />
-        <Button title="Next →" onPress={() => navigation.navigate('SaleCSD')} color="#2196F3" />
+        <Button
+          title="← Previous"
+          onPress={() => navigation.navigate("MedicalVisit")}
+          color="#757575"
+        />
+        <Button
+          title="Next →"
+          onPress={() => navigation.navigate("SaleCSD")}
+          color="#2196F3"
+        />
       </View>
     </ScrollView>
   );
@@ -106,41 +120,41 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: "#f5f5f5",
   },
   sectionTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
-    color: '#333',
+    color: "#333",
   },
   label: {
     fontSize: 14,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
-    color: '#555',
+    color: "#555",
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 5,
     padding: 10,
     marginBottom: 15,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   largeInput: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 5,
     padding: 10,
     marginBottom: 15,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     height: 150,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 30,
   },
   homeButton: {

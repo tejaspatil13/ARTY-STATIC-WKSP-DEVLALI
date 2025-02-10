@@ -1,46 +1,48 @@
-
-import { View, TouchableOpacity, Text, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 import { FormContext } from "../utils/FormContext";
 import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
 import { WebView } from "react-native-webview";
-import { Ionicons } from '@expo/vector-icons';
-import React, { useContext, useEffect } from "react";
+import { Ionicons } from "@expo/vector-icons";
+import React, { use, useContext, useEffect, useState } from "react";
+import createAndAppendExcel from "../utils/generator";
+import EmptyFieldsPopup from "../utils/popUp";
+import { validateFormData } from "../utils/emptyChecker";
+import Toast from "react-native-toast-message";
 
+const currentDate = new Date().toLocaleDateString("en-IN"); // Format: DD/MM/YYYY
 
-const currentDate = new Date().toLocaleDateString("en-GB"); // Format: DD/MM/YYYY
-
-
-
-
-
-
-
-const PDFPreviewPage = () => { ({ navigation }) => {
-
-
+const PDFPreviewPage = ({ navigation }) => {
+  ({ navigation }) => {
     useEffect(() => {
-        navigation.setOptions({
-          headerTitle: "Fire Equipment Check",
-          headerTitleAlign: "center",
-          headerTitleStyle: {
-            fontSize: 22,
-            fontWeight: "bold",
-            color: "#333",
-          },
-          headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Main")}
-              style={styles.homeButton}
-            >
-              <Ionicons name="home" size={28} color="#000" />
-            </TouchableOpacity>
-          ),
-        });
-      }, [navigation]);
-};
+      navigation.setOptions({
+        headerTitle: "Fire Equipment Check",
+        headerTitleAlign: "center",
+        headerTitleStyle: {
+          fontSize: 22,
+          fontWeight: "bold",
+          color: "#333",
+        },
+        headerLeft: () => (
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Main")}
+            style={styles.homeButton}
+          >
+            <Ionicons name="home" size={28} color="#000" />
+          </TouchableOpacity>
+        ),
+      });
+    }, [navigation]);
+  };
   const { formData } = useContext(FormContext);
   const form = formData[0] || {}; // Ensure form data exists
+  const [popUp, setPopUp] = useState(false);
 
   // Generate HTML for PDF Preview
   const htmlContent = `
@@ -63,87 +65,129 @@ const PDFPreviewPage = () => { ({ navigation }) => {
       <h1>DUTY JCO FORM</h1>
   
       <p>
-        1. I, JC <b>${form.duty_handover.jcNumber || "____"}</b>, Rank <b>${form.duty_handover.rank || "____"}</b>, 
-        Name <b>${form.duty_handover.name || "____"}</b> was the duty JCO from <b>${form.duty_handover.startTime || "____"}</b> hrs, 
-        on <b>${form.duty_handover.startDate || "____"}</b> to <b>${form.duty_handover.endTime || "____"}</b> hrs, on <b>${form.duty_handover.endDate || "____"}</b>.
+        1. I, JC <b>${form.duty_handover.jcNumber || "____"}</b>, Rank <b>${
+    form.duty_handover.rank || "____"
+  }</b>, 
+        Name <b>${
+          form.duty_handover.name || "____"
+        }</b> was the duty JCO from <b>${
+    form.duty_handover.startTime || "____"
+  }</b> hrs, 
+        on <b>${form.duty_handover.startDate || "____"}</b> to <b>${
+    form.duty_handover.endTime || "____"
+  }</b> hrs, on <b>${form.duty_handover.endDate || "____"}</b>.
       </p>
   
-      <p>2. I mounted the Kote guard at <b>${form.guard_details.koteGuardTime || "____"}</b> and Found <b>${form.guard_details.koteGuardFindings || "____"}</b>.</p>
+      <p>2. I mounted the Kote guard at <b>${
+        form.guard_details.koteGuardTime || "____"
+      }</b> and Found <b>${
+    form.guard_details.koteGuardFindings || "____"
+  }</b>.</p>
   
       <h2>3. MT Briefing</h2>
       <p>Time: <b>${form.mt_briefing.mt_time || "____"}</b></p>
       <p>Strength: <b>${form.mt_briefing.mt_strength || "____"}</b></p>
       <ul>
-        ${form.mt_briefing.mtStrengthFields.map((field, index) => `<li>(${index + 1}) ${field.name || "____"}</li>`).join("")}
+        ${form.mt_briefing.mtStrengthFields
+          .map(
+            (field, index) => `<li>(${index + 1}) ${field.name || "____"}</li>`
+          )
+          .join("")}
       </ul>
   
       <h2>4. Day/Night Guard Check Observations</h2>
       <table>
         <tr><th>Location</th><th>Day</th><th>Night</th></tr>
-        ${form.guard_check.map(row => `
+        ${form.guard_check
+          .map(
+            (row) => `
           <tr>
             <td>${row.guard || "____"}</td>
             <td>${row.dayInfo || "____"}</td>
             <td>${row.nightInfo || "____"}</td>
           </tr>
-        `).join("")}
+        `
+          )
+          .join("")}
       </table>
   
       <h2>5. Office and Store Sealing</h2>
-      <p>Office sealed at: <b>${form.office_sealing.office_sealed_at || "____"}</b></p>
-      <p>Store sealed at: <b>${form.office_sealing.store_sealed_at || "____"}</b></p>
+      <p>Office sealed at: <b>${
+        form.office_sealing.office_sealed_at || "____"
+      }</b></p>
+      <p>Store sealed at: <b>${
+        form.office_sealing.store_sealed_at || "____"
+      }</b></p>
   
       <h2>6. Fresh/Dry Ration and Meat Check</h2>
-      <p>Observations: <b>${form.ration_check.ration_observations || "____"}</b></p>
+      <p>Observations: <b>${
+        form.ration_check.ration_observations || "____"
+      }</b></p>
   
       <h2>7. Cook Houses - Serviceability of Appliances & Staff Adequacy</h2>
       <table>
         <tr><th>Cook House</th><th>Serviceability</th><th>Staff Adequacy</th></tr>
-        ${form.cookHouseObservations.map(row => `
+        ${form.cookHouseObservations
+          .map(
+            (row) => `
           <tr>
             <td>${row.cook_house || "____"}</td>
             <td>${row.appliances_status || "____"}</td>
             <td>${row.staff_details || "____"}</td>
           </tr>
-        `).join("")}
+        `
+          )
+          .join("")}
       </table>
   
       <h2>8. Fire Fighting Equipment Check</h2>
       <table>
         <tr><th>Location</th><th>Type</th><th>Serviceability</th><th>Remarks</th></tr>
-        ${form.fire_equipment_check.map(row => `
+        ${form.fire_equipment_check
+          .map(
+            (row) => `
           <tr>
             <td>${row.location || "____"}</td>
             <td>${row.type || "____"}</td>
             <td>${row.status || "____"}</td>
             <td>${row.remarks || "____"}</td>
           </tr>
-        `).join("")}
+        `
+          )
+          .join("")}
       </table>
   
       <h2>9. Food Tasting Observations</h2>
       <table>
         <tr><th>Cook House</th><th>Meal</th><th>Quality</th><th>Improvement</th></tr>
-        ${form.foodTasting.map(row => `
+        ${form.foodTasting
+          .map(
+            (row) => `
           <tr>
             <td>${row.cookHouse || "____"}</td>
             <td>${row.meal || "____"}</td>
             <td>${row.quality || "____"}</td>
             <td>${row.improvement || "____"}</td>
           </tr>
-        `).join("")}
+        `
+          )
+          .join("")}
       </table>
   
       <h2>10. Health & Hygiene Check</h2>
       <table>
         <tr><th>Aspect</th><th>Observations</th><th>Remarks</th></tr>
-        ${form.health_hygiene.map(row => `
+        ${form.health_hygiene
+          .map(
+            (row) => `
           <tr>
             <td>${row.field}</td>
             <td>${row.observation || "____"}</td>
             <td>${row.remark || "____"}</td>
           </tr>
-        `).join("")}
+        `
+          )
+          .join("")}
       </table>
 
 
@@ -200,10 +244,14 @@ const PDFPreviewPage = () => { ({ navigation }) => {
 
 
       <h2>13. Quarter Gd & Kote</h2>
-<p>I have physically checked the Arms in Kote on <b>${form.quarter_gd_kote.koteCheckDate || "____"}</b> and have the following to report:</p>
+<p>I have physically checked the Arms in Kote on <b>${
+    form.quarter_gd_kote.koteCheckDate || "____"
+  }</b> and have the following to report:</p>
 <table>
   <tr><th>Ser</th><th>Type</th><th>Arms Held</th><th>Arms Out of Kote</th><th>Arms In Kote</th><th>Remarks</th></tr>
-  ${form.quarter_gd_kote.quarterGdKoteRows.map((row, index) => `
+  ${form.quarter_gd_kote.quarterGdKoteRows
+    .map(
+      (row, index) => `
     <tr>
       <td>${String.fromCharCode(97 + index) || "a"}</td>
       <td>${row.type || "____"}</td>
@@ -212,17 +260,23 @@ const PDFPreviewPage = () => { ({ navigation }) => {
       <td>${row.armsIn || "____"}</td>
       <td>${row.remarks || "____"}</td>
     </tr>
-  `).join("")}
+  `
+    )
+    .join("")}
 </table>
 
   
 
 
 <h2>14. Ammunition Magazine Check</h2>
-<p>I have physically checked the ammunition magazine on <b>${form.amn_magazine.amnMagazineCheckDate || "____"}</b> and have the following to report:</p>
+<p>I have physically checked the ammunition magazine on <b>${
+    form.amn_magazine.amnMagazineCheckDate || "____"
+  }</b> and have the following to report:</p>
 <table>
   <tr><th>Ser</th><th>Ammo</th><th>1st Line</th><th>2nd Line</th><th>Training</th><th>Used Cartridges</th><th>Remarks</th></tr>
-  ${form.amn_magazine.amnMagazineRows.map((row, index) => `
+  ${form.amn_magazine.amnMagazineRows
+    .map(
+      (row, index) => `
     <tr>
       <td>${String.fromCharCode(97 + index) || "a"}</td>
       <td>${row.amn || "____"}</td>
@@ -232,7 +286,9 @@ const PDFPreviewPage = () => { ({ navigation }) => {
       <td>${row.usedCartridges || "____"}</td>
       <td>${row.remarks || "____"}</td>
     </tr>
-  `).join("")}
+  `
+    )
+    .join("")}
 </table>
 
     
@@ -261,7 +317,9 @@ const PDFPreviewPage = () => { ({ navigation }) => {
 <p>I have physically checked the following sample items as per my trade-work (minimum three) and matched the ground and ledger balance:</p>
 <table>
   <tr><th>Ser</th><th>Item</th><th>Cat Part No</th><th>Ground Balance</th><th>Ledger Balance</th><th>Remarks</th></tr>
-  ${form.tss.columns.map((row, index) => `
+  ${form.tss.columns
+    .map(
+      (row, index) => `
     <tr>
       <td>${String.fromCharCode(97 + index) || "a"}</td>
       <td>${row.item || "____"}</td>
@@ -270,15 +328,23 @@ const PDFPreviewPage = () => { ({ navigation }) => {
       <td>${row.ledger_bal || "____"}</td>
       <td>${row.remarks || "____"}</td>
     </tr>
-  `).join("")}
+  `
+    )
+    .join("")}
 </table>
 
 
 <h2>17. Security Measures</h2>
-<p>I have checked the premises of ASW AOR at <b>${form.security_measures?.checkTime || "____"}</b> hrs and observed:</p>
+<p>I have checked the premises of ASW AOR at <b>${
+    form.security_measures?.checkTime || "____"
+  }</b> hrs and observed:</p>
 <ul>
-  <li>Any Salesmen/Beggars found in AOR: <b>${form.security_measures?.measures[0]?.check ? "Yes" : "No"}</b></li>
-  <li>Checked unit AOR for unauthorized occupation of def land: <b>${form.security_measures?.measures[1]?.check ? "Yes" : "No"}</b></li>
+  <li>Any Salesmen/Beggars found in AOR: <b>${
+    form.security_measures?.measures[0]?.check ? "Yes" : "No"
+  }</b></li>
+  <li>Checked unit AOR for unauthorized occupation of def land: <b>${
+    form.security_measures?.measures[1]?.check ? "Yes" : "No"
+  }</b></li>
 </ul>
 
 <h2>18. CCTV Location</h2>
@@ -290,7 +356,9 @@ const PDFPreviewPage = () => { ({ navigation }) => {
     <th>Unserviceable</th>
     <th>Remarks</th>
   </tr>
-  ${form.cctv_locations?.map(row => `
+  ${form.cctv_locations
+    ?.map(
+      (row) => `
     <tr>
       <td>${row.location || "____"}</td>
       <td>${row.total || "____"}</td>
@@ -298,21 +366,29 @@ const PDFPreviewPage = () => { ({ navigation }) => {
       <td>${row.unserviceable || "____"}</td>
       <td>${row.remarks || "____"}</td>
     </tr>
-  `).join("")}
+  `
+    )
+    .join("")}
 </table>
 
 <h2>19. MH Devlali Visit</h2>
-<p>I have visited MH Devlali at <b>${form.devlali_visit?.time || "____"}</b> hrs. The following observations were noted:</p>
+<p>I have visited MH Devlali at <b>${
+    form.devlali_visit?.time || "____"
+  }</b> hrs. The following observations were noted:</p>
 <p><b>Remarks:</b> ${form.devlali_visit?.observations[0]?.text || "____"}</p>
 
 
 
 
 <h2>20. Sale of CSD</h2>
-<p>Grocery Rs. <b>${form.sale_of_csd.grocery_amount || "____"}</b> Liquor Rs. <b>${form.sale_of_csd.liquor_amount || "____"}</b></p>
+<p>Grocery Rs. <b>${
+    form.sale_of_csd.grocery_amount || "____"
+  }</b> Liquor Rs. <b>${form.sale_of_csd.liquor_amount || "____"}</b></p>
 
 <h2>21. Roll Call</h2>
-<p>I attended the Roll Call at <b>${form.roll_call.location || "____"}</b> and briefed tps on the following aspects:</p>
+<p>I attended the Roll Call at <b>${
+    form.roll_call.location || "____"
+  }</b> and briefed tps on the following aspects:</p>
 <p><b>${form.roll_call.details || "____"}</b></p>
 
 
@@ -328,14 +404,18 @@ const PDFPreviewPage = () => { ({ navigation }) => {
     <th>Problem</th>
     <th>Remarks</th>
   </tr>
-  ${form.qtr_visit.map((row, index) => `
+  ${form.qtr_visit
+    .map(
+      (row, index) => `
     <tr>
       <td>${index + 1}</td>
       <td>${row.qtr_no_and_location || "____"}</td>
       <td>${row.problem || "____"}</td>
       <td>${row.remarks || "____"}</td>
     </tr>
-  `).join("")}
+  `
+    )
+    .join("")}
 </table>
 
 
@@ -354,7 +434,9 @@ const PDFPreviewPage = () => { ({ navigation }) => {
     <th>Banned App & PIO Calls</th>
     <th>Remarks</th>
   </tr>
-  ${form.mobileCheckRows.map((row, index) => `
+  ${form.mobileCheckRows
+    .map(
+      (row, index) => `
     <tr>
       <td>${index + 1}</td>
       <td>${row.rank || "____"}</td>
@@ -364,7 +446,9 @@ const PDFPreviewPage = () => { ({ navigation }) => {
       <td>${row.bannedAppAndPpoCalls || "____"}</td>
       <td>${row.remarks || "____"}</td>
     </tr>
-  `).join("")}
+  `
+    )
+    .join("")}
 </table>
 
 
@@ -377,25 +461,41 @@ ${form.liquorIssue.text || "Remark : "}
 <h2>25. Improvement in Wksp Tech Processes and Functioning/Welfare of Tps</h2>
 <p>Points observed are as follows (Minimum two compulsory):</p>
 <ul>
-  <li>(a) <b>${form.improvement_in_wksp_tech[0]?.point || "____________________"}</b></li>
-  <li>(b) <b>${form.improvement_in_wksp_tech[1]?.point || "____________________"}</b></li>
+  <li>(a) <b>${
+    form.improvement_in_wksp_tech[0]?.point || "____________________"
+  }</b></li>
+  <li>(b) <b>${
+    form.improvement_in_wksp_tech[1]?.point || "____________________"
+  }</b></li>
 </ul>
 
 
 <h2>26. Awareness</h2>
 <ul>
-  <li>(a) GFO: Rank and Name <b>${form.awareness.rankAndName || "________"}</b></li>
-  <li>(b) Duty Offr: Rank and Name <b>${form.awareness.dutyOfficer || "________"}</b></li>
-  <li>(c) QRT JCO: Rank and Name <b>${form.awareness.QRT_JCO || "________"}</b></li>
-  <li>(d) Duty NCO: Rank and Name <b>${form.awareness.NCO || "________"}</b></li>
+  <li>(a) GFO: Rank and Name <b>${
+    form.awareness.rankAndName || "________"
+  }</b></li>
+  <li>(b) Duty Offr: Rank and Name <b>${
+    form.awareness.dutyOfficer || "________"
+  }</b></li>
+  <li>(c) QRT JCO: Rank and Name <b>${
+    form.awareness.QRT_JCO || "________"
+  }</b></li>
+  <li>(d) Duty NCO: Rank and Name <b>${
+    form.awareness.NCO || "________"
+  }</b></li>
 </ul>
 
 
 
 <h2>27. Handing Over of Duties</h2>
 <p>I am handing over my duties to,</p>
-<p>No: <b>${form.handoverDuties.no || "______"}</b> Rank: <b>${form.handoverDuties.rank || "______"}</b> Name: <b>${form.handoverDuties.name || "______"}</b></p>
-<p>at <b>${form.handoverDuties.time || "______"}</b> on <b>${form.handoverDuties.date || "______"}</b>.</p>
+<p>No: <b>${form.handoverDuties.no || "______"}</b> Rank: <b>${
+    form.handoverDuties.rank || "______"
+  }</b> Name: <b>${form.handoverDuties.name || "______"}</b></p>
+<p>at <b>${form.handoverDuties.time || "______"}</b> on <b>${
+    form.handoverDuties.date || "______"
+  }</b>.</p>
 
 
 <h2>28. Progress on Tasks Given by Sub Maj / Adjt / 2IC</h2>
@@ -412,7 +512,11 @@ ${form.liquorIssue.text || "Remark : "}
       
       
   
-`  
+`;
+
+  const handlePopUp = () => {
+    setPopUp(true);
+  };
 
   // Function to Generate and Share PDF
   const generatePDF = async () => {
@@ -425,29 +529,56 @@ ${form.liquorIssue.text || "Remark : "}
     }
   };
 
+  const handleAdd = () => {
+    createAndAppendExcel(formData);
+    setPopUp(false);
+    navigation.navigate("Main");
+    // Toast.show({
+    //   type: "success",
+    //   text1: "Success",
+    //   text2: "Added successfully!",
+    //   position: "top",
+    //   visibilityTime: 3000,
+    //   autoHide: true,
+    // });
+  };
+
   return (
     <View style={styles.container}>
+      <EmptyFieldsPopup
+        visible={popUp}
+        onClose={() => setPopUp(false)}
+        emptyFields={validateFormData(formData)}
+        addFunction={handleAdd}
+      />
       {/* WebView to Show PDF Preview */}
-      <WebView originWhitelist={["*"]} source={{ html: htmlContent }} style={styles.webView} />
-  
+      <WebView
+        originWhitelist={["*"]}
+        source={{ html: htmlContent }}
+        style={styles.webView}
+      />
       {/* Buttons in Horizontal Row */}
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.actionButton} onPress={"#"}>
+        <TouchableOpacity
+          style={styles.actionButton}
+          onPress={() =>
+            validateFormData(formData)?.length > 0 ? handlePopUp() : handleAdd()
+          }
+        >
           <Text style={styles.buttonText}>Add to Excel</Text>
         </TouchableOpacity>
-  
+
         <TouchableOpacity style={styles.actionButton} onPress={generatePDF}>
           <Text style={styles.buttonText}>Generate PDF</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
-  
 };
 
 // Styles
 
-  const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
@@ -477,7 +608,5 @@ ${form.liquorIssue.text || "Remark : "}
     fontWeight: "bold",
   },
 });
-
-  
 
 export default PDFPreviewPage;

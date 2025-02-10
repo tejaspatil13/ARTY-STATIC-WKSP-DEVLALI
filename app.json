@@ -4,7 +4,11 @@
     "slug": "ARTY-STATIC-WKSP-DEVLALI",
     "version": "1.0.0",
     "orientation": "portrait",
+<<<<<<< HEAD
     "icon": "./assets/formicon.JPG",
+=======
+    "icon": "./assets/img.png",
+>>>>>>> 2be89efd309d4e11b78c46f8e11f823e0db73274
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {

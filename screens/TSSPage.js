@@ -16,39 +16,58 @@ const TSSPage = ({ navigation }) => {
 
   // Function to handle input change in a specific row
   const handleInputChange = (index, field, value) => {
-    const updatedRows = [...formData[0].tss.columns];
-    updatedRows[index][field] = value;
     setFormData((prev) => {
-      const newData = [...prev];
-      newData[0].tss.columns = updatedRows;
-      return newData;
+      const updatedData = Array.isArray(prev) && prev.length > 0 ? [...prev] : [{ tss: { text: "", columns: [] } }];
+      updatedData[0] = {
+        ...updatedData[0],
+        tss: {
+          ...updatedData[0].tss,
+          columns: updatedData[0].tss.columns.map((row, i) =>
+            i === index ? { ...row, [field]: value } : row
+          ),
+        },
+      };
+      return updatedData;
     });
   };
 
   // Function to add a new row
   const handleAddRow = () => {
     setFormData((prev) => {
-      const newData = [...prev];
-      newData[0].tss.columns.push({
-        id: newData[0].tss.columns.length + 1,
-        item: "",
-        cat_part_no: "",
-        grnd_bal: "",
-        ledger_bal: "",
-        remarks: "",
-      });
-      return newData;
+      const updatedData = Array.isArray(prev) && prev.length > 0 ? [...prev] : [{ tss: { text: "", columns: [] } }];
+      updatedData[0] = {
+        ...updatedData[0],
+        tss: {
+          ...updatedData[0].tss,
+          columns: [
+            ...updatedData[0].tss.columns,
+            {
+              id: updatedData[0].tss.columns.length + 1,
+              item: "",
+              cat_part_no: "",
+              grnd_bal: "",
+              ledger_bal: "",
+              remarks: "",
+            },
+          ],
+        },
+      };
+      return updatedData;
     });
   };
 
   // Function to remove a row
   const handleRemoveRow = (index) => {
     setFormData((prev) => {
-      const newData = [...prev];
-      newData[0].tss.columns = newData[0].tss.columns.filter(
-        (_, i) => i !== index
-      );
-      return newData;
+      const updatedData = Array.isArray(prev) && prev.length > 0 ? [...prev] : [{ tss: { text: "", columns: [] } }];
+      updatedData[0] = {
+        ...updatedData[0],
+        tss: {
+          ...updatedData[0].tss,
+          columns: updatedData[0].tss.columns.filter((_, i) => i !== index),
+        },
+      };
+      return updatedData;
     });
   };
 
@@ -76,15 +95,18 @@ const TSSPage = ({ navigation }) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.sectionTitle}>16. TSS</Text>
-      <Text style={styles.label}>{formData[0].tss.text}</Text>
+      <Text style={styles.label}>
+        {formData[0]?.tss?.text ||
+          "I have physically checked the following sample items as per my trade-work (minimum three) and matched the ground and ledger balance"}
+      </Text>
 
-      {formData[0].tss.columns.map((row, index) => (
+      {formData[0]?.tss?.columns?.map((row, index) => (
         <View key={row.id} style={styles.card}>
           <Text style={styles.label}>Item</Text>
           <TextInput
             style={styles.input}
             placeholder="Enter Item"
-            value={row.item}
+            value={row.item || ""}
             onChangeText={(text) => handleInputChange(index, "item", text)}
           />
 
@@ -92,7 +114,7 @@ const TSSPage = ({ navigation }) => {
           <TextInput
             style={styles.input}
             placeholder="Enter Cat Part No."
-            value={row.cat_part_no}
+            value={row.cat_part_no || ""}
             onChangeText={(text) =>
               handleInputChange(index, "cat_part_no", text)
             }
@@ -102,7 +124,7 @@ const TSSPage = ({ navigation }) => {
           <TextInput
             style={styles.input}
             placeholder="Enter Ground Balance"
-            value={row.grnd_bal}
+            value={row.grnd_bal || ""}
             onChangeText={(text) => handleInputChange(index, "grnd_bal", text)}
           />
 
@@ -110,7 +132,7 @@ const TSSPage = ({ navigation }) => {
           <TextInput
             style={styles.input}
             placeholder="Enter Ledger Balance"
-            value={row.ledger_bal}
+            value={row.ledger_bal || ""}
             onChangeText={(text) =>
               handleInputChange(index, "ledger_bal", text)
             }
@@ -120,12 +142,12 @@ const TSSPage = ({ navigation }) => {
           <TextInput
             style={styles.input}
             placeholder="Enter Remarks"
-            value={row.remarks}
+            value={row.remarks || ""}
             onChangeText={(text) => handleInputChange(index, "remarks", text)}
           />
 
           {/* Remove Row Button */}
-          {formData[0].tss.columns.length > 1 && (
+          {formData[0]?.tss?.columns.length > 1 && (
             <TouchableOpacity
               key={`btn-${index}`}
               onPress={() => handleRemoveRow(index)}

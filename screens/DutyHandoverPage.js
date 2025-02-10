@@ -114,7 +114,7 @@ const DutyHandoverPage = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholder="Enter Previous JC No."
-        value={formData.prevJCNumber}
+        value={formData[0].duty_handover.prevJCNumber}
         onChangeText={(t) => handleInputChange("prevJCNumber", t)}
       />
 

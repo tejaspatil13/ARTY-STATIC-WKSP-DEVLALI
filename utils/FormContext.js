@@ -1,6 +1,12 @@
 import React, { createContext, useEffect, useState } from "react";
+import { validateFormData } from "./emptyChecker";
+import * as MediaLibrary from "expo-media-library";
+import * as fs from "expo-file-system";
 
+// Request storage permissions (needed on Android)
 export const FormContext = createContext();
+
+export const fileContext = createContext();
 
 export const FormProvider = ({ children }) => {
   const [formData, setFormData] = useState([
@@ -143,12 +149,13 @@ export const FormProvider = ({ children }) => {
       quarter_gd_kote: {
         koteCheckDate: "",
         quarterGdKoteRows: [
-          { id: 1, type: "", held: "", armsOut: "", armsIn: "", remarks: "" },
+          { id: 1, held: "", type: "", armsOut: "", armsIn: "", remarks: "" },
         ],
       },
 
       // Amn magazine
       amn_magazine: {
+        text: "I have physically cheked the Amn Magazine on",
         amnMagazineCheckDate: "",
         amnMagazineRows: [
           {
@@ -176,6 +183,7 @@ export const FormProvider = ({ children }) => {
           cardItem3: "",
         },
       },
+
       // TSS
       tss: {
         text: "I have physically checked the following sample items as per my trade-work (minimum three) and matched the ground and ledger balance",
@@ -275,9 +283,315 @@ export const FormProvider = ({ children }) => {
     },
   ]);
 
-  useEffect(() => {
-    console.log(formData[0]?.security_measures);
-  }, [formData]);
+  //Filled data
+  // const [formData, setFormData] = useState([
+  //   {
+  //     date: "9/2/2025",
+
+  //     // Page 1: Duty Handover Details
+  //     duty_handover: {
+  //       jcNumber: "a",
+  //       rank: "Captain",
+  //       name: "John Doe",
+  //       startTime: "08:00",
+  //       startDate: "9/2/2025",
+  //       endTime: "16:00",
+  //       endDate: "9/2/2025",
+  //       prevJCNumber: "JC122",
+  //       prevRank: "Lieutenant",
+  //       prevName: "Jane Doe",
+  //     },
+
+  //     // Page 2: Kote Guard Details
+  //     guard_details: {
+  //       koteGuardTime: "09:00",
+  //       koteGuardFindings: "Guard duty completed successfully, no issues.",
+  //     },
+
+  //     // MT Briefing Page Data
+  //     mt_briefing: {
+  //       mt_time: "10:00",
+  //       mt_strength: "50",
+  //       mtStrengthFields: [
+  //         { id: 1, name: "Truck 1" },
+  //         { id: 2, name: "Truck 2" },
+  //       ],
+  //     },
+
+  //     // Guard Check
+  //     guard_check: [
+  //       { guard: "Guard A", dayInfo: "Clear", nightInfo: "Clear" },
+  //       { guard: "Guard B", dayInfo: "Alert", nightInfo: "Alert" },
+  //     ],
+
+  //     // Office Sealing
+  //     office_sealing: {
+  //       office_sealed_at: "09:30",
+  //       store_sealed_at: "10:00",
+  //     },
+
+  //     // Ration Checking
+  //     ration_check: {
+  //       ration_observations: "Rations are in good condition, no issues found.",
+  //     },
+
+  //     // Cook Houses
+  //     cookHouseObservations: [
+  //       {
+  //         cook_house: "A PI",
+  //         appliances_status: "Working",
+  //         staff_details: "Sufficient staff on duty.",
+  //       },
+  //       {
+  //         cook_house: "B PI",
+  //         appliances_status: "Not Working",
+  //         staff_details: "Need repair.",
+  //       },
+  //     ],
+
+  //     // Fire Equipment Check
+  //     fire_equipment_check: [
+  //       {
+  //         location: "Main Hall",
+  //         type: "Extinguisher",
+  //         status: "Serviceable",
+  //         remarks: "All good",
+  //       },
+  //       {
+  //         location: "Kitchen",
+  //         type: "Hose",
+  //         status: "Unserviceable",
+  //         remarks: "Repair needed",
+  //       },
+  //     ],
+
+  //     // Food Tasting
+  //     foodTasting: [
+  //       {
+  //         cookHouse: "A PI",
+  //         meal: "Breakfast",
+  //         quality: "Good",
+  //         improvement: "None",
+  //       },
+  //       {
+  //         cookHouse: "A PI",
+  //         meal: "Lunch",
+  //         quality: "Excellent",
+  //         improvement: "None",
+  //       },
+  //       {
+  //         cookHouse: "B PI",
+  //         meal: "Dinner",
+  //         quality: "Fair",
+  //         improvement: "Better seasoning",
+  //       },
+  //     ],
+
+  //     // Health and Hygiene
+  //     health_hygiene: [
+  //       {
+  //         field: "Cleanliness of JCO Mess",
+  //         observation: "Clean",
+  //         remark: "No issues.",
+  //       },
+  //       {
+  //         field: "Cleanliness of Barracks/Toilets",
+  //         observation: "Clean",
+  //         remark: "Well maintained.",
+  //       },
+  //     ],
+
+  //     // Land Matters
+  //     land_matters: [
+  //       {
+  //         location: "Area A",
+  //         time: "11:00",
+  //         remark: "Clear, no obstructions.",
+  //       },
+  //       {
+  //         location: "Area B",
+  //         time: "13:00",
+  //         remark: "Minor issue with land clearance.",
+  //       },
+  //     ],
+
+  //     // Defense Land Survey
+  //     defense_land_survey: {
+  //       text: "I visited def land survey No. 36,38,40,41,43,59 along with a rep of the RP/QM and made entry in the Def land visit register. I have the following to report.",
+  //       RP: true,
+  //       QM: false,
+  //       observations: [{ text: "Survey completed without major issues." }],
+  //     },
+
+  //     // Quarter Gd & Kote
+  //     quarter_gd_kote: {
+  //       koteCheckDate: "9/2/2025",
+  //       quarterGdKoteRows: [
+  //         {
+  //           id: 1,
+  //           held: "Yes",
+  //           type: "Routine",
+  //           armsOut: "No",
+  //           armsIn: "Yes",
+  //           remarks: "Normal check.",
+  //         },
+  //       ],
+  //     },
+
+  //     // Ammunition Magazine
+  //     amn_magazine: {
+  //       text: "I have physically checked the Amn Magazine on",
+  //       amnMagazineCheckDate: "9/2/2025",
+  //       amnMagazineRows: [
+  //         {
+  //           id: 1,
+  //           amn: "5.56mm",
+  //           firstLine: "Full",
+  //           secondLine: "Full",
+  //           trg: "Complete",
+  //           usedCartridges: "None",
+  //           remarks: "All good.",
+  //         },
+  //       ],
+  //     },
+
+  //     // CSD Checks
+  //     csd_checks: {
+  //       csd_items: {
+  //         csdItem1: "Item A",
+  //         csdItem2: "Item B",
+  //         csdItem3: "Item C",
+  //       },
+  //       card_items: {
+  //         cardItem1: "Card A",
+  //         cardItem2: "Card B",
+  //         cardItem3: "Card C",
+  //       },
+  //     },
+
+  //     // TSS
+  //     tss: {
+  //       text: "I have physically checked the following sample items as per my trade-work (minimum three) and matched the ground and ledger balance",
+  //       columns: [
+  //         {
+  //           id: 1,
+  //           item: "Sample Item 1",
+  //           cat_part_no: "1234",
+  //           grnd_bal: "50",
+  //           ledger_bal: "50",
+  //           remarks: "Match",
+  //         },
+  //         {
+  //           id: 2,
+  //           item: "Sample Item 2",
+  //           cat_part_no: "5678",
+  //           grnd_bal: "30",
+  //           ledger_bal: "30",
+  //           remarks: "Match",
+  //         },
+  //       ],
+  //     },
+
+  //     // Security Measures
+  //     security_measures: {
+  //       text: "I have checked the premises of ASW AOR on",
+  //       checkTime: "9/2/2025 15:00",
+  //       measures: [
+  //         { text: "Any salesmen/beggars found in AOR", check: true },
+  //         {
+  //           text: "I have checked init AoR for authorized occupation of def land",
+  //           check: false,
+  //         },
+  //       ],
+  //     },
+
+  //     // CCTV Locations
+  //     cctv_locations: [
+  //       {
+  //         location: "Entrance",
+  //         total: "5",
+  //         serviceable: "4",
+  //         unserviceable: "1",
+  //         remarks: "Minor issue.",
+  //       },
+  //       {
+  //         location: "Kitchen",
+  //         total: "2",
+  //         serviceable: "2",
+  //         unserviceable: "0",
+  //         remarks: "All good.",
+  //       },
+  //     ],
+
+  //     // Devlali Visit
+  //     devlali_visit: {
+  //       time: "9/2/2025 14:00",
+  //       observations: [{ id: 1, text: "Observation 1: Well-maintained." }],
+  //     },
+
+  //     // Roll Call
+  //     roll_call: {
+  //       location: "Building A",
+  //       details: "Roll Call completed successfully at 9:00 AM.",
+  //     },
+
+  //     // Sale of CSD
+  //     sale_of_csd: {
+  //       grocery_amount: "500",
+  //       liquor_amount: "200",
+  //     },
+
+  //     // OTR Visit
+  //     qtr_visit: [
+  //       {
+  //         id: 1,
+  //         qtr_no_and_location: "Qtr 101, Sector 5",
+  //         problem: "Water leakage",
+  //         remarks: "Needs fixing.",
+  //       },
+  //     ],
+
+  //     // Mobile Check Page
+  //     mobileCheckRows: [
+  //       {
+  //         id: 1,
+  //         rank: "Private",
+  //         name: "Sam",
+  //         makeAndType: "Samsung Galaxy",
+  //         mobNo: "9876543210",
+  //         bannedAppAndPpoCalls: "None",
+  //         remarks: "All fine.",
+  //       },
+  //     ],
+
+  //     // Liquor Issue
+  //     liquorIssue: { text: "Liquor issue checked and verified for all units." },
+
+  //     // Improvement in Workshop Tech
+  //     improvement_in_wksp_tech: [
+  //       { id: 1, point: "Need better tools for repair work." },
+  //       { id: 2, point: "Improve workshop cleanliness." },
+  //     ],
+
+  //     // Awareness
+  //     awareness: {
+  //       rankAndName: "Sergeant James",
+  //       unit: "Unit A",
+  //       dutyOfficer: "Captain Smith",
+  //       QRT_JCO: "Lieutenant Lee",
+  //       NCO: "Sergeant Johnson",
+  //     },
+
+  //     // Handover Duties
+  //     handoverDuties: {
+  //       no: "a",
+  //       rank: "Captain",
+  //       name: "John Doe",
+  //       date: "9/2/2025",
+  //       time: "08:00 AM",
+  //     },
+  //   },
+  // ]);
 
   return (
     <FormContext.Provider value={{ formData, setFormData }}>
