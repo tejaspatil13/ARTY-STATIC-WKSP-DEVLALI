@@ -244,10 +244,10 @@ const MainScreen = ({ navigation }) => {
           onPress={() => createAndAppendExcel(formData)}
         /> */}
 
-        <Button
+        {/* <Button
           title="Export File"
           onPress={() => requestPermission(pFileUri)}
-        />
+        /> */}
         {/* Buttons for Navigation */}
 
         <View
@@ -417,7 +417,7 @@ const MainScreen = ({ navigation }) => {
        <Button
         title="PDF Preview"
         onPress={() => navigation.navigate("PDFPreview")}
-        color="#2196F3"
+        color="#34d399"
       /> 
       
       
