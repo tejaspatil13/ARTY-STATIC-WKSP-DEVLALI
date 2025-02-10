@@ -1,3 +1,4 @@
+
 import React, { useContext } from 'react';
 import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { FormContext } from '../utils/FormContext';
@@ -8,14 +9,19 @@ const AwarenessPage = ({ navigation }) => {
 
   // Handle input change for Awareness Page fields
   const handleInputChange = (field, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      [0]:{
-      ...prev[0],
-      awareness: { ...prev[0]?.awareness, [field]: value },
-    }
-    }));
+    setFormData((prev) => {
+      // Ensure prev is an array and initialize if undefined
+      const updatedData = Array.isArray(prev) && prev.length > 0 ? [...prev] : [{ awareness: {} }];
+  
+      updatedData[0] = {
+        ...updatedData[0],
+        awareness: { ...updatedData[0].awareness, [field]: value },
+      };
+  
+      return updatedData;
+    });
   };
+  ;
 
   // Set up the home icon and center the title
   React.useLayoutEffect(() => {
