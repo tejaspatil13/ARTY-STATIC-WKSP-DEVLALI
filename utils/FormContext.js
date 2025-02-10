@@ -1,7 +1,4 @@
 import React, { createContext, useEffect, useState } from "react";
-import { validateFormData } from "./emptyChecker";
-import * as MediaLibrary from "expo-media-library";
-import * as fs from "expo-file-system";
 
 // Request storage permissions (needed on Android)
 export const FormContext = createContext();
@@ -234,7 +231,8 @@ export const FormProvider = ({ children }) => {
 
       // roll call
       roll_call: {
-        location: "",
+        date: "",
+        time: "",
         details: "",
       },
 

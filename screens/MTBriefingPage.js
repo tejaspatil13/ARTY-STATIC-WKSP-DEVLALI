@@ -30,16 +30,16 @@ const MTBriefingPage = ({ navigation }) => {
   };
 
   const addStrengthField = () => {
-    const newField = { id: strengthFields.length + 1, name: "" };
+    const newField = { id: Date.now(), name: "" }; // Unique ID using timestamp
     const updatedFields = [...strengthFields, newField];
     setStrengthFields(updatedFields);
     setFormData((prevData) => {
-      if (!Array.isArray(prevData)) return prevData; // Ensure prevData is an array
+      if (!Array.isArray(prevData)) return prevData;
       return prevData.map((item) => ({
         ...item,
         mt_briefing: {
           ...item.mt_briefing,
-          mtStrengthFields: updatedFields ?? [], // Ensure mtStrengthFields is always an array
+          mtStrengthFields: updatedFields ?? [],
         },
       }));
     });
@@ -108,7 +108,7 @@ const MTBriefingPage = ({ navigation }) => {
       {strengthFields?.map((field, index) => (
         <View key={field.id} style={styles.fieldRow}>
           <TextInput
-            key={`input-${field.id}`} // Unique key for input
+            key={`input-${field.id}`}
             style={styles.fullWidthInput}
             placeholder={`(${String.fromCharCode(97 + index)}) Enter details`}
             value={field.name}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Modal,
   View,
@@ -9,8 +9,15 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
+import { FormContext } from "./FormContext";
 
-const EmptyFieldsPopup = ({ visible, onClose, emptyFields, addFunction }) => {
+const EmptyFieldsPopup = ({
+  visible,
+  onClose,
+  emptyFields,
+  addFunction,
+  isLoading,
+}) => {
   function handleField(path) {
     // Helper function to check if a path matches a pattern with any array index
     const matchesPattern = (path, pattern) => {
@@ -260,22 +267,33 @@ const EmptyFieldsPopup = ({ visible, onClose, emptyFields, addFunction }) => {
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
           <Text style={styles.title}>Missing fields</Text>
-          {emptyFields?.length === 0 ? (
-            <ActivityIndicator size="large" color="#0000ff" />
-          ) : (
-            <FlatList
-              data={emptyFields}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <Text style={styles.fieldText}>{`${handleField(
-                  item.path
-                )}`}</Text>
-              )}
-            />
-          )}
+
+          <FlatList
+            data={emptyFields}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <Text style={styles.fieldText}>{`${handleField(
+                item.path
+              )}`}</Text>
+            )}
+          />
+
           <View style={{ display: "flex", flexDirection: "row" }}>
-            <TouchableOpacity style={styles.actionButton} onPress={addFunction}>
-              <Text style={styles.buttonText}>Add Anyway</Text>
+            <TouchableOpacity
+              style={styles.actionButton}
+              disabled={isLoading}
+              onPress={addFunction}
+            >
+              <Text style={styles.buttonText}>
+                {isLoading ? (
+                  <ActivityIndicator
+                    style={{ paddingInline: 18 }}
+                    color={"white"}
+                  />
+                ) : (
+                  "Add Anyway"
+                )}
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.actionButton} onPress={onClose}>
               <Text style={styles.buttonText}>Close</Text>

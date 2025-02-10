@@ -244,10 +244,16 @@ const MainScreen = ({ navigation }) => {
           onPress={() => createAndAppendExcel(formData)}
         /> */}
 
-        {/* <Button
+        <Button
+          color={"#34d399"}
           title="Export File"
           onPress={() => requestPermission(pFileUri)}
-        /> */}
+        />
+        <Button
+          title="PDF Preview"
+          onPress={() => navigation.navigate("PDFPreview")}
+          color="#34d399"
+        />
         {/* Buttons for Navigation */}
 
         <View
@@ -414,16 +420,7 @@ const MainScreen = ({ navigation }) => {
           onPress={() => navigation.navigate("HandoverDuties")}
           color="#2196F3"
         />
-       <Button
-        title="PDF Preview"
-        onPress={() => navigation.navigate("PDFPreview")}
-        color="#34d399"
-      /> 
-      
-      
-      
       </View>
-       
     </ScrollView>
   );
 };

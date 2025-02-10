@@ -23,7 +23,6 @@
     "expo-image-picker": "~16.0.5",
     "expo-intent-launcher": "^12.0.2",
     "expo-media-library": "^17.0.5",
-    "expo-permissions": "^14.4.0",
     "expo-print": "^14.0.3",
     "expo-sharing": "^13.0.1",
     "expo-status-bar": "~2.0.1",

@@ -16,24 +16,19 @@ const RollCallPage = ({ navigation }) => {
 
   // Handle input change for roll call location and briefing
   const handleInputChange = (field, value) => {
-    setFormData((prevData) => {
-      // Make sure we have the first form data object
-      if (!prevData[0]) {
-        prevData[0] = {};
-      }
-
-      // Create a deep copy of the first form data object
-      const updatedForm = {
-        ...prevData[0],
-        roll_call: {
-          ...(prevData[0].roll_call || {}),
-          [field]: value,
-        },
-      };
-
-      // Return new array with updated first form
-      return [updatedForm, ...prevData.slice(1)];
-    });
+    setFormData((prevData) =>
+      prevData.map((item, index) =>
+        index === 0
+          ? {
+              ...item,
+              roll_call: {
+                ...(item.roll_call || {}),
+                [field]: value,
+              },
+            }
+          : item
+      )
+    );
   };
 
   // Set up the home icon and center the title
@@ -78,13 +73,22 @@ const RollCallPage = ({ navigation }) => {
       {/* Roll Call Section */}
       <Text style={styles.sectionTitle}>20. Roll Call</Text>
 
-      {/* Roll Call Location */}
+      {/* Roll Call time */}
       <Text style={styles.label}>I attended the Roll Call at:</Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter Roll Call Location"
-        value={formData[0]?.roll_call?.location || ""}
-        onChangeText={(value) => handleInputChange("location", value)}
+        placeholder="Enter Roll Call Time"
+        value={formData[0]?.roll_call?.time || ""}
+        onChangeText={(value) => handleInputChange("time", value)}
+      />
+
+      {/* Roll Call date */}
+      <Text style={styles.label}>On:</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter Roll Call Date"
+        value={formData[0]?.roll_call?.date || ""}
+        onChangeText={(value) => handleInputChange("date", value)}
       />
 
       {/* Briefing Details */}
