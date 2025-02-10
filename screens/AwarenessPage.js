@@ -1,8 +1,15 @@
-
-import React, { useContext } from 'react';
-import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
-import { FormContext } from '../utils/FormContext';
-import { Ionicons } from '@expo/vector-icons';
+import React, { useContext } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
+import { FormContext } from "../utils/FormContext";
+import { Ionicons } from "@expo/vector-icons";
 
 const AwarenessPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
@@ -11,30 +18,33 @@ const AwarenessPage = ({ navigation }) => {
   const handleInputChange = (field, value) => {
     setFormData((prev) => {
       // Ensure prev is an array and initialize if undefined
-      const updatedData = Array.isArray(prev) && prev.length > 0 ? [...prev] : [{ awareness: {} }];
-  
+      const updatedData =
+        Array.isArray(prev) && prev.length > 0 ? [...prev] : [{ awareness: {} }];
+
       updatedData[0] = {
         ...updatedData[0],
         awareness: { ...updatedData[0].awareness, [field]: value },
       };
-  
+
       return updatedData;
     });
   };
-  ;
 
   // Set up the home icon and center the title
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitle: 'Awareness',
-      headerTitleAlign: 'center',
+      headerTitle: "Awareness",
+      headerTitleAlign: "center",
       headerTitleStyle: {
         fontSize: 22,
-        fontWeight: 'bold',
-        color: '#333',
+        fontWeight: "bold",
+        color: "#333",
       },
       headerLeft: () => (
-        <TouchableOpacity onPress={() => navigation.navigate('Main')} style={styles.homeButton}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Main")}
+          style={styles.homeButton}
+        >
           <Ionicons name="home" size={28} color="#000" />
         </TouchableOpacity>
       ),
@@ -51,15 +61,16 @@ const AwarenessPage = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholder="Enter Rank and Name"
-        value={formData[0]?.awareness?.rankAndName}
-        onChangeText={(t) => handleInputChange('rankAndName', t)}
+        value={formData[0]?.awareness?.rankAndName || ""}
+        onChangeText={(t) => handleInputChange("rankAndName", t)}
       />
-      <Text style={styles.label}>Unit</Text>
+
+      <Text style={styles.label}>Unit:</Text>
       <TextInput
         style={styles.input}
         placeholder="Unit"
-        value={formData[0]?.awareness?.unit}
-        onChangeText={(t) => handleInputChange('unit', t)}
+        value={formData[0]?.awareness?.unit || ""}
+        onChangeText={(t) => handleInputChange("unit", t)}
       />
 
       {/* Duty Officer */}
@@ -67,8 +78,8 @@ const AwarenessPage = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholder="Enter Duty Officer Rank and Name"
-        value={formData[0]?.awareness?.dutyOfficer}
-        onChangeText={(t) => handleInputChange('dutyOfficer', t)}
+        value={formData[0]?.awareness?.dutyOfficer || ""}
+        onChangeText={(t) => handleInputChange("dutyOfficer", t)}
       />
 
       {/* QRT JCO */}
@@ -76,8 +87,8 @@ const AwarenessPage = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholder="Enter QRT JCO Rank and Name"
-        value={formData[0]?.awareness?.QRT_JCO}
-        onChangeText={(t) => handleInputChange('QRT_JCO', t)}
+        value={formData[0]?.awareness?.QRT_JCO || ""}
+        onChangeText={(t) => handleInputChange("QRT_JCO", t)}
       />
 
       {/* Duty NCO */}
@@ -85,14 +96,22 @@ const AwarenessPage = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholder="Enter Duty NCO Rank and Name"
-        value={formData[0]?.awareness?.NCO}
-        onChangeText={(t) => handleInputChange('NCO', t)}
+        value={formData[0]?.awareness?.NCO || ""}
+        onChangeText={(t) => handleInputChange("NCO", t)}
       />
 
       {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
-        <Button title="← Previous" onPress={() => navigation.navigate('Improvement')} color="#757575" />
-        <Button title="Next →" onPress={() => navigation.navigate('HandoverDuties')} color="#2196F3" />
+        <Button
+          title="← Previous"
+          onPress={() => navigation.navigate("Improvement")}
+          color="#757575"
+        />
+        <Button
+          title="Next →"
+          onPress={() => navigation.navigate("HandoverDuties")}
+          color="#2196F3"
+        />
       </View>
     </ScrollView>
   );
@@ -103,31 +122,31 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: "#f5f5f5",
   },
   sectionTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
-    color: '#333',
+    color: "#333",
   },
   label: {
     fontSize: 14,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 5,
-    color: '#555',
+    color: "#555",
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 5,
     padding: 10,
     marginBottom: 15,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 30,
   },
   homeButton: {
