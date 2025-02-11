@@ -10,12 +10,14 @@ import {
 } from "react-native";
 import { FormContext } from "../utils/FormContext";
 import { Ionicons } from "@expo/vector-icons";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const AmnMagazinePage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
   const [localRows, setLocalRows] = useState([]);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [date, setDate] = useState(new Date());
 
-  // Initialize local state from formData on component mount
   useEffect(() => {
     const currentData = formData[0]?.amn_magazine?.amnMagazineRows || [
       {
@@ -31,10 +33,9 @@ const AmnMagazinePage = ({ navigation }) => {
     setLocalRows(currentData);
   }, [formData]);
 
-  // Add a new row
   const addRow = () => {
     const newRow = {
-      id: Date.now(), // Unique ID instead of length-based ID
+      id: Date.now(),
       amn: "",
       firstLine: "",
       secondLine: "",
@@ -42,12 +43,11 @@ const AmnMagazinePage = ({ navigation }) => {
       usedCartridges: "",
       remarks: "",
     };
-    const updatedRows = [...localRows, newRow]; // Add new row
+    const updatedRows = [...localRows, newRow];
     setLocalRows(updatedRows);
     updateFormData(updatedRows);
   };
 
-  // Handle input change for a specific row and field
   const handleInputChange = (id, field, value) => {
     const updatedRows = localRows.map((row) =>
       row.id === id ? { ...row, [field]: value } : row
@@ -56,24 +56,27 @@ const AmnMagazinePage = ({ navigation }) => {
     updateFormData(updatedRows);
   };
 
-  // Handle date change
-  const handleDateChange = (value) => {
-    setFormData((prev) =>
-      prev.map((item, index) =>
-        index === 0
-          ? {
-              ...item,
-              amn_magazine: {
-                ...item.amn_magazine,
-                amnMagazineCheckDate: value,
-              },
-            }
-          : item
-      )
-    );
+  const handleDateChange = (event, selectedDate) => {
+    setShowDatePicker(false);
+    if (selectedDate) {
+      setDate(selectedDate);
+      const formattedDate = selectedDate.toISOString().split("T")[0];
+      setFormData((prev) =>
+        prev.map((item, index) =>
+          index === 0
+            ? {
+                ...item,
+                amn_magazine: {
+                  ...item.amn_magazine,
+                  amnMagazineCheckDate: formattedDate,
+                },
+              }
+            : item
+        )
+      );
+    }
   };
 
-  // Update form data
   const updateFormData = (updatedRows) => {
     setFormData((prev) =>
       prev.map((item, index) =>
@@ -90,7 +93,6 @@ const AmnMagazinePage = ({ navigation }) => {
     );
   };
 
-  // Delete a row
   const deleteRow = (id) => {
     const updatedRows = localRows.filter((row) => row.id !== id);
     setLocalRows(updatedRows);
@@ -123,12 +125,22 @@ const AmnMagazinePage = ({ navigation }) => {
       <Text style={styles.label}>
         I have physically checked the Amn Magazine on:
       </Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter date"
-        value={formData[0]?.amn_magazine?.amnMagazineCheckDate || ""}
-        onChangeText={handleDateChange}
-      />
+      <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+        <TextInput
+          style={styles.input}
+          placeholder="Select Date"
+          value={formData[0]?.amn_magazine?.amnMagazineCheckDate || ""}
+          editable={false}
+        />
+      </TouchableOpacity>
+      {showDatePicker && (
+        <DateTimePicker
+          value={date}
+          mode="date"
+          display="default"
+          onChange={handleDateChange}
+        />
+      )}
 
       {localRows.map((row, index) => (
         <View key={row.id} style={styles.card}>

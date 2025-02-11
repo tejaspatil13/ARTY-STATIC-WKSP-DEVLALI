@@ -202,10 +202,12 @@ export const FormProvider = ({ children }) => {
         checkTime: "",
         measures: [
           {
+            observation: "",
             text: "Any salesmen/beggars found in AOR",
             check: false,
           },
           {
+            observation: "",
             text: "I have checked init AoR for authorized occupation of def land",
             check: false,
           },

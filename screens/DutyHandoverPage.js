@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import {
   View,
@@ -11,20 +11,81 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { FormContext } from "../utils/FormContext";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const DutyHandoverPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
+  const [showStartTimePicker, setShowStartTimePicker] = useState(false);
+  const [showStartDatePicker, setShowStartDatePicker] = useState(false);
+  const [showEndTimePicker, setShowEndTimePicker] = useState(false);
+  const [showEndDatePicker, setShowEndDatePicker] = useState(false);
+  const [selectedStartTime, setSelectedStartTime] = useState(new Date());
+  const [selectedStartDate, setSelectedStartDate] = useState(new Date());
+  const [selectedEndTime, setSelectedEndTime] = useState(new Date());
+  const [selectedEndDate, setSelectedEndDate] = useState(new Date());
 
   const handleInputChange = (field, value) => {
     setFormData((prevData) =>
       prevData?.map((item, index) => ({
         ...item,
         duty_handover: {
-          ...item.duty_handover, // Keep existing data
-          [field]: value, // Update only the specific field
+          ...item.duty_handover,
+          [field]: value,
         },
       }))
     );
+  };
+
+  const onStartTimeChange = (event, selected) => {
+    setShowStartTimePicker(false);
+    if (selected) {
+      setSelectedStartTime(selected);
+      const formattedTime = selected.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      });
+      handleInputChange("startTime", formattedTime);
+    }
+  };
+
+  const onStartDateChange = (event, selected) => {
+    setShowStartDatePicker(false);
+    if (selected) {
+      setSelectedStartDate(selected);
+      const formattedDate = selected.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+      handleInputChange("startDate", formattedDate);
+    }
+  };
+
+  const onEndTimeChange = (event, selected) => {
+    setShowEndTimePicker(false);
+    if (selected) {
+      setSelectedEndTime(selected);
+      const formattedTime = selected.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      });
+      handleInputChange("endTime", formattedTime);
+    }
+  };
+
+  const onEndDateChange = (event, selected) => {
+    setShowEndDatePicker(false);
+    if (selected) {
+      setSelectedEndDate(selected);
+      const formattedDate = selected.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+      handleInputChange("endDate", formattedDate);
+    }
   };
 
   // Set up the home icon and center the title
@@ -50,8 +111,37 @@ const DutyHandoverPage = ({ navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      {showStartTimePicker && (
+        <DateTimePicker
+          value={selectedStartTime}
+          mode="time"
+          is24Hour={true}
+          onChange={onStartTimeChange}
+        />
+      )}
+      {showStartDatePicker && (
+        <DateTimePicker
+          value={selectedStartDate}
+          mode="date"
+          onChange={onStartDateChange}
+        />
+      )}
+      {showEndTimePicker && (
+        <DateTimePicker
+          value={selectedEndTime}
+          mode="time"
+          is24Hour={true}
+          onChange={onEndTimeChange}
+        />
+      )}
+      {showEndDatePicker && (
+        <DateTimePicker
+          value={selectedEndDate}
+          mode="date"
+          onChange={onEndDateChange}
+        />
+      )}
       <Text style={styles.sectionTitle}>1. Duty JCO Handover</Text>
-
       <Text style={styles.label}>JC No.</Text>
       <TextInput
         style={styles.input}
@@ -59,7 +149,6 @@ const DutyHandoverPage = ({ navigation }) => {
         value={formData[0].duty_handover.jcNumber}
         onChangeText={(t) => handleInputChange("jcNumber", t)}
       />
-
       <Text style={styles.label}>Rank</Text>
       <TextInput
         style={styles.input}
@@ -67,7 +156,6 @@ const DutyHandoverPage = ({ navigation }) => {
         value={formData[0].duty_handover.rank}
         onChangeText={(t) => handleInputChange("rank", t)}
       />
-
       <Text style={styles.label}>Name of the Duty JCO</Text>
       <TextInput
         style={styles.input}
@@ -75,41 +163,39 @@ const DutyHandoverPage = ({ navigation }) => {
         value={formData[0].duty_handover.name}
         onChangeText={(t) => handleInputChange("name", t)}
       />
-
       <Text style={styles.label}>Duty Start Time and Date</Text>
       <View style={styles.timeContainer}>
         <TextInput
           style={[styles.input, styles.timeInput]}
           placeholder="Start Time (HH:MM)"
           value={formData[0].duty_handover.startTime}
-          onChangeText={(t) => handleInputChange("startTime", t)}
+          onPress={() => setShowStartTimePicker(true)}
         />
+
         <TextInput
           style={[styles.input, styles.dateInput]}
           placeholder="Start Date (DD/MM/YYYY)"
           value={formData[0].duty_handover.startDate}
-          onChangeText={(t) => handleInputChange("startDate", t)}
+          onPress={() => setShowStartDatePicker(true)}
+          // onChangeText={(t) => handleInputChange("startDate", t)}
         />
       </View>
-
       <Text style={styles.label}>Duty End Time and Date</Text>
       <View style={styles.timeContainer}>
         <TextInput
           style={[styles.input, styles.timeInput]}
           placeholder="End Time (HH:MM)"
           value={formData[0].duty_handover.endTime}
-          onChangeText={(t) => handleInputChange("endTime", t)}
+          onPress={() => setShowEndTimePicker(true)}
         />
         <TextInput
           style={[styles.input, styles.dateInput]}
           placeholder="End Date (DD/MM/YYYY)"
           value={formData[0].duty_handover.endDate}
-          onChangeText={(t) => handleInputChange("endDate", t)}
+          onPress={() => setShowEndDatePicker(true)}
         />
       </View>
-
       <Text style={styles.subSection}>Took Over Duty From</Text>
-
       <Text style={styles.label}>Previous JC No.</Text>
       <TextInput
         style={styles.input}
@@ -117,7 +203,6 @@ const DutyHandoverPage = ({ navigation }) => {
         value={formData[0].duty_handover.prevJCNumber}
         onChangeText={(t) => handleInputChange("prevJCNumber", t)}
       />
-
       <Text style={styles.label}>Previous Rank</Text>
       <TextInput
         style={styles.input}
@@ -125,7 +210,6 @@ const DutyHandoverPage = ({ navigation }) => {
         value={formData[0].duty_handover.prevRank}
         onChangeText={(t) => handleInputChange("prevRank", t)}
       />
-
       <Text style={styles.label}>Previous JCO's Name</Text>
       <TextInput
         style={styles.input}
@@ -133,7 +217,6 @@ const DutyHandoverPage = ({ navigation }) => {
         value={formData[0].duty_handover.prevName}
         onChangeText={(t) => handleInputChange("prevName", t)}
       />
-
       {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
         <View style={styles.buttonWrapperLeft}>

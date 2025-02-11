@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,11 +10,15 @@ import {
 } from "react-native";
 import { FormContext } from "../utils/FormContext";
 import { Ionicons } from "@expo/vector-icons";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const RollCallPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedTime, setSelectedTime] = useState(new Date());
 
-  // Handle input change for roll call location and briefing
   const handleInputChange = (field, value) => {
     setFormData((prevData) =>
       prevData.map((item, index) =>
@@ -31,7 +35,32 @@ const RollCallPage = ({ navigation }) => {
     );
   };
 
-  // Set up the home icon and center the title
+  const onDateChange = (event, selected) => {
+    setShowDatePicker(false);
+    if (selected) {
+      setSelectedDate(selected);
+      const formattedDate = selected.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+      handleInputChange("date", formattedDate);
+    }
+  };
+
+  const onTimeChange = (event, selected) => {
+    setShowTimePicker(false);
+    if (selected) {
+      setSelectedTime(selected);
+      const formattedTime = selected.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      });
+      handleInputChange("time", formattedTime);
+    }
+  };
+
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: "Roll Call",
@@ -52,7 +81,6 @@ const RollCallPage = ({ navigation }) => {
     });
   }, [navigation]);
 
-  // Initialize roll_call if it doesn't exist
   useEffect(() => {
     if (!formData[0]?.roll_call) {
       setFormData((prevData) => {
@@ -61,6 +89,12 @@ const RollCallPage = ({ navigation }) => {
           roll_call: {
             location: "",
             details: "",
+            date: new Date().toLocaleDateString("en-GB"),
+            time: new Date().toLocaleTimeString("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: false,
+            }),
           },
         };
         return [updatedForm, ...prevData.slice(1)];
@@ -70,28 +104,45 @@ const RollCallPage = ({ navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* Roll Call Section */}
       <Text style={styles.sectionTitle}>20. Roll Call</Text>
 
-      {/* Roll Call time */}
       <Text style={styles.label}>I attended the Roll Call at:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter Roll Call Time"
-        value={formData[0]?.roll_call?.time || ""}
-        onChangeText={(value) => handleInputChange("time", value)}
-      />
+      <TouchableOpacity onPress={() => setShowTimePicker(true)}>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter Roll Call Time"
+          value={formData[0]?.roll_call?.time || ""}
+          editable={false}
+        />
+      </TouchableOpacity>
 
-      {/* Roll Call date */}
+      {showTimePicker && (
+        <DateTimePicker
+          value={selectedTime}
+          mode="time"
+          is24Hour={true}
+          onChange={onTimeChange}
+        />
+      )}
+
       <Text style={styles.label}>On:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter Roll Call Date"
-        value={formData[0]?.roll_call?.date || ""}
-        onChangeText={(value) => handleInputChange("date", value)}
-      />
+      <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter Roll Call Date"
+          value={formData[0]?.roll_call?.date || ""}
+          editable={false}
+        />
+      </TouchableOpacity>
 
-      {/* Briefing Details */}
+      {showDatePicker && (
+        <DateTimePicker
+          value={selectedDate}
+          mode="date"
+          onChange={onDateChange}
+        />
+      )}
+
       <Text style={styles.label}>Briefed tps on the following aspects:</Text>
       <TextInput
         style={styles.largeInput}
@@ -99,11 +150,8 @@ const RollCallPage = ({ navigation }) => {
         value={formData[0]?.roll_call?.details || ""}
         onChangeText={(value) => handleInputChange("details", value)}
         multiline={true}
-        numberOfLines={10}
-        textAlignVertical="top"
       />
 
-      {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
         <Button
           title="← Previous"
@@ -153,7 +201,6 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 15,
     backgroundColor: "#fff",
-    height: 150,
     textAlignVertical: "top",
   },
   buttonContainer: {

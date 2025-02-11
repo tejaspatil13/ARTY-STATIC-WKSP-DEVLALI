@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -11,9 +11,12 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { RadioButton } from "react-native-paper";
 import { FormContext } from "../utils/FormContext";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const SecurityMeasuresPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [selectedTime, setSelectedTime] = useState(new Date());
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -31,12 +34,21 @@ const SecurityMeasuresPage = ({ navigation }) => {
     });
   }, [navigation]);
 
-  const handleCheckTimeChange = (value) => {
-    setFormData((prev) => {
-      const newData = [...prev];
-      newData[0].security_measures.checkTime = value;
-      return newData;
-    });
+  const handleCheckTimeChange = (event, selected) => {
+    setShowTimePicker(false);
+    if (selected) {
+      setSelectedTime(selected);
+      const timeString = selected.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      });
+      setFormData((prev) => {
+        const newData = [...prev];
+        newData[0].security_measures.checkTime = timeString;
+        return newData;
+      });
+    }
   };
 
   const handleMeasureToggle = (index) => {
@@ -54,6 +66,7 @@ const SecurityMeasuresPage = ({ navigation }) => {
       newData[0].security_measures.measures.push({
         text: "",
         check: false,
+        observation: "",
       });
       return newData;
     });
@@ -63,6 +76,14 @@ const SecurityMeasuresPage = ({ navigation }) => {
     setFormData((prev) => {
       const newData = [...prev];
       newData[0].security_measures.measures[index].text = text;
+      return newData;
+    });
+  };
+
+  const updateObservationText = (index, text) => {
+    setFormData((prev) => {
+      const newData = [...prev];
+      newData[0].security_measures.measures[index].observation = text;
       return newData;
     });
   };
@@ -80,13 +101,23 @@ const SecurityMeasuresPage = ({ navigation }) => {
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.sectionTitle}>17. Security Measures</Text>
       <Text style={styles.label}>{formData[0].security_measures.text} at:</Text>
-      <TextInput
-        style={[styles.input, styles.fullWidth]}
-        placeholder="HH:MM"
-        keyboardType="numeric"
-        value={formData[0].security_measures.checkTime}
-        onChangeText={handleCheckTimeChange}
-      />
+      <TouchableOpacity onPress={() => setShowTimePicker(true)}>
+        <TextInput
+          style={[styles.input, styles.fullWidth]}
+          placeholder="HH:MM"
+          value={formData[0].security_measures.checkTime}
+          editable={false}
+        />
+      </TouchableOpacity>
+      {showTimePicker && (
+        <DateTimePicker
+          value={selectedTime}
+          mode="time"
+          is24Hour={true}
+          display="default"
+          onChange={handleCheckTimeChange}
+        />
+      )}
 
       {formData[0].security_measures.measures.map((measure, index) => (
         <View key={index} style={styles.card}>
@@ -115,7 +146,12 @@ const SecurityMeasuresPage = ({ navigation }) => {
               </TouchableOpacity>
             )}
           </View>
-
+          <TextInput
+            style={styles.input}
+            placeholder="Observation"
+            value={measure.observation}
+            onChangeText={(text) => updateObservationText(index, text)}
+          />
           <RadioButton.Group
             onValueChange={() => handleMeasureToggle(index)}
             value={measure.check ? "yes" : "no"}

@@ -101,14 +101,12 @@ const CCTVLocationPage = ({ navigation }) => {
           <TextInput
             style={styles.input}
             placeholder="Total"
-            keyboardType="numeric"
             value={loc.total}
             onChangeText={(text) => handleInputChange(index, "total", text)}
           />
           <TextInput
             style={styles.input}
             placeholder="Serviceable"
-            keyboardType="numeric"
             value={loc.serviceable}
             onChangeText={(text) =>
               handleInputChange(index, "serviceable", text)
@@ -117,7 +115,6 @@ const CCTVLocationPage = ({ navigation }) => {
           <TextInput
             style={styles.input}
             placeholder="Unserviceable"
-            keyboardType="numeric"
             value={loc.unserviceable}
             onChangeText={(text) =>
               handleInputChange(index, "unserviceable", text)

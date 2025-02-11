@@ -10,12 +10,28 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons"; // Importing Ionicons
 import { FormContext } from "../utils/FormContext";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const MTBriefingPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
   const [strengthFields, setStrengthFields] = useState(
     formData[0].mt_briefing.mtStrengthFields || [{ id: 1, name: "" }]
   );
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const onTimeChange = (event, selected) => {
+    setShowTimePicker(false);
+    if (selected) {
+      setSelectedDate(selected);
+      const formattedTime = selected.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      });
+      handleInputChange("mt_time", formattedTime);
+    }
+  };
 
   const handleInputChange = (field, value) => {
     setFormData((prevData) =>
@@ -92,7 +108,17 @@ const MTBriefingPage = ({ navigation }) => {
         placeholder="Enter Time"
         value={formData[0].mt_briefing.mt_time}
         onChangeText={(t) => handleInputChange("mt_time", t)}
+        onPress={() => setShowTimePicker(true)}
       />
+
+      {showTimePicker && (
+        <DateTimePicker
+          value={selectedDate}
+          mode="time"
+          onChange={onTimeChange}
+          is24Hour={true}
+        />
+      )}
 
       {/* Strength Input */}
       <Text style={styles.label}>Strength</Text>

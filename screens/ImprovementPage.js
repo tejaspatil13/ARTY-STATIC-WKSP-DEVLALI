@@ -1,21 +1,33 @@
-import React, { useContext, useEffect } from 'react';
-import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
-import { FormContext } from '../utils/FormContext';
-import { Ionicons } from '@expo/vector-icons';
+import React, { useContext, useEffect } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
+import { FormContext } from "../utils/FormContext";
+import { Ionicons } from "@expo/vector-icons";
 
 const ImprovementPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
 
   // Ensure the data structure is initialized properly
   useEffect(() => {
-    if (!formData[0]?.improvement_in_wksp_tech || formData[0].improvement_in_wksp_tech.length < 2) {
-      setFormData(prev => {
+    if (
+      !formData[0]?.improvement_in_wksp_tech ||
+      formData[0].improvement_in_wksp_tech.length < 2
+    ) {
+      setFormData((prev) => {
         const newFormData = [...prev];
         newFormData[0] = {
           ...newFormData[0],
           improvement_in_wksp_tech: [
-            { id: Date.now() + 1, point: '' },
-            { id: Date.now() + 2, point: '' },
+            { id: Date.now() + 1, point: "" },
+            { id: Date.now() + 2, point: "" },
           ],
         };
         return newFormData;
@@ -25,13 +37,13 @@ const ImprovementPage = ({ navigation }) => {
 
   // Function to add a new improvement point
   const addPoint = () => {
-    setFormData(prev => {
+    setFormData((prev) => {
       const newFormData = [...prev];
       newFormData[0] = {
         ...newFormData[0],
         improvement_in_wksp_tech: [
           ...newFormData[0].improvement_in_wksp_tech,
-          { id: Date.now(), point: '' },
+          { id: Date.now(), point: "" },
         ],
       };
       return newFormData;
@@ -41,11 +53,14 @@ const ImprovementPage = ({ navigation }) => {
   // Function to remove an improvement point
   const removePoint = (id) => {
     if (formData[0].improvement_in_wksp_tech.length > 2) {
-      setFormData(prev => {
+      setFormData((prev) => {
         const newFormData = [...prev];
         newFormData[0] = {
           ...newFormData[0],
-          improvement_in_wksp_tech: newFormData[0].improvement_in_wksp_tech.filter(point => point.id !== id),
+          improvement_in_wksp_tech:
+            newFormData[0].improvement_in_wksp_tech.filter(
+              (point) => point.id !== id
+            ),
         };
         return newFormData;
       });
@@ -55,11 +70,14 @@ const ImprovementPage = ({ navigation }) => {
   // Configure navigation header
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: 'Improvement Page',
-      headerTitleAlign: 'center',
-      headerTitleStyle: { fontSize: 22, fontWeight: 'bold', color: '#333' },
+      headerTitle: "Improvement Page",
+      headerTitleAlign: "center",
+      headerTitleStyle: { fontSize: 22, fontWeight: "bold", color: "#333" },
       headerLeft: () => (
-        <TouchableOpacity onPress={() => navigation.navigate('Main')} style={styles.homeButton}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Main")}
+          style={styles.homeButton}
+        >
           <Ionicons name="home" size={28} color="#000" />
         </TouchableOpacity>
       ),
@@ -75,25 +93,33 @@ const ImprovementPage = ({ navigation }) => {
 
         {formData[0]?.improvement_in_wksp_tech?.map((point, index) => (
           <View key={point.id} style={styles.inputRow}>
-            <Text style={styles.subLabel}>{`(${String.fromCharCode(97 + index)})`}</Text>
+            <Text style={styles.subLabel}>{`(${String.fromCharCode(
+              97 + index
+            )})`}</Text>
             <TextInput
               multiline={true}
               style={styles.input}
               placeholder={`Enter improvement point `}
               value={point.point}
-              onChangeText={t => {
-                const updatedPoints = formData[0].improvement_in_wksp_tech.map(p =>
-                  p.id === point.id ? { ...p, point: t } : p
+              onChangeText={(t) => {
+                const updatedPoints = formData[0].improvement_in_wksp_tech.map(
+                  (p) => (p.id === point.id ? { ...p, point: t } : p)
                 );
-                setFormData(prev => {
+                setFormData((prev) => {
                   const newFormData = [...prev];
-                  newFormData[0] = { ...newFormData[0], improvement_in_wksp_tech: updatedPoints };
+                  newFormData[0] = {
+                    ...newFormData[0],
+                    improvement_in_wksp_tech: updatedPoints,
+                  };
                   return newFormData;
                 });
               }}
             />
             {formData[0].improvement_in_wksp_tech.length > 2 && (
-              <TouchableOpacity onPress={() => removePoint(point.id)} style={styles.deleteButton}>
+              <TouchableOpacity
+                onPress={() => removePoint(point.id)}
+                style={styles.deleteButton}
+              >
                 <Ionicons name="trash" size={24} color="red" />
               </TouchableOpacity>
             )}
@@ -105,8 +131,16 @@ const ImprovementPage = ({ navigation }) => {
         </TouchableOpacity>
 
         <View style={styles.buttonContainer}>
-          <Button title="← Previous" onPress={() => navigation.navigate('LiquorIssue')} color="#757575" />
-          <Button title="Next →" onPress={() => navigation.navigate('Awareness')} color="#2196F3" />
+          <Button
+            title="← Previous"
+            onPress={() => navigation.navigate("LiquorIssue")}
+            color="#757575"
+          />
+          <Button
+            title="Next →"
+            onPress={() => navigation.navigate("Awareness")}
+            color="#2196F3"
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -115,23 +149,51 @@ const ImprovementPage = ({ navigation }) => {
 
 // Styles
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#f5f5f5' },
+  safeArea: { flex: 1, backgroundColor: "#f5f5f5" },
   container: { flexGrow: 1, padding: 20 },
 
-  sectionTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: 20, color: '#333' },
-  subLabel: { fontSize: 14, fontWeight: 'bold', marginBottom: 5, color: '#555' },
-  inputRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
-  input: { flex: 1, borderWidth: 1, borderColor: '#ccc', borderRadius: 5, padding: 10, backgroundColor: '#fff' },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 20,
+    color: "#333",
+  },
+  subLabel: {
+    fontSize: 14,
+    fontWeight: "bold",
+    marginBottom: 5,
+    color: "#555",
+  },
+  inputRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+    gap: 10,
+  },
+  input: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: 10,
+    backgroundColor: "#fff",
+  },
   deleteButton: { marginLeft: 10 },
 
-  addButton: { backgroundColor: "#34d399",
+  addButton: {
+    backgroundColor: "#34d399",
     paddingVertical: 10,
     borderRadius: 8,
     alignItems: "center",
-    marginTop: 10,},
-  addButtonText: { color: '#fff', fontWeight: 'bold' },
+    marginTop: 10,
+  },
+  addButtonText: { color: "#fff", fontWeight: "bold" },
 
-  buttonContainer: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 30 },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 30,
+  },
 
   homeButton: { marginLeft: 15 },
 });

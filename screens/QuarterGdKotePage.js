@@ -10,6 +10,7 @@ import {
 import { FormContext } from "../utils/FormContext";
 import { Ionicons } from "@expo/vector-icons";
 import { Button } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const QuarterGdKotePage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
@@ -18,6 +19,8 @@ const QuarterGdKotePage = ({ navigation }) => {
       { id: 1, held: "", armsOut: "", armsIn: "", remarks: "" },
     ]
   );
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [date, setDate] = useState(new Date());
 
   const addRow = () => {
     const newRow = {
@@ -60,18 +63,21 @@ const QuarterGdKotePage = ({ navigation }) => {
     });
   };
 
-  const handleDateChange = (value) => {
-    setFormData((prevState) => {
-      const newState = [...prevState];
-      newState[0].quarter_gd_kote = {
-        ...newState[0].quarter_gd_kote,
-        koteCheckDate: value,
-      };
-      return newState;
-    });
+  const handleDateChange = (event, selectedDate) => {
+    setShowDatePicker(false);
+    if (selectedDate) {
+      setDate(selectedDate);
+      setFormData((prevState) => {
+        const newState = [...prevState];
+        newState[0].quarter_gd_kote = {
+          ...newState[0].quarter_gd_kote,
+          koteCheckDate: selectedDate.toISOString().split("T")[0],
+        };
+        return newState;
+      });
+    }
   };
 
-  // Initialize quarter_gd_kote if it doesn't exist
   useEffect(() => {
     if (!formData[0].quarter_gd_kote) {
       setFormData((prevState) => {
@@ -108,7 +114,7 @@ const QuarterGdKotePage = ({ navigation }) => {
   }, [navigation]);
 
   if (!formData[0].quarter_gd_kote) {
-    return null; // or a loading indicator
+    return null;
   }
 
   return (
@@ -118,17 +124,27 @@ const QuarterGdKotePage = ({ navigation }) => {
       <Text style={styles.label}>
         I have physically checked the Arms in Kote on:
       </Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter date"
-        value={formData[0].quarter_gd_kote.koteCheckDate}
-        onChangeText={handleDateChange}
-      />
+      <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+        <TextInput
+          style={styles.input}
+          placeholder="Select Date"
+          value={formData[0].quarter_gd_kote.koteCheckDate}
+          editable={false}
+        />
+      </TouchableOpacity>
+      {showDatePicker && (
+        <DateTimePicker
+          value={date}
+          mode="date"
+          display="default"
+          onChange={handleDateChange}
+        />
+      )}
 
-      {rows.map((row) => (
+      {rows.map((row, index) => (
         <View key={row.id} style={styles.card}>
           <View style={styles.rowHeader}>
-            <Text style={styles.rowTitle}>Entry {row.id}</Text>
+            <Text style={styles.rowTitle}>Entry {index + 1}</Text>
             {rows.length > 1 && (
               <TouchableOpacity
                 onPress={() => deleteRow(row.id)}
@@ -205,6 +221,8 @@ const QuarterGdKotePage = ({ navigation }) => {
   );
 };
 
+export default QuarterGdKotePage;
+
 // Styles
 const styles = StyleSheet.create({
   container: {
@@ -268,5 +286,3 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
-
-export default QuarterGdKotePage;

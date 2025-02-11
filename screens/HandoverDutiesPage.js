@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -7,14 +7,15 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  Platform,
 } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { FormContext } from "../utils/FormContext";
 import { Ionicons } from "@expo/vector-icons";
 
 const HandoverDutiesPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
 
-  // Ensure `handoverDuties` exists in `formData[0]`
   const handoverDuties = formData[0]?.handoverDuties || {
     no: "",
     rank: "",
@@ -23,11 +24,12 @@ const HandoverDutiesPage = ({ navigation }) => {
     time: "",
   };
 
-  // Handle input change while keeping the array structure intact
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+
   const handleInputChange = (field, value) => {
     setFormData((prev) => {
-      if (!prev[0]) return [{ handoverDuties: { [field]: value } }]; // Ensure first entry exists
-
+      if (!prev[0]) return [{ handoverDuties: { [field]: value } }];
       return prev.map((item, index) =>
         index === 0
           ? {
@@ -42,7 +44,26 @@ const HandoverDutiesPage = ({ navigation }) => {
     });
   };
 
-  // Set up the home icon and center the title
+  const handleDateChange = (event, selectedDate) => {
+    setShowDatePicker(Platform.OS === "ios");
+    if (selectedDate) {
+      const formattedDate = selectedDate.toLocaleDateString("en-GB"); // DD/MM/YYYY format
+      handleInputChange("date", formattedDate);
+    }
+  };
+
+  const handleTimeChange = (event, selectedTime) => {
+    setShowTimePicker(Platform.OS === "ios");
+    if (selectedTime) {
+      const formattedTime = selectedTime.toLocaleTimeString("en-GB", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      });
+      handleInputChange("time", formattedTime);
+    }
+  };
+
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: "Handover Duties",
@@ -65,7 +86,6 @@ const HandoverDutiesPage = ({ navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* Handover Details Section */}
       <Text style={styles.sectionTitle}>27. Handover Duties</Text>
 
       <Text style={styles.subSectionTitle}>
@@ -96,22 +116,44 @@ const HandoverDutiesPage = ({ navigation }) => {
         onChangeText={(t) => handleInputChange("name", t)}
       />
 
-      {/* Date and Time Input */}
+      {/* Date Picker */}
       <Text style={styles.label}>Date</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter Date (DD/MM/YYYY)"
-        value={handoverDuties.date}
-        onChangeText={(t) => handleInputChange("date", t)}
-      />
+      <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+        <TextInput
+          style={styles.input}
+          placeholder="Select Date"
+          value={handoverDuties.date}
+          editable={false}
+        />
+      </TouchableOpacity>
+      {showDatePicker && (
+        <DateTimePicker
+          value={new Date()}
+          mode="date"
+          display="default"
+          onChange={handleDateChange}
+        />
+      )}
 
+      {/* Time Picker */}
       <Text style={styles.label}>Time</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter Time (HH:MM)"
-        value={handoverDuties.time}
-        onChangeText={(t) => handleInputChange("time", t)}
-      />
+      <TouchableOpacity onPress={() => setShowTimePicker(true)}>
+        <TextInput
+          style={styles.input}
+          placeholder="Select Time"
+          value={handoverDuties.time}
+          editable={false}
+        />
+      </TouchableOpacity>
+      {showTimePicker && (
+        <DateTimePicker
+          value={new Date()}
+          mode="time"
+          display="default"
+          onChange={handleTimeChange}
+          is24Hour={true}
+        />
+      )}
 
       {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>

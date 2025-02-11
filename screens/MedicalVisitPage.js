@@ -10,81 +10,43 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { FormContext } from "../utils/FormContext";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const MedicalVisitPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [selectedTime, setSelectedTime] = useState(new Date());
 
-  // Ensure devlali_visit structure exists
   const devlaliVisitData = formData[0]?.devlali_visit || {
     time: "",
     observations: [{ id: 1, text: "" }],
   };
 
-  // Local state for observations
   const [observations, setObservations] = useState(
     devlaliVisitData.observations
   );
 
-  // Handle input change for time
-  const handleInputChange = (field, value) => {
-    setFormData((prev) => {
-      const updatedFormData = [...prev];
-
-      if (!updatedFormData[0]) {
-        updatedFormData[0] = {
-          devlali_visit: { time: "", observations: [{ id: 1, text: "" }] },
-        };
-      }
-      if (!updatedFormData[0].devlali_visit) {
-        updatedFormData[0].devlali_visit = {
-          time: "",
-          observations: [{ id: 1, text: "" }],
-        };
-      }
-
-      // Update time field
-      updatedFormData[0].devlali_visit[field] = value;
-
-      return updatedFormData;
-    });
-  };
-
-  // Add new observation
-  const addObservation = () => {
-    const newObservations = [...observations, { id: Date.now(), text: "" }];
-    setObservations(newObservations);
-    setFormData((prev) => {
-      const updatedFormData = [...prev];
-      if (!updatedFormData[0].devlali_visit) {
-        updatedFormData[0].devlali_visit = { time: "", observations: [] };
-      }
-      updatedFormData[0].devlali_visit.observations = newObservations;
-      return updatedFormData;
-    });
-  };
-
-  // Update specific observation
-  const updateObservation = (id, text) => {
-    const updatedObservations = observations.map((obs) =>
-      obs.id === id ? { ...obs, text } : obs
-    );
-    setObservations(updatedObservations);
-    setFormData((prev) => {
-      const updatedFormData = [...prev];
-      updatedFormData[0].devlali_visit.observations = updatedObservations;
-      return updatedFormData;
-    });
-  };
-
-  // Remove observation
-  const removeObservation = (id) => {
-    const updatedObservations = observations.filter((obs) => obs.id !== id);
-    setObservations(updatedObservations);
-    setFormData((prev) => {
-      const updatedFormData = [...prev];
-      updatedFormData[0].devlali_visit.observations = updatedObservations;
-      return updatedFormData;
-    });
+  const handleTimeChange = (event, selected) => {
+    setShowTimePicker(false);
+    if (selected) {
+      setSelectedTime(selected);
+      const timeString = selected.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      });
+      setFormData((prev) => {
+        const updatedFormData = [...prev];
+        if (!updatedFormData[0].devlali_visit) {
+          updatedFormData[0].devlali_visit = {
+            time: "",
+            observations: [{ id: 1, text: "" }],
+          };
+        }
+        updatedFormData[0].devlali_visit.time = timeString;
+        return updatedFormData;
+      });
+    }
   };
 
   useEffect(() => {
@@ -112,12 +74,23 @@ const MedicalVisitPage = ({ navigation }) => {
       <Text style={styles.sectionTitle}>19. MH Devlali Visit</Text>
 
       <Text style={styles.label}>Time</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter Time"
-        value={devlaliVisitData.time}
-        onChangeText={(t) => handleInputChange("time", t)}
-      />
+      <TouchableOpacity onPress={() => setShowTimePicker(true)}>
+        <TextInput
+          style={styles.input}
+          placeholder="HH:MM"
+          value={devlaliVisitData.time}
+          editable={false}
+        />
+      </TouchableOpacity>
+      {showTimePicker && (
+        <DateTimePicker
+          value={selectedTime}
+          mode="time"
+          is24Hour={true}
+          display="default"
+          onChange={handleTimeChange}
+        />
+      )}
 
       <Text style={styles.label}>Observations</Text>
       {observations.map((obs, index) => (
@@ -128,11 +101,33 @@ const MedicalVisitPage = ({ navigation }) => {
             style={styles.observationInput}
             placeholder={`Observation ${index + 1}`}
             value={obs.text}
-            onChangeText={(text) => updateObservation(obs.id, text)}
+            onChangeText={(text) => {
+              const updatedObservations = observations.map((o) =>
+                o.id === obs.id ? { ...o, text } : o
+              );
+              setObservations(updatedObservations);
+              setFormData((prev) => {
+                const updatedFormData = [...prev];
+                updatedFormData[0].devlali_visit.observations =
+                  updatedObservations;
+                return updatedFormData;
+              });
+            }}
           />
           {observations.length > 1 && (
             <TouchableOpacity
-              onPress={() => removeObservation(obs.id)}
+              onPress={() => {
+                const updatedObservations = observations.filter(
+                  (o) => o.id !== obs.id
+                );
+                setObservations(updatedObservations);
+                setFormData((prev) => {
+                  const updatedFormData = [...prev];
+                  updatedFormData[0].devlali_visit.observations =
+                    updatedObservations;
+                  return updatedFormData;
+                });
+              }}
               style={styles.deleteButton}
             >
               <Ionicons name="trash" size={20} color="red" />
@@ -143,11 +138,21 @@ const MedicalVisitPage = ({ navigation }) => {
 
       <Button
         title="Add Observation"
-        onPress={addObservation}
+        onPress={() => {
+          const newObservations = [
+            ...observations,
+            { id: Date.now(), text: "" },
+          ];
+          setObservations(newObservations);
+          setFormData((prev) => {
+            const updatedFormData = [...prev];
+            updatedFormData[0].devlali_visit.observations = newObservations;
+            return updatedFormData;
+          });
+        }}
         color="#34d399"
       />
 
-      {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
         <Button
           title="← Previous"
@@ -164,8 +169,18 @@ const MedicalVisitPage = ({ navigation }) => {
   );
 };
 
-// Styles
 const styles = StyleSheet.create({
+  addButton: {
+    backgroundColor: "#34d399",
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 10,
+  },
+  addButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
   container: { flexGrow: 1, padding: 20, backgroundColor: "#f5f5f5" },
   sectionTitle: {
     fontSize: 20,

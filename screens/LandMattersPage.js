@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,11 +8,13 @@ import {
   TouchableOpacity,
   Button,
 } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { Ionicons } from "@expo/vector-icons";
 import { FormContext } from "../utils/FormContext";
 
 const LandMattersPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
+  const [showPicker, setShowPicker] = useState(null);
 
   const handleInputChange = (index, field, value) => {
     setFormData((prevState) => {
@@ -45,7 +47,6 @@ const LandMattersPage = ({ navigation }) => {
     });
   };
 
-  // Initialize land_matters if it doesn't exist
   useEffect(() => {
     if (!formData[0].land_matters || formData[0].land_matters.length === 0) {
       setFormData((prevState) => {
@@ -79,7 +80,7 @@ const LandMattersPage = ({ navigation }) => {
   }, [navigation]);
 
   if (!formData[0].land_matters) {
-    return null; // or a loading indicator
+    return null;
   }
 
   return (
@@ -88,6 +89,9 @@ const LandMattersPage = ({ navigation }) => {
 
       {formData[0].land_matters.map((entry, index) => (
         <View key={index} style={styles.entryContainer}>
+          <Text style={(styles.label, { marginBottom: 10 })}>
+            Entry {index + 1}
+          </Text>
           <Text style={styles.label}>Location</Text>
           <TextInput
             style={styles.input}
@@ -97,12 +101,33 @@ const LandMattersPage = ({ navigation }) => {
           />
 
           <Text style={styles.label}>Time</Text>
-          <TextInput
+          <TouchableOpacity
+            onPress={() => setShowPicker(index)}
             style={styles.input}
-            placeholder="Enter Time"
-            value={entry.time}
-            onChangeText={(text) => handleInputChange(index, "time", text)}
-          />
+          >
+            <Text>{entry.time || "Select Time"}</Text>
+          </TouchableOpacity>
+          {showPicker === index && (
+            <DateTimePicker
+              value={new Date()}
+              mode="time"
+              is24Hour={true}
+              display="default"
+              onChange={(event, selectedDate) => {
+                setShowPicker(null);
+                if (selectedDate) {
+                  const formattedTime = selectedDate.toLocaleTimeString(
+                    "en-GB",
+                    {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    }
+                  );
+                  handleInputChange(index, "time", formattedTime);
+                }
+              }}
+            />
+          )}
 
           <Text style={styles.label}>Remark</Text>
           <TextInput
@@ -146,10 +171,21 @@ const LandMattersPage = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  removeButton: {
+    backgroundColor: "#ff5252",
+    padding: 12,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 10,
+  },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 30,
+  },
+  removeButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
   },
   container: {
     flexGrow: 1,
@@ -167,10 +203,6 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 15,
     borderRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
     elevation: 3,
   },
   label: {
@@ -195,35 +227,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   addButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-  removeButton: {
-    backgroundColor: "#ff5252",
-    padding: 12,
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 10,
-  },
-  removeButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-  navigationButtons: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 20,
-    marginBottom: 30,
-  },
-  navButton: {
-    backgroundColor: "#2196F3",
-    padding: 12,
-    // borderRadius: 8,
-    width: "45%",
-    alignItems: "center",
-  },
-  navButtonText: {
     color: "#fff",
     fontWeight: "bold",
     fontSize: 16,

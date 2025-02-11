@@ -239,10 +239,7 @@ const MainScreen = ({ navigation }) => {
       <Text style={styles.title}>DUTY JCO FORM</Text>
 
       <View style={styles.buttonContainer}>
-        {/* <Button
-          title="Make Sheet"
-          onPress={() => createAndAppendExcel(formData)}
-        /> */}
+        <Button title="delete Sheet" onPress={() => deleteExcelFile()} />
 
         <Button
           color={"#34d399"}

@@ -387,9 +387,9 @@ const PDFPreviewPage = ({ navigation }) => {
   }</b> Liquor Rs. <b>${form.sale_of_csd.liquor_amount || "____"}</b></p>
 
 <h2>21. Roll Call</h2>
-<p>I attended the Roll Call at <b>${
-    form.roll_call.location || "____"
-  }</b> and briefed tps on the following aspects:</p>
+<p>I attended the Roll Call at <b>${form.roll_call.time || "____"}</b> on ${
+    form.roll_call.date || "____"
+  } and briefed tps on the following aspects:</p>
 <p><b>${form.roll_call.details || "____"}</b></p>
 
 
@@ -531,14 +531,14 @@ ${form.liquorIssue.text || "Remark : "}
   };
 
   const handleAdd = () => {
-    setIsLoading(true);
+    // setIsLoading(true);
     createAndAppendExcel(formData);
-    handleClear();
-    setTimeout(() => {
-      setPopUp(false);
-      setIsLoading(false);
-      navigation.navigate("Main");
-    }, 1000);
+    // handleClear();
+    // setTimeout(() => {
+    //   setPopUp(false);
+    //   setIsLoading(false);
+    //   navigation.navigate("Main");
+    // }, 1000);
     // Toast.show({
     //   type: "success",
     //   text1: "Success",

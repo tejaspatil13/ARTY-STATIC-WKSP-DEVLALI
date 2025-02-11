@@ -1,13 +1,24 @@
-import React, { useContext } from 'react';
-import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
-import { FormContext } from '../utils/FormContext';
-import { Ionicons } from '@expo/vector-icons';
+import React, { useContext } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
+import { FormContext } from "../utils/FormContext";
+import { Ionicons } from "@expo/vector-icons";
 
 const SaleCSDPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
 
   // Ensure safe access to sale_of_csd
-  const sale_of_csd = formData[0]?.sale_of_csd || { grocery_amount: "", liquor_amount: "" };
+  const sale_of_csd = formData[0]?.sale_of_csd || {
+    grocery_amount: "",
+    liquor_amount: "",
+  };
 
   // Handle input change for CSD sale
   const handleInputChange = (field, value) => {
@@ -24,15 +35,18 @@ const SaleCSDPage = ({ navigation }) => {
   // Set up the home icon and center the title
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitle: 'Sale of CSD',
-      headerTitleAlign: 'center',
+      headerTitle: "Sale of CSD",
+      headerTitleAlign: "center",
       headerTitleStyle: {
         fontSize: 22,
-        fontWeight: 'bold',
-        color: '#333',
+        fontWeight: "bold",
+        color: "#333",
       },
       headerLeft: () => (
-        <TouchableOpacity onPress={() => navigation.navigate('Main')} style={styles.homeButton}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Main")}
+          style={styles.homeButton}
+        >
           <Ionicons name="home" size={28} color="#000" />
         </TouchableOpacity>
       ),
@@ -50,8 +64,7 @@ const SaleCSDPage = ({ navigation }) => {
         style={styles.input}
         placeholder="Enter amount"
         value={sale_of_csd.grocery_amount}
-        onChangeText={(text) => handleInputChange('grocery_amount', text)}
-        keyboardType="numeric"
+        onChangeText={(text) => handleInputChange("grocery_amount", text)}
       />
 
       {/* Liquor Sale */}
@@ -60,14 +73,21 @@ const SaleCSDPage = ({ navigation }) => {
         style={styles.input}
         placeholder="Enter amount"
         value={sale_of_csd.liquor_amount}
-        onChangeText={(text) => handleInputChange('liquor_amount', text)}
-        keyboardType="numeric"
+        onChangeText={(text) => handleInputChange("liquor_amount", text)}
       />
 
       {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
-        <Button title="← Previous" onPress={() => navigation.navigate('RollCall')} color="#757575" />
-        <Button title="Next →" onPress={() => navigation.navigate('QtrVisit')} color="#2196F3" />
+        <Button
+          title="← Previous"
+          onPress={() => navigation.navigate("RollCall")}
+          color="#757575"
+        />
+        <Button
+          title="Next →"
+          onPress={() => navigation.navigate("QtrVisit")}
+          color="#2196F3"
+        />
       </View>
     </ScrollView>
   );
@@ -78,31 +98,31 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: "#f5f5f5",
   },
   sectionTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
-    color: '#333',
+    color: "#333",
   },
   label: {
     fontSize: 14,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
-    color: '#555',
+    color: "#555",
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 5,
     padding: 10,
     marginBottom: 15,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 30,
   },
   homeButton: {

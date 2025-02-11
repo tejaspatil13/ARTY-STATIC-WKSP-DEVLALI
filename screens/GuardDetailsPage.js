@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,9 +10,25 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { FormContext } from "../utils/FormContext";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const GuardDetailsPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const onTimeChange = (event, selected) => {
+    setShowTimePicker(false);
+    if (selected) {
+      setSelectedDate(selected);
+      const formattedTime = selected.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      });
+      handleInputChange("koteGuardTime", formattedTime);
+    }
+  };
 
   const handleInputChange = (field, value) => {
     setFormData((prevData) =>
@@ -25,7 +41,6 @@ const GuardDetailsPage = ({ navigation }) => {
       }))
     );
   };
-
   // Set up the title and home button
   useEffect(() => {
     navigation.setOptions({
@@ -56,8 +71,17 @@ const GuardDetailsPage = ({ navigation }) => {
         style={styles.input}
         placeholder="Enter time"
         value={formData[0].guard_details.koteGuardTime}
-        onChangeText={(t) => handleInputChange("koteGuardTime", t)}
+        // onChangeText={(t) => handleInputChange("koteGuardTime", t)}
+        onPress={() => setShowTimePicker(true)}
       />
+      {showTimePicker && (
+        <DateTimePicker
+          value={selectedDate}
+          mode="time"
+          onChange={onTimeChange}
+          is24Hour={true}
+        />
+      )}
 
       <Text style={styles.label}>Findings</Text>
       <TextInput
