@@ -81,6 +81,7 @@ const FireEquipmentCheckPage = ({ navigation }) => {
 
           <Text style={styles.label}>Type</Text>
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="Enter Equipment Type"
             value={item.type}
@@ -89,6 +90,7 @@ const FireEquipmentCheckPage = ({ navigation }) => {
 
           <Text style={styles.label}>Status</Text>
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="Enter Status"
             value={item.status}
@@ -97,6 +99,7 @@ const FireEquipmentCheckPage = ({ navigation }) => {
 
           <Text style={styles.label}>Remarks</Text>
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="Enter Remarks"
             value={item.remarks}
@@ -115,7 +118,7 @@ const FireEquipmentCheckPage = ({ navigation }) => {
       <Button
         title="Add Fire Equipment"
         onPress={handleAddField}
-        color="#4CAF50"
+        color="#34d399"
       />
 
       <View style={styles.buttonContainer}>

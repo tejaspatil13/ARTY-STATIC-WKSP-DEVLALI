@@ -59,7 +59,7 @@ const RationCheckPage = ({ navigation }) => {
         placeholder="Enter observations..."
         value={formData[0].ration_check.ration_observations}
         onChangeText={(text) => handleInputChange("ration_observations", text)}
-        multiline
+        multiline={true}
       />
 
       {/* Navigation Buttons */}

@@ -61,6 +61,7 @@ const GuardDetailsPage = ({ navigation }) => {
 
       <Text style={styles.label}>Findings</Text>
       <TextInput
+        multiline={true}
         style={styles.input}
         placeholder="Enter findings"
         value={formData[0].guard_details.koteGuardFindings}

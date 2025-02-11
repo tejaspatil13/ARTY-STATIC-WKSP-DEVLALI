@@ -95,6 +95,7 @@ const QtrVisitPage = ({ navigation }) => {
 
           <Text style={styles.label}>Problem</Text>
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="Describe the Problem"
             value={row.problem}
@@ -103,6 +104,7 @@ const QtrVisitPage = ({ navigation }) => {
 
           <Text style={styles.label}>Remarks</Text>
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="Add Remarks"
             value={row.remarks}
@@ -188,11 +190,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   addButton: {
-    padding: 12,
     backgroundColor: "#34d399",
-    borderRadius: 5,
+    paddingVertical: 10,
+    borderRadius: 8,
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 10,
   },
   addButtonText: {
     color: "#fff",

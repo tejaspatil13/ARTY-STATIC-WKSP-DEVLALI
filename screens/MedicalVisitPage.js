@@ -124,6 +124,7 @@ const MedicalVisitPage = ({ navigation }) => {
         <View key={obs.id} style={styles.observationRow}>
           <Text style={styles.observationLabel}>{index + 1}.</Text>
           <TextInput
+            multiline={true}
             style={styles.observationInput}
             placeholder={`Observation ${index + 1}`}
             value={obs.text}
@@ -143,7 +144,7 @@ const MedicalVisitPage = ({ navigation }) => {
       <Button
         title="Add Observation"
         onPress={addObservation}
-        color="#2196F3"
+        color="#34d399"
       />
 
       {/* Navigation Buttons */}

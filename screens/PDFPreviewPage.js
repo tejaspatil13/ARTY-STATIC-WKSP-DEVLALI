@@ -1,69 +1,118 @@
+
+
+
+
+
+
+
 import {
   View,
   TouchableOpacity,
   Text,
   StyleSheet,
-  ScrollView,
 } from "react-native";
 import { FormContext } from "../utils/FormContext";
 import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
 import { WebView } from "react-native-webview";
 import { Ionicons } from "@expo/vector-icons";
-import React, { use, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import createAndAppendExcel from "../utils/generator";
 import EmptyFieldsPopup from "../utils/popUp";
 import { validateFormData } from "../utils/emptyChecker";
-import Toast from "react-native-toast-message";
 
 const currentDate = new Date().toLocaleDateString("en-IN"); // Format: DD/MM/YYYY
 
 const PDFPreviewPage = ({ navigation }) => {
-  ({ navigation }) => {
-    useEffect(() => {
-      navigation.setOptions({
-        headerTitle: "Fire Equipment Check",
-        headerTitleAlign: "center",
-        headerTitleStyle: {
-          fontSize: 22,
-          fontWeight: "bold",
-          color: "#333",
-        },
-        headerLeft: () => (
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Main")}
-            style={styles.homeButton}
-          >
-            <Ionicons name="home" size={28} color="#000" />
-          </TouchableOpacity>
-        ),
-      });
-    }, [navigation]);
-  };
-  const { formData, setFormData } = useContext(FormContext);
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: "Fire Equipment Check",
+      headerTitleAlign: "center",
+      headerTitleStyle: {
+        fontSize: 22,
+        fontWeight: "bold",
+        color: "#333",
+      },
+      headerLeft: () => (
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Main")}
+          style={styles.homeButton}
+        >
+          <Ionicons name="home" size={28} color="#000" />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
+
+  const { formData } = useContext(FormContext);
   const form = formData[0] || {}; // Ensure form data exists
   const [popUp, setPopUp] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   // Generate HTML for PDF Preview
   const htmlContent = `
-  <html>
-  <head>
-    <style>
-      body { font-family: Arial, sans-serif; padding: 20px; background-color: #f8f8f8; }
-      .form-container { border: 3px solid black; padding: 20px; background: white; border-radius: 8px;; }
-      h1 { text-align: center; text-transform: uppercase; border-bottom: 2px solid black; padding-bottom: 10px;  margin-bottom: 50px }
-      h2 { background-color: #f4f4f4; padding: 10px; border: 1px solid black; }
-      table { width: 100%; border-collapse: collapse; margin-bottom: 10px; border: 2px solid black; }
-      th, td { border: 1px solid black; padding: 8px; text-align: left; }
-      p { padding: 5px; font-size: 16px; }
-      .bold { font-weight: bold; color: #000; }
-      
-    </style>
-  </head>
-  <body>
-    <div class="form-container">
-      <h1>DUTY JCO FORM</h1>
+<html>
+<head>
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      padding: 20px; 
+      background-color: #f8f8f8; 
+    }
+    .form-container { 
+      border: 3px solid black; 
+      padding: 20px; 
+      background: white; 
+      border-radius: 8px; 
+      max-width: 100%; 
+      overflow-x: auto; 
+    }
+    h1 { 
+      text-align: center; 
+      text-transform: uppercase; 
+      border-bottom: 2px solid black; 
+      padding-bottom: 10px;  
+      margin-bottom: 50px; 
+    }
+    h2 { 
+      background-color: #f4f4f4; 
+      padding: 10px; 
+      border: 1px solid black; 
+    }
+    table { 
+      width: 100%; 
+      border-collapse: collapse; 
+      margin-bottom: 10px; 
+      border: 2px solid black; 
+      table-layout: fixed; 
+    }
+    th, td { 
+      border: 1px solid black; 
+      padding: 8px; 
+      text-align: left; 
+      word-wrap: break-word; 
+      overflow-wrap: break-word; 
+      white-space: normal; 
+    }
+    p { 
+      padding: 5px; 
+      font-size: 16px; 
+    }
+    .bold { 
+      font-weight: bold; 
+      color: #000; 
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      border: 1px solid black;
+      padding: 10px;
+      resize: none; /* Prevent resizing */
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+   <h1>DUTY JCO FORM</h1>
   
       <p>
         1. I, JC <b>${form.duty_handover.jcNumber || "____"}</b>, Rank <b>${
@@ -79,13 +128,24 @@ const PDFPreviewPage = ({ navigation }) => {
   }</b> hrs, on <b>${form.duty_handover.endDate || "____"}</b>.
       </p>
   
+     
+     
+     
+     
+     
+     
       <p>2. I mounted the Kote guard at <b>${
         form.guard_details.koteGuardTime || "____"
       }</b> and Found <b>${
     form.guard_details.koteGuardFindings || "____"
   }</b>.</p>
   
-      <h2>3. MT Briefing</h2>
+     
+  
+  
+  
+  
+  <h2>3. MT Briefing</h2>
       <p>Time: <b>${form.mt_briefing.mt_time || "____"}</b></p>
       <p>Strength: <b>${form.mt_briefing.mt_strength || "____"}</b></p>
       <ul>
@@ -96,6 +156,11 @@ const PDFPreviewPage = ({ navigation }) => {
           .join("")}
       </ul>
   
+      
+      
+      
+      
+      
       <h2>4. Day/Night Guard Check Observations</h2>
       <table>
         <tr><th>Location</th><th>Day</th><th>Night</th></tr>
@@ -112,6 +177,9 @@ const PDFPreviewPage = ({ navigation }) => {
           .join("")}
       </table>
   
+      
+      
+      
       <h2>5. Office and Store Sealing</h2>
       <p>Office sealed at: <b>${
         form.office_sealing.office_sealed_at || "____"
@@ -120,11 +188,20 @@ const PDFPreviewPage = ({ navigation }) => {
         form.office_sealing.store_sealed_at || "____"
       }</b></p>
   
+      
+      
+      
+      
+      
       <h2>6. Fresh/Dry Ration and Meat Check</h2>
       <p>Observations: <b>${
         form.ration_check.ration_observations || "____"
       }</b></p>
   
+      
+      
+      
+      
       <h2>7. Cook Houses - Serviceability of Appliances & Staff Adequacy</h2>
       <table>
         <tr><th>Cook House</th><th>Serviceability</th><th>Staff Adequacy</th></tr>
@@ -300,17 +377,22 @@ const PDFPreviewPage = ({ navigation }) => {
 
 <h3>(a) CSD Items</h3>
 <ul>
-  <li>(a) <input type="text" name="csdItem1" value="${form.csd_checks?.csd_items?.csdItem1 || ''}" placeholder="Enter CSD Item 1"></li>
-  <li>(b) <input type="text" name="csdItem2" value="${form.csd_checks?.csd_items?.csdItem2 || ''}" placeholder="Enter CSD Item 2"></li>
-  <li>(c) <input type="text" name="csdItem3" value="${form.csd_checks?.csd_items?.csdItem3 || ''}" placeholder="Enter CSD Item 3"></li>
+  ${Object.keys(form.csd_checks?.csd_items || {}).map((key, index) => `
+    <li>(${String.fromCharCode(97 + index)}) 
+      <input type="text" name="${key}" value="${form.csd_checks?.csd_items[key] || ''}" placeholder="Enter CSD Item ${index + 1}">
+    </li>
+  `).join('')}
 </ul>
 
 <h3>(b) Liquor/Grocery Card</h3>
 <ul>
-  <li>(a) <input type="text" name="cardItem1" value="${form.csd_checks?.card_items?.cardItem1 || ''}" placeholder="Enter Card Item 1"></li>
-  <li>(b) <input type="text" name="cardItem2" value="${form.csd_checks?.card_items?.cardItem2 || ''}" placeholder="Enter Card Item 2"></li>
-  <li>(c) <input type="text" name="cardItem3" value="${form.csd_checks?.card_items?.cardItem3 || ''}" placeholder="Enter Card Item 3"></li>
+  ${Object.keys(form.csd_checks?.card_items || {}).map((key, index) => `
+    <li>(${String.fromCharCode(97 + index)}) 
+      <input type="text" name="${key}" value="${form.csd_checks?.card_items[key] || ''}" placeholder="Enter Card Item ${index + 1}">
+    </li>
+  `).join('')}
 </ul>
+
 
 
 
@@ -382,17 +464,18 @@ const PDFPreviewPage = ({ navigation }) => {
 
 
 
-<h2>20. Sale of CSD</h2>
+
+<h2>20. Roll Call</h2>
+<p>I attended the Roll Call at <b>${form.roll_call.time || "__"}</b> on ${
+    form.roll_call.date || "__"
+  } and briefed tps on the following aspects:</p>
+<p><b>${form.roll_call.details || "__"}</b></p>
+
+
+<h2>21. Sale of CSD</h2>
 <p>Grocery Rs. <b>${
     form.sale_of_csd.grocery_amount || "____"
   }</b> Liquor Rs. <b>${form.sale_of_csd.liquor_amount || "____"}</b></p>
-
-<h2>21. Roll Call</h2>
-<p>I attended the Roll Call at <b>${
-    form.roll_call.location || "____"
-  }</b> and briefed tps on the following aspects:</p>
-<p><b>${form.roll_call.details || "____"}</b></p>
-
 
 
 
@@ -401,25 +484,24 @@ const PDFPreviewPage = ({ navigation }) => {
 <h2>22. QTR Visit</h2>
 <table>
   <tr>
-    <th>S/No</th>
-    <th>Qtr No & Loc</th>
-    <th>Problem</th>
-    <th>Remarks</th>
+    <th style="width: 5%;">S/No</th>
+    <th style="width: 25%;">Qtr No & Loc</th>
+    <th style="width: 35%;">Problem</th>
+    <th style="width: 35%;">Remarks</th>
   </tr>
   ${form.qtr_visit
     .map(
       (row, index) => `
     <tr>
       <td>${index + 1}</td>
-      <td>${row.qtr_no_and_location || "____"}</td>
-      <td>${row.problem || "____"}</td>
-      <td>${row.remarks || "____"}</td>
+      <td name="qtr_no_and_location">${row.qtr_no_and_location || "_____"}</td>
+      <td name="problem">${row.problem || "_____"}</td>
+      <td name="remarks">${row.remarks || "______"}</td>
     </tr>
   `
     )
     .join("")}
 </table>
-
 
 
 
@@ -433,7 +515,7 @@ const PDFPreviewPage = ({ navigation }) => {
     <th>Name</th>
     <th>Make & Type</th>
     <th>Mob No.</th>
-    <th>Banned App & PIO Calls</th>
+    <th>Banned App & brZZPIO Calls</th>
     <th>Remarks</th>
   </tr>
   ${form.mobileCheckRows
@@ -511,9 +593,9 @@ ${form.liquorIssue.text || "Remark : "}
 <p>Comdt: ______________</p>
 
 
-      
-      
-  
+  </div>
+</body>
+</html>
 `;
 
   const handlePopUp = () => {
@@ -532,311 +614,9 @@ ${form.liquorIssue.text || "Remark : "}
   };
 
   const handleAdd = () => {
-    setIsLoading(true);
     createAndAppendExcel(formData);
-    handleClear();
-    setTimeout(() => {
-      setPopUp(false);
-      setIsLoading(false);
-      navigation.navigate("Main");
-    }, 1000);
-    // Toast.show({
-    //   type: "success",
-    //   text1: "Success",
-    //   text2: "Added successfully!",
-    //   position: "top",
-    //   visibilityTime: 3000,
-    //   autoHide: true,
-    // });
-  };
-
-  const handleClear = () => {
-    setFormData([
-      {
-        date: "",
-
-        // Page 1: Duty Handover Details
-        duty_handover: {
-          jcNumber: "",
-          rank: "",
-          name: "",
-          startTime: "",
-          startDate: "",
-          endTime: "",
-          endDate: "",
-          prevJCNumber: "",
-          prevRank: "",
-          prevName: "",
-        },
-
-        // Page 2: Kote Guard Details
-        guard_details: {
-          koteGuardTime: "",
-          koteGuardFindings: "",
-        },
-
-        // MT Briefing Page Data
-        mt_briefing: {
-          mt_time: "",
-          mt_strength: "",
-          mtStrengthFields: [{ id: 1, name: "" }],
-        },
-
-        // Guard Check
-        guard_check: [{ guard: "", dayInfo: "", nightInfo: "" }],
-
-        // Office Sealing
-        office_sealing: {
-          office_sealed_at: "",
-          store_sealed_at: "",
-        },
-
-        // Ration Checking
-        ration_check: {
-          ration_observations: "",
-        },
-
-        // Cook Houses
-        cookHouseObservations: [
-          { cook_house: "", appliances_status: "", staff_details: "" },
-        ],
-
-        // Fire equipment check
-        fire_equipment_check: [
-          { location: "", type: "", status: "", remarks: "" },
-        ],
-
-        // Food Tasting
-        foodTasting: [
-          {
-            cookHouse: "A PI",
-            meal: "Breakfast",
-            quality: "",
-            improvement: "",
-          },
-          { cookHouse: "A PI", meal: "Lunch", quality: "", improvement: "" },
-          { cookHouse: "A PI", meal: "Dinner", quality: "", improvement: "" },
-          {
-            cookHouse: "B PI",
-            meal: "Breakfast",
-            quality: "",
-            improvement: "",
-          },
-          { cookHouse: "B PI", meal: "Lunch", quality: "", improvement: "" },
-          { cookHouse: "B PI", meal: "Dinner", quality: "", improvement: "" },
-        ],
-
-        // health and hygiene
-        health_hygiene: [
-          {
-            field: "Cleanliness of JCO Mess",
-            observation: "",
-            remark: "",
-          },
-          {
-            field: "Persons sleeping on ground",
-            observation: "",
-            remark: "",
-          },
-          {
-            field: "Cleanliness of bathroom and latrines",
-            observation: "",
-            remark: "",
-          },
-          {
-            field: "Cleanliness of OR Cook House",
-            observation: "",
-            remark: "",
-          },
-          {
-            field: "Disposal of Kitchen Wastage",
-            observation: "",
-            remark: "",
-          },
-          {
-            field: "Cleanliness of Barracks/Toilets",
-            observation: "",
-            remark: "",
-          },
-          {
-            field: "Personnel Maintenance",
-            observation: "",
-            remark: "",
-          },
-          {
-            field: "Availability of Drinking Water for Troops",
-            observation: "",
-            remark: "",
-          },
-          {
-            field: "Cleanliness of Civilian Tea Room",
-            observation: "",
-            remark: "",
-          },
-          {
-            field: "Anti-Malaria/Dengue Precautions",
-            observation: "",
-            remark: "",
-          },
-        ],
-
-        // Land Matters
-        land_matters: [
-          {
-            location: "",
-            time: "",
-            remark: "",
-          },
-        ],
-
-        // defense land survey
-        defense_land_survey: {
-          text: "I visited def land survey No. 36,38,40,41,43,59 along with a rep of the RP/QM and made entry in the Def land visit register. I have the following to report",
-          RP: false,
-          QM: false,
-          observations: [{ text: "" }],
-        },
-
-        // Quarter Gd & Kote
-        quarter_gd_kote: {
-          koteCheckDate: "",
-          quarterGdKoteRows: [
-            { id: 1, held: "", type: "", armsOut: "", armsIn: "", remarks: "" },
-          ],
-        },
-
-        // Amn magazine
-        amn_magazine: {
-          text: "I have physically cheked the Amn Magazine on",
-          amnMagazineCheckDate: "",
-          amnMagazineRows: [
-            {
-              id: 1,
-              amn: "",
-              firstLine: "",
-              secondLine: "",
-              trg: "",
-              usedCartridges: "",
-              remarks: "",
-            },
-          ],
-        },
-
-        // csd checks
-        csd_checks: {
-          csd_items: {
-            csdItem1: "",
-            csdItem2: "",
-            csdItem3: "",
-          },
-          card_items: {
-            cardItem1: "",
-            cardItem2: "",
-            cardItem3: "",
-          },
-        },
-
-        // TSS
-        tss: {
-          text: "I have physically checked the following sample items as per my trade-work (minimum three) and matched the ground and ledger balance",
-          columns: [
-            {
-              id: 1,
-              item: "",
-              cat_part_no: "",
-              grnd_bal: "",
-              ledger_bal: "",
-              remarks: "",
-            },
-          ],
-        },
-
-        // security measures
-        security_measures: {
-          text: "I have checked the premises of ASW AOR on",
-          checkTime: "",
-          measures: [
-            {
-              text: "Any salesmen/beggars found in AOR",
-              check: false,
-            },
-            {
-              text: "I have checked init AoR for authorized occupation of def land",
-              check: false,
-            },
-          ],
-        },
-
-        // cctv_locations
-        cctv_locations: [
-          {
-            location: "",
-            total: "",
-            serviceable: "",
-            unserviceable: "",
-            remarks: "",
-          },
-        ],
-
-        // devlali visit
-        devlali_visit: {
-          time: "",
-          observations: [{ id: 1, text: "" }],
-        },
-
-        // roll call
-        roll_call: {
-          date: "",
-          time: "",
-          details: "",
-        },
-
-        // sale of csd
-        sale_of_csd: {
-          grocery_amount: "",
-          liquor_amount: "",
-        },
-
-        // OTR visit
-        qtr_visit: [
-          { id: 1, qtr_no_and_location: "", problem: "", remarks: "" },
-        ],
-
-        // Mobile Check Page
-        mobileCheckRows: [
-          {
-            id: 1,
-            rank: "",
-            name: "",
-            makeAndType: "",
-            mobNo: "",
-            bannedAppAndPpoCalls: "",
-            remarks: "",
-          },
-        ],
-
-        //liquor issue
-        liquorIssue: { text: "" },
-
-        // improvement in wksp tech
-        improvement_in_wksp_tech: [
-          { id: 1, point: "" },
-          { id: 2, point: "" },
-        ],
-
-        // awareness
-        awareness: {
-          rankAndName: "",
-          unit: "",
-          dutyOfficer: "",
-          QRT_JCO: "",
-          NCO: "",
-        },
-
-        // handover duties
-        handoverDuties: { no: "", rank: "", name: "", date: "", time: "" },
-      },
-    ]);
+    setPopUp(false);
+    navigation.navigate("Main");
   };
 
   return (
@@ -846,7 +626,6 @@ ${form.liquorIssue.text || "Remark : "}
         onClose={() => setPopUp(false)}
         emptyFields={validateFormData(formData)}
         addFunction={handleAdd}
-        isLoading={isLoading}
       />
       {/* WebView to Show PDF Preview */}
       <WebView
@@ -874,7 +653,6 @@ ${form.liquorIssue.text || "Remark : "}
 };
 
 // Styles
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

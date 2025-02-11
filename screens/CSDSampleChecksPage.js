@@ -20,6 +20,26 @@ const CSDSampleChecksPage = ({ navigation }) => {
     ensureMinimumFields("card_items");
   }, []);
 
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: "CSD Sample Checks",
+      headerTitleAlign: "center",
+      headerTitleStyle: {
+        fontSize: 22,
+        fontWeight: "bold",
+        color: "#333",
+      },
+      headerLeft: () => (
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Main")}
+          style={{marginLeft: 15}}
+        >
+          <Ionicons name="home" size={28} color="#000" />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
+
   const ensureMinimumFields = (section) => {
     setFormData((prev) =>
       prev.map((item, index) =>
@@ -133,6 +153,7 @@ const CSDSampleChecksPage = ({ navigation }) => {
         {Object.keys(items).map((fieldName, index) => (
           <View key={fieldName} style={styles.fieldContainer}>
             <TextInput
+              multiline={true}
               style={styles.fieldInput}
               placeholder={`Item ${index + 1}`}
               value={items[fieldName]}
@@ -223,9 +244,9 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   addButton: {
-    padding: 12,
     backgroundColor: "#34d399",
-    borderRadius: 5,
+    paddingVertical: 10,
+    borderRadius: 8,
     alignItems: "center",
     marginTop: 10,
   },

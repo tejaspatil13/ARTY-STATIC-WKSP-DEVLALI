@@ -77,6 +77,7 @@ const CookHouseObservationsPage = ({ navigation }) => {
         <View key={`view-${index}`} style={styles.card}>
           <Text style={styles.label}>Cook House</Text>
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="Enter Cook House"
             value={row.cook_house}
@@ -87,6 +88,7 @@ const CookHouseObservationsPage = ({ navigation }) => {
 
           <Text style={styles.label}>Serviceability of Appliances</Text>
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="Enter Appliance Status"
             value={row.appliances_status}
@@ -97,6 +99,7 @@ const CookHouseObservationsPage = ({ navigation }) => {
 
           <Text style={styles.label}>Staff Adequacy</Text>
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="Enter Staff Details"
             value={row.staff_details}

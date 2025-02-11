@@ -231,11 +231,11 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   addButton: {
-    padding: 12,
     backgroundColor: "#34d399",
-    borderRadius: 5,
+    paddingVertical: 10,
+    borderRadius: 8,
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 10,
   },
   addButtonText: {
     color: "#fff",

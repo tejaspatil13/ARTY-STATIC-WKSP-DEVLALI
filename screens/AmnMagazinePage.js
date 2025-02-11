@@ -142,36 +142,42 @@ const AmnMagazinePage = ({ navigation }) => {
           </View>
 
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="Amn"
             value={row.amn}
             onChangeText={(t) => handleInputChange(row.id, "amn", t)}
           />
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="1st Line"
             value={row.firstLine}
             onChangeText={(t) => handleInputChange(row.id, "firstLine", t)}
           />
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="2nd Line"
             value={row.secondLine}
             onChangeText={(t) => handleInputChange(row.id, "secondLine", t)}
           />
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="Trg"
             value={row.trg}
             onChangeText={(t) => handleInputChange(row.id, "trg", t)}
           />
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="Used Cartridges"
             value={row.usedCartridges}
             onChangeText={(t) => handleInputChange(row.id, "usedCartridges", t)}
           />
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="Remarks"
             value={row.remarks}
@@ -245,11 +251,11 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   addButton: {
-    padding: 12,
     backgroundColor: "#34d399",
-    borderRadius: 5,
+    paddingVertical: 10,
+    borderRadius: 8,
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 10,
   },
   addButtonText: {
     color: "#fff",

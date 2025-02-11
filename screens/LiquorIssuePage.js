@@ -53,7 +53,7 @@ const LiquorIssuePage = ({ navigation }) => {
         placeholder="Enter your report here..."
         value={liquorIssue.text}
         onChangeText={handleInputChange}
-        multiline
+        multiline={true}
         numberOfLines={10}
         textAlignVertical="top"
       />

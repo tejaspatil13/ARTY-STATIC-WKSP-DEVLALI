@@ -141,6 +141,7 @@ const QuarterGdKotePage = ({ navigation }) => {
 
           <Text style={styles.label}>Type</Text>
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="Enter Type"
             value={row.type}
@@ -148,6 +149,7 @@ const QuarterGdKotePage = ({ navigation }) => {
           />
           <Text style={styles.label}>Held</Text>
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="Enter Held"
             value={row.held}
@@ -156,6 +158,7 @@ const QuarterGdKotePage = ({ navigation }) => {
 
           <Text style={styles.label}>Arms Out of Kote</Text>
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="Enter Arms Out"
             value={row.armsOut}
@@ -164,6 +167,7 @@ const QuarterGdKotePage = ({ navigation }) => {
 
           <Text style={styles.label}>Arms In Kote</Text>
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="Enter Arms In"
             value={row.armsIn}
@@ -176,7 +180,7 @@ const QuarterGdKotePage = ({ navigation }) => {
             placeholder="Enter Remarks"
             value={row.remarks}
             onChangeText={(t) => handleInputChange(row.id, "remarks", t)}
-            multiline
+            multiline={true}
           />
         </View>
       ))}
@@ -247,11 +251,11 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   addButton: {
-    padding: 12,
     backgroundColor: "#34d399",
-    borderRadius: 5,
+    paddingVertical: 10,
+    borderRadius: 8,
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 10,
   },
   addButtonText: {
     color: "#fff",

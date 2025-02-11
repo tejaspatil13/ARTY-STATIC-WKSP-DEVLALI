@@ -67,6 +67,7 @@ const AwarenessPage = ({ navigation }) => {
 
       <Text style={styles.label}>Unit:</Text>
       <TextInput
+        multiline={true}
         style={styles.input}
         placeholder="Unit"
         value={formData[0]?.awareness?.unit || ""}
@@ -76,6 +77,7 @@ const AwarenessPage = ({ navigation }) => {
       {/* Duty Officer */}
       <Text style={styles.label}>(b) Duty Officer: Rank and Name</Text>
       <TextInput
+        multiline={true}
         style={styles.input}
         placeholder="Enter Duty Officer Rank and Name"
         value={formData[0]?.awareness?.dutyOfficer || ""}
@@ -85,6 +87,7 @@ const AwarenessPage = ({ navigation }) => {
       {/* QRT JCO */}
       <Text style={styles.label}>(c) QRT JCO: Rank and Name</Text>
       <TextInput
+        multiline={true}
         style={styles.input}
         placeholder="Enter QRT JCO Rank and Name"
         value={formData[0]?.awareness?.QRT_JCO || ""}
@@ -94,6 +97,7 @@ const AwarenessPage = ({ navigation }) => {
       {/* Duty NCO */}
       <Text style={styles.label}>(d) Duty NCO: Rank and Name</Text>
       <TextInput
+        multiline={true}
         style={styles.input}
         placeholder="Enter Duty NCO Rank and Name"
         value={formData[0]?.awareness?.NCO || ""}
