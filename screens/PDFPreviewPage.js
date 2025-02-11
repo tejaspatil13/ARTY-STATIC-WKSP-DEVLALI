@@ -362,12 +362,11 @@ const PDFPreviewPage = ({ navigation }) => {
 <p>
   I have physically checked the following sample items (minimum three):
 </p>
-
 <h3>(a) CSD Items</h3>
 <ul>
   ${Object.keys(form.csd_checks?.csd_items || {}).map((key, index) => `
     <li>(${String.fromCharCode(97 + index)}) 
-      <input type="text" name="${key}" value="${form.csd_checks?.csd_items[key] || ''}" placeholder="Enter CSD Item ${index + 1}">
+      ${form.csd_checks?.csd_items[key] || "____"}
     </li>
   `).join('')}
 </ul>
@@ -376,7 +375,7 @@ const PDFPreviewPage = ({ navigation }) => {
 <ul>
   ${Object.keys(form.csd_checks?.card_items || {}).map((key, index) => `
     <li>(${String.fromCharCode(97 + index)}) 
-      <input type="text" name="${key}" value="${form.csd_checks?.card_items[key] || ''}" placeholder="Enter Card Item ${index + 1}">
+      ${form.csd_checks?.card_items[key] || "____"}
     </li>
   `).join('')}
 </ul>
