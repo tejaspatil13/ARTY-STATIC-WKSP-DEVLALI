@@ -72,6 +72,7 @@ const HealthHygienePage = ({ navigation }) => {
             <Text style={styles.cell}>{item.field}</Text>
 
             <TextInput
+              multiline={true}
               style={styles.input}
               placeholder="Observation"
               value={item.observation}
@@ -81,6 +82,7 @@ const HealthHygienePage = ({ navigation }) => {
             />
 
             <TextInput
+              multiline={true}
               style={styles.input}
               placeholder="Remarks"
               value={item.remark}

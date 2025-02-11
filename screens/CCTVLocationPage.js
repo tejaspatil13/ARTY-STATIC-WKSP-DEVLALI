@@ -124,6 +124,7 @@ const CCTVLocationPage = ({ navigation }) => {
             }
           />
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="Remarks"
             value={loc.remarks}
@@ -192,7 +193,7 @@ const styles = StyleSheet.create({
   },
   removeButtonText: { color: "white", fontWeight: "bold" },
   addButton: {
-    backgroundColor: "#007BFF",
+    backgroundColor: "#34d399",
     paddingVertical: 10,
     borderRadius: 8,
     alignItems: "center",

@@ -79,6 +79,7 @@ const FoodTastingPage = ({ navigation }) => {
                   styles.input,
                   !isValid(item.quality) && styles.inputError,
                 ]}
+                multiline={true}
                 placeholder="Enter food quality"
                 value={item.quality}
                 onChangeText={(t) => handleInputChange(index, "quality", t)}
@@ -90,6 +91,7 @@ const FoodTastingPage = ({ navigation }) => {
                   styles.input,
                   !isValid(item.improvement) && styles.inputError,
                 ]}
+                multiline={true}
                 placeholder="Enter improvement points"
                 value={item.improvement}
                 onChangeText={(t) => handleInputChange(index, "improvement", t)}

@@ -97,6 +97,7 @@ const MTBriefingPage = ({ navigation }) => {
       {/* Strength Input */}
       <Text style={styles.label}>Strength</Text>
       <TextInput
+        multiline={true}
         style={styles.input}
         placeholder="Enter Strength"
         value={formData[0].mt_briefing.mt_strength}
@@ -104,10 +105,11 @@ const MTBriefingPage = ({ navigation }) => {
       />
 
       {/* Strength Details Section */}
-      <Text style={styles.label}>Details:</Text>
+      <Text style={styles.label }>Details:</Text>
       {strengthFields?.map((field, index) => (
         <View key={field.id} style={styles.fieldRow}>
           <TextInput
+            multiline={true}
             key={`input-${field.id}`}
             style={styles.fullWidthInput}
             placeholder={`(${String.fromCharCode(97 + index)}) Enter details`}
@@ -204,7 +206,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   addButton: {
-    backgroundColor: "#007BFF",
+    backgroundColor: "#34d399",
     paddingVertical: 10,
     borderRadius: 8,
     alignItems: "center",

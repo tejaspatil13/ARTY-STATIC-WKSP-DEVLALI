@@ -119,6 +119,7 @@ const MobileCheckPage = ({ navigation }) => {
 
           <Text style={styles.label}>Make & Type</Text>
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="Enter Make & Type"
             value={row.makeAndType}
@@ -135,6 +136,7 @@ const MobileCheckPage = ({ navigation }) => {
 
           <Text style={styles.label}>Banned App & PIO Calls</Text>
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="Enter Banned App & PIO Calls"
             value={row.bannedAppAndPpoCalls}
@@ -145,6 +147,7 @@ const MobileCheckPage = ({ navigation }) => {
 
           <Text style={styles.label}>Remarks</Text>
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="Enter Remarks"
             value={row.remarks}
@@ -216,11 +219,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   addButton: {
-    padding: 12,
     backgroundColor: "#34d399",
-    borderRadius: 5,
+    paddingVertical: 10,
+    borderRadius: 8,
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 10,
   },
   addButtonText: {
     color: "#fff",

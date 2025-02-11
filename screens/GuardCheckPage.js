@@ -71,7 +71,14 @@ const GuardCheckPage = ({ navigation }) => {
       {guards?.map((guard, index) => (
         <View key={`view-${guard.id}`} style={styles.guardContainer}>
           <Text style={styles.label}>Guard</Text>
-          <Picker
+          <TextInput
+            style={styles.input}
+            placeholder="Enter Guard Location"
+            value={guard.guard}
+            onChangeText={(value) => handleGuardChange(index, "guard", value)}
+          />
+
+          {/* <Picker
             selectedValue={guard.guard}
             style={styles.picker}
             onValueChange={(value) => handleGuardChange(index, "guard", value)}
@@ -85,9 +92,10 @@ const GuardCheckPage = ({ navigation }) => {
             <Picker.Item label="Dhobi Ghat" value="Dhobi Ghat" />
             <Picker.Item label="Peer Baba" value="Peer Baba" />
             <Picker.Item label="SDP" value="SDP" />
-          </Picker>
+          </Picker> */}
           <Text style={styles.label}>Day</Text>
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="Enter Day Info"
             value={guard.dayInfo}
@@ -95,6 +103,7 @@ const GuardCheckPage = ({ navigation }) => {
           />
           <Text style={styles.label}>Night</Text>
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="Enter Night Info"
             value={guard.nightInfo}
@@ -112,7 +121,7 @@ const GuardCheckPage = ({ navigation }) => {
         </View>
       ))}
 
-      <Button title="+ Add More" onPress={addGuard} color="#007BFF" />
+      <Button title="+ Add More" onPress={addGuard} color="#34d399" />
 
       {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>

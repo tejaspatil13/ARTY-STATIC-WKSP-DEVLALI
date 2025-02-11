@@ -77,8 +77,9 @@ const ImprovementPage = ({ navigation }) => {
           <View key={point.id} style={styles.inputRow}>
             <Text style={styles.subLabel}>{`(${String.fromCharCode(97 + index)})`}</Text>
             <TextInput
+              multiline={true}
               style={styles.input}
-              placeholder={`Enter improvement point (${String.fromCharCode(97 + index)})`}
+              placeholder={`Enter improvement point `}
               value={point.point}
               onChangeText={t => {
                 const updatedPoints = formData[0].improvement_in_wksp_tech.map(p =>
@@ -123,7 +124,11 @@ const styles = StyleSheet.create({
   input: { flex: 1, borderWidth: 1, borderColor: '#ccc', borderRadius: 5, padding: 10, backgroundColor: '#fff' },
   deleteButton: { marginLeft: 10 },
 
-  addButton: { padding: 12, backgroundColor: '#34d399', borderRadius: 5, alignItems: 'center', marginTop: 20 },
+  addButton: { backgroundColor: "#34d399",
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 10,},
   addButtonText: { color: '#fff', fontWeight: 'bold' },
 
   buttonContainer: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 30 },

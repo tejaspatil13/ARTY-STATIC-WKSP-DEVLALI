@@ -113,6 +113,7 @@ const TSSPage = ({ navigation }) => {
         <View key={row.id} style={styles.card}>
           <Text style={styles.label}>Item</Text>
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="Enter Item"
             value={row.item || ""}
@@ -121,6 +122,7 @@ const TSSPage = ({ navigation }) => {
 
           <Text style={styles.label}>Cat Part No.</Text>
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="Enter Cat Part No."
             value={row.cat_part_no || ""}
@@ -131,6 +133,7 @@ const TSSPage = ({ navigation }) => {
 
           <Text style={styles.label}>Ground Balance</Text>
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="Enter Ground Balance"
             value={row.grnd_bal || ""}
@@ -139,6 +142,7 @@ const TSSPage = ({ navigation }) => {
 
           <Text style={styles.label}>Ledger Balance</Text>
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="Enter Ledger Balance"
             value={row.ledger_bal || ""}
@@ -149,6 +153,7 @@ const TSSPage = ({ navigation }) => {
 
           <Text style={styles.label}>Remarks</Text>
           <TextInput
+            multiline={true}
             style={styles.input}
             placeholder="Enter Remarks"
             value={row.remarks || ""}
@@ -236,11 +241,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   addButton: {
-    padding: 12,
     backgroundColor: "#34d399",
-    borderRadius: 5,
+    paddingVertical: 10,
+    borderRadius: 8,
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 10,
   },
   addButtonText: {
     color: "#fff",

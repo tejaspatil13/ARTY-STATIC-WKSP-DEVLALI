@@ -148,8 +148,9 @@ const DefenseLandSurveyPage = ({ navigation }) => {
         <View key={index} style={styles.observationRow}>
           <Text style={styles.observationLabel}>{index + 1}.</Text>
           <TextInput
+            multiline={true}
             style={styles.observationInput}
-            placeholder={`Observation ${index + 1}`}
+            placeholder={`Observation `}
             value={obs.text}
             onChangeText={(text) => updateObservation(index, text)}
           />
@@ -252,11 +253,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   addButton: {
-    backgroundColor: "#4CAF50",
-    padding: 15,
-    // borderRadius: 8,
+    backgroundColor: "#34d399",
+    paddingVertical: 10,
+    borderRadius: 8,
     alignItems: "center",
-    marginVertical: 10,
+    marginTop: 10,
   },
   addButtonText: {
     color: "#fff",
