@@ -281,30 +281,18 @@ const PDFPreviewPage = ({ navigation }) => {
     <th>Time</th>
     <th>Remarks</th>
   </tr>
-  <tr>
-    <td>(a)</td>
-    <td>Peer Baba Area checked on</td>
-    <td>${form.land_matters?.[0]?.time || "____"}</td>
-    <td>${form.land_matters?.[0]?.remark || "____"}</td>
-  </tr>
-  <tr>
-    <td>(b)</td>
-    <td>Deolali Railway Stn Area checked on</td>
-    <td>${form.land_matters?.[1]?.time || "____"}</td>
-    <td>${form.land_matters?.[1]?.remark || "____"}</td>
-  </tr>
-  <tr>
-    <td>(c)</td>
-    <td>Cantonment Bd to PT Ground Area checked on</td>
-    <td>${form.land_matters?.[2]?.time || "____"}</td>
-    <td>${form.land_matters?.[2]?.remark || "____"}</td>
-  </tr>
-  <tr>
-    <td>(d)</td>
-    <td>A Pl Church and water tank Area checked</td>
-    <td>${form.land_matters?.[3]?.time || "____"}</td>
-    <td>${form.land_matters?.[3]?.remark || "____"}</td>
-  </tr>
+  ${form.land_matters
+    .map(
+      (row, index) => `
+    <tr>
+      <td>(${String.fromCharCode(97 + index)})</td>
+      <td>${row.location || "____"}</td>
+      <td>${row.time || "____"}</td>
+      <td>${row.remark || "____"}</td>
+    </tr>
+  `
+    )
+    .join("")}
 </table>
 
 <h2>12. Defence Land Survey</h2>
