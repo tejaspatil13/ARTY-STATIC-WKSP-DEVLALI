@@ -16,123 +16,115 @@ const CSDSampleChecksPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
 
   useEffect(() => {
-    console.log("Current Form Data:", JSON.stringify(formData, null, 2));
-  }, [formData]);
-  
-
-  // Initialize minimum required fields on mount
-  useEffect(() => {
     ensureMinimumFields("csd_items");
     ensureMinimumFields("card_items");
   }, []);
 
-  // Ensure a minimum of 3 fields exist
   const ensureMinimumFields = (section) => {
-    setFormData((prev) => {
-      const currentItems = prev[0]?.csd_checks?.[section] || {};
-      const itemCount = Object.keys(currentItems).length;
+    setFormData((prev) =>
+      prev.map((item, index) =>
+        index === 0
+          ? {
+              ...item,
+              csd_checks: {
+                ...item.csd_checks,
+                [section]: {
+                  ...item.csd_checks?.[section],
+                  ...Array.from(
+                    {
+                      length:
+                        3 -
+                        Object.keys(item.csd_checks?.[section] || {}).length,
+                    },
+                    (_, i) => ({
+                      [`${section === "csd_items" ? "csdItem" : "cardItem"}${
+                        i +
+                        Object.keys(item.csd_checks?.[section] || {}).length +
+                        1
+                      }`]: "",
+                    })
+                  ).reduce((acc, cur) => ({ ...acc, ...cur }), {}),
+                },
+              },
+            }
+          : item
+      )
+    );
+  };
 
-      if (itemCount < 3) {
-        const updatedItems = { ...currentItems };
-        for (let i = itemCount + 1; i <= 3; i++) {
-          const fieldName =
-            section === "csd_items" ? `csdItem${i}` : `cardItem${i}`;
-          updatedItems[fieldName] = "";
+  const addField = (section) => {
+    setFormData((prev) =>
+      prev.map((item, index) =>
+        index === 0
+          ? {
+              ...item,
+              csd_checks: {
+                ...item.csd_checks,
+                [section]: {
+                  ...item.csd_checks[section],
+                  [`${section === "csd_items" ? "csdItem" : "cardItem"}${
+                    Object.keys(item.csd_checks[section] || {}).length + 1
+                  }`]: "",
+                },
+              },
+            }
+          : item
+      )
+    );
+  };
+
+  const removeField = (section, fieldName) => {
+    setFormData((prev) =>
+      prev.map((item, index) => {
+        if (index !== 0) return item;
+
+        const updatedItems = { ...item.csd_checks[section] };
+        delete updatedItems[fieldName];
+
+        if (Object.keys(updatedItems).length < 3) {
+          Alert.alert("Cannot Remove", "Minimum 3 fields are required");
+          return item;
         }
 
-        return [
-          {
-            ...prev[0],
-            csd_checks: {
-              ...prev[0].csd_checks,
-              [section]: updatedItems,
-            },
+        const reorderedItems = Object.values(updatedItems).reduce(
+          (acc, cur, i) => {
+            acc[`${section === "csd_items" ? "csdItem" : "cardItem"}${i + 1}`] =
+              cur;
+            return acc;
           },
-        ];
-      }
+          {}
+        );
 
-      return prev;
-    });
-  };
-
-  // Add new field dynamically
-  const addField = (section) => {
-    setFormData((prev) => {
-      const currentItems = prev[0]?.csd_checks?.[section] || {};
-      const itemCount = Object.keys(currentItems).length;
-      const newFieldName =
-        section === "csd_items"
-          ? `csdItem${itemCount + 1}`
-          : `cardItem${itemCount + 1}`;
-
-      return [
-        {
-          ...prev[0],
+        return {
+          ...item,
           csd_checks: {
-            ...prev[0].csd_checks,
-            [section]: {
-              ...prev[0].csd_checks[section],
-              [newFieldName]: "",
-            },
-          },
-        },
-      ];
-    });
-  };
-
-  // Remove field with minimum limit
-  const removeField = (section, fieldName) => {
-    setFormData((prev) => {
-      const currentItems = prev[0]?.csd_checks?.[section] || {};
-      const itemCount = Object.keys(currentItems).length;
-
-      if (itemCount <= 3) {
-        Alert.alert("Cannot Remove", "Minimum 3 fields are required");
-        return prev;
-      }
-
-      const updatedItems = { ...currentItems };
-      delete updatedItems[fieldName];
-
-      // Reorder remaining fields
-      const reorderedItems = {};
-      let counter = 1;
-      Object.values(updatedItems).forEach((value) => {
-        const newFieldName =
-          section === "csd_items" ? `csdItem${counter}` : `cardItem${counter}`;
-        reorderedItems[newFieldName] = value;
-        counter++;
-      });
-
-      return [
-        {
-          ...prev[0],
-          csd_checks: {
-            ...prev[0].csd_checks,
+            ...item.csd_checks,
             [section]: reorderedItems,
           },
-        },
-      ];
-    });
+        };
+      })
+    );
   };
 
-  // Handle input change
   const handleInputChange = (section, field, value) => {
-    setFormData((prev) => [
-      {
-        ...prev[0],
-        csd_checks: {
-          ...prev[0].csd_checks,
-          [section]: {
-            ...prev[0].csd_checks[section],
-            [field]: value,
-          },
-        },
-      },
-    ]);
+    setFormData((prev) =>
+      prev.map((item, index) =>
+        index === 0
+          ? {
+              ...item,
+              csd_checks: {
+                ...item.csd_checks,
+                [section]: {
+                  ...item.csd_checks[section],
+                  [field]: value,
+                },
+              },
+            }
+          : item
+      )
+    );
   };
 
-  // Render input fields dynamically
   const renderFields = (section, label) => {
     const items = formData[0]?.csd_checks?.[section] || {};
     return (
@@ -166,34 +158,11 @@ const CSDSampleChecksPage = ({ navigation }) => {
     );
   };
 
-  // Customize screen header
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: "CSD Sample Checks",
-      headerTitleAlign: "center",
-      headerTitleStyle: {
-        fontSize: 22,
-        fontWeight: "bold",
-        color: "#333",
-      },
-      headerLeft: () => (
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Main")}
-          style={styles.homeButton}
-        >
-          <Ionicons name="home" size={28} color="#000" />
-        </TouchableOpacity>
-      ),
-    });
-  }, [navigation]);
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.sectionTitle}>15. CSD Sample Checks</Text>
-
       {renderFields("csd_items", "(a) CSD Items:")}
       {renderFields("card_items", "(b) Liquor/Grocery Card:")}
-
       <View style={styles.buttonContainer}>
         <Button
           title="← Previous"
@@ -211,6 +180,11 @@ const CSDSampleChecksPage = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 30,
+  },
   container: {
     flexGrow: 1,
     padding: 20,
@@ -247,14 +221,6 @@ const styles = StyleSheet.create({
   removeButton: {
     marginLeft: 10,
     padding: 5,
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 30,
-  },
-  homeButton: {
-    marginLeft: 15,
   },
   addButton: {
     padding: 12,

@@ -1,27 +1,45 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { FormContext } from '../utils/FormContext';
+import React, { useContext, useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  ScrollView,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { FormContext } from "../utils/FormContext";
 
 const MedicalVisitPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
 
   // Ensure devlali_visit structure exists
-  const devlaliVisitData = formData[0]?.devlali_visit || { time: '', observations: [{ id: 1, text: '' }] };
+  const devlaliVisitData = formData[0]?.devlali_visit || {
+    time: "",
+    observations: [{ id: 1, text: "" }],
+  };
 
   // Local state for observations
-  const [observations, setObservations] = useState(devlaliVisitData.observations);
+  const [observations, setObservations] = useState(
+    devlaliVisitData.observations
+  );
 
   // Handle input change for time
   const handleInputChange = (field, value) => {
-    setFormData(prev => {
+    setFormData((prev) => {
       const updatedFormData = [...prev];
 
       if (!updatedFormData[0]) {
-        updatedFormData[0] = { devlali_visit: { time: '', observations: [{ id: 1, text: '' }] } };
+        updatedFormData[0] = {
+          devlali_visit: { time: "", observations: [{ id: 1, text: "" }] },
+        };
       }
       if (!updatedFormData[0].devlali_visit) {
-        updatedFormData[0].devlali_visit = { time: '', observations: [{ id: 1, text: '' }] };
+        updatedFormData[0].devlali_visit = {
+          time: "",
+          observations: [{ id: 1, text: "" }],
+        };
       }
 
       // Update time field
@@ -33,12 +51,12 @@ const MedicalVisitPage = ({ navigation }) => {
 
   // Add new observation
   const addObservation = () => {
-    const newObservations = [...observations, { id: observations.length + 1, text: '' }];
+    const newObservations = [...observations, { id: Date.now(), text: "" }];
     setObservations(newObservations);
-    setFormData(prev => {
+    setFormData((prev) => {
       const updatedFormData = [...prev];
       if (!updatedFormData[0].devlali_visit) {
-        updatedFormData[0].devlali_visit = { time: '', observations: [] };
+        updatedFormData[0].devlali_visit = { time: "", observations: [] };
       }
       updatedFormData[0].devlali_visit.observations = newObservations;
       return updatedFormData;
@@ -47,9 +65,11 @@ const MedicalVisitPage = ({ navigation }) => {
 
   // Update specific observation
   const updateObservation = (id, text) => {
-    const updatedObservations = observations.map(obs => (obs.id === id ? { ...obs, text } : obs));
+    const updatedObservations = observations.map((obs) =>
+      obs.id === id ? { ...obs, text } : obs
+    );
     setObservations(updatedObservations);
-    setFormData(prev => {
+    setFormData((prev) => {
       const updatedFormData = [...prev];
       updatedFormData[0].devlali_visit.observations = updatedObservations;
       return updatedFormData;
@@ -57,10 +77,10 @@ const MedicalVisitPage = ({ navigation }) => {
   };
 
   // Remove observation
-  const removeObservation = id => {
-    const updatedObservations = observations.filter(obs => obs.id !== id);
+  const removeObservation = (id) => {
+    const updatedObservations = observations.filter((obs) => obs.id !== id);
     setObservations(updatedObservations);
-    setFormData(prev => {
+    setFormData((prev) => {
       const updatedFormData = [...prev];
       updatedFormData[0].devlali_visit.observations = updatedObservations;
       return updatedFormData;
@@ -69,15 +89,18 @@ const MedicalVisitPage = ({ navigation }) => {
 
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: 'MH Devlali Visit',
-      headerTitleAlign: 'center',
+      headerTitle: "MH Devlali Visit",
+      headerTitleAlign: "center",
       headerTitleStyle: {
         fontSize: 22,
-        fontWeight: 'bold',
-        color: '#333',
+        fontWeight: "bold",
+        color: "#333",
       },
       headerLeft: () => (
-        <TouchableOpacity onPress={() => navigation.navigate('Main')} style={styles.homeButton}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Main")}
+          style={styles.homeButton}
+        >
           <Ionicons name="home" size={28} color="#000" />
         </TouchableOpacity>
       ),
@@ -93,7 +116,7 @@ const MedicalVisitPage = ({ navigation }) => {
         style={styles.input}
         placeholder="Enter Time"
         value={devlaliVisitData.time}
-        onChangeText={t => handleInputChange('time', t)}
+        onChangeText={(t) => handleInputChange("time", t)}
       />
 
       <Text style={styles.label}>Observations</Text>
@@ -104,20 +127,37 @@ const MedicalVisitPage = ({ navigation }) => {
             style={styles.observationInput}
             placeholder={`Observation ${index + 1}`}
             value={obs.text}
-            onChangeText={text => updateObservation(obs.id, text)}
+            onChangeText={(text) => updateObservation(obs.id, text)}
           />
-          <TouchableOpacity onPress={() => removeObservation(obs.id)} style={styles.deleteButton}>
-            <Ionicons name="trash" size={20} color="red" />
-          </TouchableOpacity>
+          {observations.length > 1 && (
+            <TouchableOpacity
+              onPress={() => removeObservation(obs.id)}
+              style={styles.deleteButton}
+            >
+              <Ionicons name="trash" size={20} color="red" />
+            </TouchableOpacity>
+          )}
         </View>
       ))}
 
-      <Button title="Add Observation" onPress={addObservation} color="#2196F3" />
+      <Button
+        title="Add Observation"
+        onPress={addObservation}
+        color="#2196F3"
+      />
 
       {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
-        <Button title="← Previous" onPress={() => navigation.navigate('CCTVLocation')} color="#757575" />
-        <Button title="Next →" onPress={() => navigation.navigate('RollCall')} color="#2196F3" />
+        <Button
+          title="← Previous"
+          onPress={() => navigation.navigate("CCTVLocation")}
+          color="#757575"
+        />
+        <Button
+          title="Next →"
+          onPress={() => navigation.navigate("RollCall")}
+          color="#2196F3"
+        />
       </View>
     </ScrollView>
   );
@@ -125,15 +165,43 @@ const MedicalVisitPage = ({ navigation }) => {
 
 // Styles
 const styles = StyleSheet.create({
-  container: { flexGrow: 1, padding: 20, backgroundColor: '#f5f5f5' },
-  sectionTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: 20, color: '#333' },
-  label: { fontSize: 16, fontWeight: 'bold', marginBottom: 10, color: '#555' },
-  input: { borderWidth: 1, borderColor: '#ccc', borderRadius: 5, padding: 10, backgroundColor: '#fff', fontSize: 16, marginBottom: 10 },
-  observationRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
-  observationLabel: { fontSize: 16, fontWeight: 'bold', marginRight: 10 },
-  observationInput: { flex: 1, borderWidth: 1, borderColor: '#ccc', borderRadius: 5, padding: 10, backgroundColor: '#fff' },
+  container: { flexGrow: 1, padding: 20, backgroundColor: "#f5f5f5" },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 20,
+    color: "#333",
+  },
+  label: { fontSize: 16, fontWeight: "bold", marginBottom: 10, color: "#555" },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: 10,
+    backgroundColor: "#fff",
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  observationRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  observationLabel: { fontSize: 16, fontWeight: "bold", marginRight: 10 },
+  observationInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: 10,
+    backgroundColor: "#fff",
+  },
   deleteButton: { marginLeft: 10, padding: 5 },
-  buttonContainer: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 30 },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 30,
+  },
   homeButton: { marginLeft: 15 },
 });
 

@@ -34,7 +34,7 @@ const AmnMagazinePage = ({ navigation }) => {
   // Add a new row
   const addRow = () => {
     const newRow = {
-      id: localRows.length + 1,
+      id: Date.now(), // Unique ID instead of length-based ID
       amn: "",
       firstLine: "",
       secondLine: "",
@@ -42,8 +42,9 @@ const AmnMagazinePage = ({ navigation }) => {
       usedCartridges: "",
       remarks: "",
     };
-    setLocalRows((prevRows) => [...prevRows, newRow]);
-    updateFormData([...localRows, newRow]);
+    const updatedRows = [...localRows, newRow]; // Add new row
+    setLocalRows(updatedRows);
+    updateFormData(updatedRows);
   };
 
   // Handle input change for a specific row and field
@@ -57,30 +58,36 @@ const AmnMagazinePage = ({ navigation }) => {
 
   // Handle date change
   const handleDateChange = (value) => {
-    setFormData((prev) => ({
-      ...prev,
-      [0]: {
-        ...prev[0],
-        amn_magazine: {
-          ...prev[0].amn_magazine,
-          amnMagazineCheckDate: value,
-        },
-      },
-    }));
+    setFormData((prev) =>
+      prev.map((item, index) =>
+        index === 0
+          ? {
+              ...item,
+              amn_magazine: {
+                ...item.amn_magazine,
+                amnMagazineCheckDate: value,
+              },
+            }
+          : item
+      )
+    );
   };
 
   // Update form data
   const updateFormData = (updatedRows) => {
-    setFormData((prev) => ({
-      ...prev,
-      [0]: {
-        ...prev[0],
-        amn_magazine: {
-          ...prev[0].amn_magazine,
-          amnMagazineRows: updatedRows,
-        },
-      },
-    }));
+    setFormData((prev) =>
+      prev.map((item, index) =>
+        index === 0
+          ? {
+              ...item,
+              amn_magazine: {
+                ...item.amn_magazine,
+                amnMagazineRows: updatedRows,
+              },
+            }
+          : item
+      )
+    );
   };
 
   // Delete a row

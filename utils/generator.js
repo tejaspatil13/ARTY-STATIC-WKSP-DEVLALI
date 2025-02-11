@@ -25,10 +25,14 @@ const flattenObject = (obj, prefix = "") => {
 };
 
 const processArrayData = (arrayData, date) => {
-  return arrayData.map((item) => ({
-    Date: date,
-    ...flattenObject(item),
-  }));
+  return arrayData.map((item) => {
+    // Remove id field if it exists
+    const { id, ...itemWithoutId } = item;
+    return {
+      Date: date,
+      ...flattenObject(itemWithoutId),
+    };
+  });
 };
 
 export const createAndAppendExcel = async (formData) => {

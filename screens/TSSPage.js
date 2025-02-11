@@ -17,7 +17,10 @@ const TSSPage = ({ navigation }) => {
   // Function to handle input change in a specific row
   const handleInputChange = (index, field, value) => {
     setFormData((prev) => {
-      const updatedData = Array.isArray(prev) && prev.length > 0 ? [...prev] : [{ tss: { text: "", columns: [] } }];
+      const updatedData =
+        Array.isArray(prev) && prev.length > 0
+          ? [...prev]
+          : [{ tss: { text: "", columns: [] } }];
       updatedData[0] = {
         ...updatedData[0],
         tss: {
@@ -34,7 +37,10 @@ const TSSPage = ({ navigation }) => {
   // Function to add a new row
   const handleAddRow = () => {
     setFormData((prev) => {
-      const updatedData = Array.isArray(prev) && prev.length > 0 ? [...prev] : [{ tss: { text: "", columns: [] } }];
+      const updatedData =
+        Array.isArray(prev) && prev.length > 0
+          ? [...prev]
+          : [{ tss: { text: "", columns: [] } }];
       updatedData[0] = {
         ...updatedData[0],
         tss: {
@@ -59,7 +65,10 @@ const TSSPage = ({ navigation }) => {
   // Function to remove a row
   const handleRemoveRow = (index) => {
     setFormData((prev) => {
-      const updatedData = Array.isArray(prev) && prev.length > 0 ? [...prev] : [{ tss: { text: "", columns: [] } }];
+      const updatedData =
+        Array.isArray(prev) && prev.length > 0
+          ? [...prev]
+          : [{ tss: { text: "", columns: [] } }];
       updatedData[0] = {
         ...updatedData[0],
         tss: {
@@ -193,7 +202,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 20,
     color: "#333",
-    textAlign: "center",
+    textAlign: "left",
   },
   label: {
     fontSize: 14,

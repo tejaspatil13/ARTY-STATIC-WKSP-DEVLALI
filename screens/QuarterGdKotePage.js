@@ -21,7 +21,7 @@ const QuarterGdKotePage = ({ navigation }) => {
 
   const addRow = () => {
     const newRow = {
-      id: rows.length + 1,
+      id: Date.now(),
       type: "",
       held: "",
       armsOut: "",
@@ -128,7 +128,7 @@ const QuarterGdKotePage = ({ navigation }) => {
       {rows.map((row) => (
         <View key={row.id} style={styles.card}>
           <View style={styles.rowHeader}>
-            <Text style={styles.rowTitle}>Entry #{row.id}</Text>
+            <Text style={styles.rowTitle}>Entry {row.id}</Text>
             {rows.length > 1 && (
               <TouchableOpacity
                 onPress={() => deleteRow(row.id)}
@@ -146,15 +146,13 @@ const QuarterGdKotePage = ({ navigation }) => {
             value={row.type}
             onChangeText={(t) => handleInputChange(row.id, "type", t)}
           />
-           <Text style={styles.label}>Held</Text>
+          <Text style={styles.label}>Held</Text>
           <TextInput
             style={styles.input}
             placeholder="Enter Held"
             value={row.held}
             onChangeText={(t) => handleInputChange(row.id, "held", t)}
           />
-
-          
 
           <Text style={styles.label}>Arms Out of Kote</Text>
           <TextInput

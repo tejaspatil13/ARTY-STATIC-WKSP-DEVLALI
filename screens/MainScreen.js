@@ -245,10 +245,16 @@ const MainScreen = ({ navigation }) => {
         /> */}
 
         <Button
+          color={"#34d399"}
           title="Export File"
           onPress={() => requestPermission(pFileUri)}
-        /> 
-         {/* Buttons for Navigation */}
+        />
+        <Button
+          title="PDF Preview"
+          onPress={() => navigation.navigate("PDFPreview")}
+          color="#34d399"
+        />
+        {/* Buttons for Navigation */}
 
         <View
           style={{
@@ -414,16 +420,7 @@ const MainScreen = ({ navigation }) => {
           onPress={() => navigation.navigate("HandoverDuties")}
           color="#2196F3"
         />
-       <Button
-        title="PDF Preview"
-        onPress={() => navigation.navigate("PDFPreview")}
-        color="#34d399"
-      /> 
-      
-      
-      
       </View>
-       
     </ScrollView>
   );
 };
