@@ -648,7 +648,6 @@ export const requestPermission = async (uri) => {
     });
 
     console.log("File saved successfully");
-    alert(directoryUri);
     //  alert(
     //    "Saved successfully!"
     //  );

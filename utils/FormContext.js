@@ -34,6 +34,7 @@ export const FormProvider = ({ children }) => {
 
       // MT Briefing Page Data
       mt_briefing: {
+        text: "I mounted the kote guard and found",
         mt_time: "",
         mt_strength: "",
         mtStrengthFields: [{ id: 1, name: "" }],
