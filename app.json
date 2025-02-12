@@ -4,11 +4,11 @@
     "slug": "ARTY-STATIC-WKSP-DEVLALI",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/temp.jpeg",
+    "icon": "./assets/formicon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/img.png",
+      "image": "./assets/formicon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -16,10 +16,12 @@
       "supportsTablet": true
     },
     "android": {
+      "permissions": ["WRITE_EXTERNAL_STORAGE", "READ_EXTERNAL_STORAGE"],
       "adaptiveIcon": {
-        "foregroundImage": "./assets/temp.jpeg",
+        "foregroundImage": "./assets/formicon.png",
         "backgroundColor": "#ffffff"
       },
+
       "package": "com.harsh_patil.ARTYSTATICWKSPDEVLALI"
     },
     "web": {

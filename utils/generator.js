@@ -4,6 +4,7 @@ import * as fs from "expo-file-system";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as IntentLauncher from "expo-intent-launcher";
 import { Platform, Linking } from "react-native";
+import { PermissionsAndroid } from "react-native";
 
 const fileName = "Daily_Report.xlsx";
 const fileUri = FileSystem.documentDirectory + fileName;
@@ -34,6 +35,23 @@ const processArrayData = (arrayData, date) => {
 
 export const createAndAppendExcel = async (formData) => {
   try {
+    if (Platform.OS === "android") {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: "Storage Permission",
+          message: "App needs access to storage to save reports",
+          buttonNeutral: "Ask Me Later",
+          buttonNegative: "Cancel",
+          buttonPositive: "OK",
+        }
+      );
+      if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+        alert("Storage permission is required");
+        return;
+      }
+    }
+
     alert("Please Wait...");
     const fileName = "Daily_Report.xlsx";
     const fileUri = FileSystem.documentDirectory + fileName;
