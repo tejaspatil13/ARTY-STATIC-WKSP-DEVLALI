@@ -24,7 +24,7 @@ const MTBriefingPage = ({ navigation }) => {
     setShowTimePicker(false);
     if (selected) {
       setSelectedDate(selected);
-      const formattedTime = selected.toLocaleTimeString("en-US", {
+      const formattedTime = selected.toLocaleTimeString("en-GB", {
         hour: "2-digit",
         minute: "2-digit",
         hour12: false,
@@ -131,7 +131,7 @@ const MTBriefingPage = ({ navigation }) => {
       />
 
       {/* Strength Details Section */}
-      <Text style={styles.label }>Details:</Text>
+      <Text style={styles.label}>Details:</Text>
       {strengthFields?.map((field, index) => (
         <View key={field.id} style={styles.fieldRow}>
           <TextInput

@@ -38,7 +38,7 @@ const SecurityMeasuresPage = ({ navigation }) => {
     setShowTimePicker(false);
     if (selected) {
       setSelectedTime(selected);
-      const timeString = selected.toLocaleTimeString([], {
+      const timeString = selected.toLocaleTimeString("en-GB", {
         hour: "2-digit",
         minute: "2-digit",
         hour12: false,
@@ -133,6 +133,7 @@ const SecurityMeasuresPage = ({ navigation }) => {
                   style={styles.measureInput}
                   placeholder="Enter additional measure"
                   value={measure.text}
+                  multiline={true}
                   onChangeText={(text) => updateCustomMeasureText(index, text)}
                 />
               )}
@@ -150,6 +151,7 @@ const SecurityMeasuresPage = ({ navigation }) => {
             style={styles.input}
             placeholder="Observation"
             value={measure.observation}
+            multiline={true}
             onChangeText={(text) => updateObservationText(index, text)}
           />
           <RadioButton.Group

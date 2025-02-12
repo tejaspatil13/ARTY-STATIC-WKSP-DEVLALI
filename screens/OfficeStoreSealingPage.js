@@ -12,107 +12,54 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { Ionicons } from "@expo/vector-icons";
 import { FormContext } from "../utils/FormContext";
 
-const QuarterGdKotePage = ({ navigation }) => {
+const OfficeStoreSealingPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
-  const [rows, setRows] = useState(
-    formData[0].quarter_gd_kote?.quarterGdKoteRows || [
-      { id: 1, held: "", armsOut: "", armsIn: "", remarks: "", ate: "" },
-    ]
-  );
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [showATEPicker, setShowATEPicker] = useState(false);
-  const [selectedRowId, setSelectedRowId] = useState(null);
-  const [date, setDate] = useState(new Date());
-  const [ateTime, setATETime] = useState(new Date());
+  const [showOfficePicker, setShowOfficePicker] = useState(false);
+  const [showStorePicker, setShowStorePicker] = useState(false);
+  const [officeTime, setOfficeTime] = useState(new Date());
+  const [storeTime, setStoreTime] = useState(new Date());
 
-  const handleInputChange = (id, field, value) => {
-    const updatedRows = rows.map((row) =>
-      row.id === id ? { ...row, [field]: value } : row
+  const handleInputChange = (field, value) => {
+    setFormData((prevData) =>
+      prevData?.map((item) => ({
+        ...item,
+        office_sealing: {
+          ...item.office_sealing,
+          [field]: value,
+        },
+      }))
     );
-    setRows(updatedRows);
-    updateFormData(updatedRows);
   };
 
-  const updateFormData = (updatedRows) => {
-    setFormData((prevState) => {
-      const newState = [...prevState];
-      newState[0].quarter_gd_kote = {
-        ...newState[0].quarter_gd_kote,
-        quarterGdKoteRows: updatedRows,
-      };
-      return newState;
-    });
-  };
-
-  const handleDateChange = (event, selectedDate) => {
-    setShowDatePicker(false);
-    if (selectedDate) {
-      setDate(selectedDate);
-      setFormData((prevState) => {
-        const newState = [...prevState];
-        newState[0].quarter_gd_kote = {
-          ...newState[0].quarter_gd_kote,
-          koteCheckDate: selectedDate.toISOString().split("T")[0],
-        };
-        return newState;
-      });
-    }
-  };
-
-  const handleATEChange = (event, selectedTime) => {
-    setShowATEPicker(false);
-    if (selectedTime && selectedRowId) {
-      setATETime(selectedTime);
-      const timeString = selectedTime.toLocaleTimeString("en-US", {
+  const onOfficeTimeChange = (event, selectedTime) => {
+    setShowOfficePicker(false);
+    if (selectedTime) {
+      setOfficeTime(selectedTime);
+      const formattedTime = selectedTime.toLocaleTimeString("en-GB", {
         hour: "2-digit",
         minute: "2-digit",
-        hour12: true,
+        hour12: false,
       });
-      handleInputChange(selectedRowId, "ate", timeString);
+      handleInputChange("office_sealed_at", formattedTime);
     }
   };
 
-  const addRow = () => {
-    const newRow = {
-      id: Date.now(),
-      type: "",
-      held: "",
-      armsOut: "",
-      armsIn: "",
-      remarks: "",
-      ate: "",
-    };
-    const updatedRows = [...rows, newRow];
-    setRows(updatedRows);
-    updateFormData(updatedRows);
-  };
-
-  const deleteRow = (id) => {
-    if (rows.length > 1) {
-      const updatedRows = rows.filter((row) => row.id !== id);
-      setRows(updatedRows);
-      updateFormData(updatedRows);
-    }
-  };
-
-  useEffect(() => {
-    if (!formData[0].quarter_gd_kote) {
-      setFormData((prevState) => {
-        const newState = [...prevState];
-        newState[0].quarter_gd_kote = {
-          koteCheckDate: "",
-          quarterGdKoteRows: [
-            { id: 1, held: "", armsOut: "", armsIn: "", remarks: "", ate: "" },
-          ],
-        };
-        return newState;
+  const onStoreTimeChange = (event, selectedTime) => {
+    setShowStorePicker(false);
+    if (selectedTime) {
+      setStoreTime(selectedTime);
+      const formattedTime = selectedTime.toLocaleTimeString("en-GB", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
       });
+      handleInputChange("store_sealed_at", formattedTime);
     }
-  }, []);
+  };
 
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: "Quarter Gd & Kote",
+      headerTitle: "Office & Store Sealing",
       headerTitleAlign: "center",
       headerTitleStyle: {
         fontSize: 22,
@@ -130,129 +77,57 @@ const QuarterGdKotePage = ({ navigation }) => {
     });
   }, [navigation]);
 
-  if (!formData[0].quarter_gd_kote) {
-    return null;
-  }
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.sectionTitle}>13. Quarter Gd & Kote</Text>
+      <Text style={styles.sectionTitle}>5. Office & Store Sealing</Text>
 
-      <Text style={styles.label}>
-        I have physically checked the Arms in Kote on:
-      </Text>
-      <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+      <Text style={styles.label}>Office Sealed At</Text>
+      <TouchableOpacity onPress={() => setShowOfficePicker(true)}>
         <TextInput
           style={styles.input}
-          placeholder="Select Date"
-          value={formData[0].quarter_gd_kote.koteCheckDate}
+          placeholder="HH:MM"
+          value={formData[0].office_sealing.office_sealed_at}
           editable={false}
         />
       </TouchableOpacity>
-      {showDatePicker && (
+      {showOfficePicker && (
         <DateTimePicker
-          value={date}
-          mode="date"
-          display="default"
-          onChange={handleDateChange}
-        />
-      )}
-
-      {rows.map((row) => (
-        <View key={row.id} style={styles.card}>
-          <View style={styles.rowHeader}>
-            <Text style={styles.rowTitle}>Entry {row.id}</Text>
-            {rows.length > 1 && (
-              <TouchableOpacity
-                onPress={() => deleteRow(row.id)}
-                style={styles.deleteButton}
-              >
-                <Ionicons name="trash-outline" size={24} color="#ff5252" />
-              </TouchableOpacity>
-            )}
-          </View>
-
-          <Text style={styles.label}>Type</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter Type"
-            value={row.type}
-            onChangeText={(t) => handleInputChange(row.id, "type", t)}
-          />
-
-          <Text style={styles.label}>Held</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter Held"
-            value={row.held}
-            onChangeText={(t) => handleInputChange(row.id, "held", t)}
-          />
-
-          <Text style={styles.label}>Arms Out of Kote</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter Arms Out"
-            value={row.armsOut}
-            onChangeText={(t) => handleInputChange(row.id, "armsOut", t)}
-          />
-
-          <Text style={styles.label}>Arms In Kote</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter Arms In"
-            value={row.armsIn}
-            onChangeText={(t) => handleInputChange(row.id, "armsIn", t)}
-          />
-
-          <Text style={styles.label}>ATE Time</Text>
-          <TouchableOpacity
-            onPress={() => {
-              setSelectedRowId(row.id);
-              setShowATEPicker(true);
-            }}
-          >
-            <TextInput
-              style={styles.input}
-              placeholder="HH:MM"
-              value={row.ate}
-              editable={false}
-            />
-          </TouchableOpacity>
-
-          <Text style={styles.label}>Remarks</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter Remarks"
-            value={row.remarks}
-            onChangeText={(t) => handleInputChange(row.id, "remarks", t)}
-            multiline
-          />
-        </View>
-      ))}
-
-      {showATEPicker && (
-        <DateTimePicker
-          value={ateTime}
+          value={officeTime}
           mode="time"
-          is24Hour={true}
           display="default"
-          onChange={handleATEChange}
+          onChange={onOfficeTimeChange}
+          is24Hour={true}
         />
       )}
 
-      <TouchableOpacity onPress={addRow} style={styles.addButton}>
-        <Text style={styles.addButtonText}>Add Entry</Text>
+      <Text style={styles.label}>Store Sealed At</Text>
+      <TouchableOpacity onPress={() => setShowStorePicker(true)}>
+        <TextInput
+          style={styles.input}
+          placeholder="HH:MM"
+          value={formData[0].office_sealing.store_sealed_at}
+          editable={false}
+        />
       </TouchableOpacity>
+      {showStorePicker && (
+        <DateTimePicker
+          value={storeTime}
+          mode="time"
+          display="default"
+          onChange={onStoreTimeChange}
+          is24Hour={true}
+        />
+      )}
 
       <View style={styles.buttonContainer}>
         <Button
           title="← Previous"
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.navigate("GuardCheck")}
           color="#757575"
         />
         <Button
           title="Next →"
-          onPress={() => navigation.navigate("Next")}
+          onPress={() => navigation.navigate("RationCheck")}
           color="#2196F3"
         />
       </View>
@@ -286,49 +161,14 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     backgroundColor: "#fff",
   },
-  card: {
-    backgroundColor: "#fff",
-    borderRadius: 5,
-    padding: 15,
-    marginBottom: 15,
-    borderWidth: 1,
-    borderColor: "#ccc",
-  },
-  rowHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 15,
-  },
-  rowTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#333",
-  },
-  deleteButton: {
-    padding: 4,
-  },
-  addButton: {
-    backgroundColor: "#2196F3",
-    padding: 10,
-    borderRadius: 5,
-    alignItems: "center",
-    marginVertical: 15,
-  },
-  addButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 15,
-    marginBottom: 30,
+    marginTop: 30,
   },
   homeButton: {
     marginLeft: 15,
   },
 });
 
-export default QuarterGdKotePage;
+export default OfficeStoreSealingPage;

@@ -19,7 +19,9 @@ const AwarenessPage = ({ navigation }) => {
     setFormData((prev) => {
       // Ensure prev is an array and initialize if undefined
       const updatedData =
-        Array.isArray(prev) && prev.length > 0 ? [...prev] : [{ awareness: {} }];
+        Array.isArray(prev) && prev.length > 0
+          ? [...prev]
+          : [{ awareness: {} }];
 
       updatedData[0] = {
         ...updatedData[0],
@@ -57,7 +59,7 @@ const AwarenessPage = ({ navigation }) => {
       <Text style={styles.sectionTitle}>26. Awareness</Text>
 
       {/* Rank and Name */}
-      <Text style={styles.label}>(a) Rank and Name:</Text>
+      <Text style={styles.label}>(a)GFO: Rank and Name</Text>
       <TextInput
         style={styles.input}
         placeholder="Enter Rank and Name"

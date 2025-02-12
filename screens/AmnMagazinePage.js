@@ -60,7 +60,11 @@ const AmnMagazinePage = ({ navigation }) => {
     setShowDatePicker(false);
     if (selectedDate) {
       setDate(selectedDate);
-      const formattedDate = selectedDate.toISOString().split("T")[0];
+      const formattedDate = selectedDate.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
       setFormData((prev) =>
         prev.map((item, index) =>
           index === 0

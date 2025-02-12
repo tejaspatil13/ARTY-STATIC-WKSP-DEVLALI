@@ -21,7 +21,7 @@ const GuardDetailsPage = ({ navigation }) => {
     setShowTimePicker(false);
     if (selected) {
       setSelectedDate(selected);
-      const formattedTime = selected.toLocaleTimeString("en-US", {
+      const formattedTime = selected.toLocaleTimeString("en-GB", {
         hour: "2-digit",
         minute: "2-digit",
         hour12: false,

@@ -44,7 +44,12 @@ const GuardCheckPage = ({ navigation }) => {
   };
 
   const addGuard = () => {
-    const newGuard = { id: guards.length + 1, type: "", day: "", night: "" };
+    const newGuard = {
+      id: guards.length + 1,
+      guard: "",
+      dayInfo: "",
+      nightInfo: "",
+    };
     setFormData((prevData) => {
       if (!Array.isArray(prevData)) return prevData; // Ensure prevData is an array
       return prevData.map((item) => ({

@@ -5,6 +5,8 @@ export const FormContext = createContext();
 
 export const fileContext = createContext();
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 export const FormProvider = ({ children }) => {
   const [formData, setFormData] = useState([
     {
@@ -38,7 +40,7 @@ export const FormProvider = ({ children }) => {
       },
 
       // Guard Check
-      guard_check: [{ guard: "", dayInfo: "", nightInfo: "" }],
+      guard_check: [{ id: 1, guard: "", dayInfo: "", nightInfo: "" }],
 
       // Office Sealing
       office_sealing: {
@@ -283,7 +285,8 @@ export const FormProvider = ({ children }) => {
     },
   ]);
 
-  //Filled data
+  // Filled data
+
   // const [formData, setFormData] = useState([
   //   {
   //     date: "9/2/2025",
@@ -320,8 +323,8 @@ export const FormProvider = ({ children }) => {
 
   //     // Guard Check
   //     guard_check: [
-  //       { guard: "Guard A", dayInfo: "Clear", nightInfo: "Clear" },
-  //       { guard: "Guard B", dayInfo: "Alert", nightInfo: "Alert" },
+  //       { id: 1, guard: "Guard A", dayInfo: "Clear", nightInfo: "Clear" },
+  //       // { id: 2, guard: "Guard B", dayInfo: "Alert", nightInfo: "Alert" },
   //     ],
 
   //     // Office Sealing
@@ -592,6 +595,35 @@ export const FormProvider = ({ children }) => {
   //     },
   //   },
   // ]);
+
+  // useEffect(() => {
+  //   const saveFormData = async () => {
+  //     try {
+  //       const res = await AsyncStorage.getItem("formData");
+  //       const parsedData = JSON.parse(res);
+
+  //       const date = new Date().toLocaleDateString("en-IN");
+  //       const oldData = saveFormData();
+
+  //       if (date === oldData.date) setFormData(oldData);
+  //     } catch (error) {
+  //       return null;
+  //     }
+  //   };
+  //   saveFormData();
+  // }, []);
+
+  useEffect(() => {
+    const saveData = async () => {
+      try {
+        const jsonValue = JSON.stringify(formData);
+        await AsyncStorage.setItem("formData", jsonValue);
+      } catch (error) {
+        console.log("Error saving data:", error);
+      }
+    };
+    saveData();
+  }, [formData]);
 
   return (
     <FormContext.Provider value={{ formData, setFormData }}>

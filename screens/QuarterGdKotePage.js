@@ -71,7 +71,11 @@ const QuarterGdKotePage = ({ navigation }) => {
         const newState = [...prevState];
         newState[0].quarter_gd_kote = {
           ...newState[0].quarter_gd_kote,
-          koteCheckDate: selectedDate.toISOString().split("T")[0],
+          koteCheckDate: selectedDate.toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          }),
         };
         return newState;
       });

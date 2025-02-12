@@ -1,8 +1,9 @@
 import * as FileSystem from "expo-file-system";
 import XLSX from "xlsx";
-import { shareAsync } from "expo-sharing";
 import * as fs from "expo-file-system";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as IntentLauncher from "expo-intent-launcher";
+import { Platform, Linking } from "react-native";
 
 const fileName = "Daily_Report.xlsx";
 const fileUri = FileSystem.documentDirectory + fileName;
@@ -33,6 +34,7 @@ const processArrayData = (arrayData, date) => {
 
 export const createAndAppendExcel = async (formData) => {
   try {
+    alert("Please Wait...");
     const fileName = "Daily_Report.xlsx";
     const fileUri = FileSystem.documentDirectory + fileName;
     let wb;
@@ -237,20 +239,54 @@ export const createAndAppendExcel = async (formData) => {
       }
 
       // 12. Defense Land Survey Sheet
-      const defenseData = {
-        Date: date,
-        ...flattenObject(entry.defense_land_survey),
-      };
-      const defenseSheet =
-        wb.Sheets["defense_land_survey"] ||
-        XLSX.utils.json_to_sheet([defenseData]);
+      // Modified Defense Land Survey Sheet handling
+      const defenseDataRows = [];
+
+      // Process each entry's defense land survey data
+      formData.forEach((entry) => {
+        const { date, defense_land_survey } = entry;
+
+        // If there are observations, create a row for each
+        if (
+          defense_land_survey.observations &&
+          Array.isArray(defense_land_survey.observations)
+        ) {
+          defense_land_survey.observations.forEach((obs) => {
+            defenseDataRows.push({
+              Date: date,
+              Text: defense_land_survey.text,
+              RP_Present: defense_land_survey.RP ? "Yes" : "No",
+              QM_Present: defense_land_survey.QM ? "Yes" : "No",
+              Observation: obs.text,
+            });
+          });
+        } else {
+          // If no observations, create one row with basic data
+          defenseDataRows.push({
+            Date: date,
+            Text: defense_land_survey.text,
+            RP_Present: defense_land_survey.RP ? "Yes" : "No",
+            QM_Present: defense_land_survey.QM ? "Yes" : "No",
+            Observation: "",
+          });
+        }
+      });
+
+      // Create or update the defense land survey sheet
       if (!wb.Sheets["defense_land_survey"]) {
+        // Create new sheet if it doesn't exist
+        const defenseSheet = XLSX.utils.json_to_sheet(defenseDataRows);
         XLSX.utils.book_append_sheet(wb, defenseSheet, "defense_land_survey");
       } else {
-        XLSX.utils.sheet_add_json(defenseSheet, [defenseData], {
-          skipHeader: true,
-          origin: -1,
-        });
+        // Append to existing sheet
+        XLSX.utils.sheet_add_json(
+          wb.Sheets["defense_land_survey"],
+          defenseDataRows,
+          {
+            skipHeader: true,
+            origin: -1,
+          }
+        );
       }
 
       // 13. Quarter Guard & Kote Sheet
@@ -539,6 +575,11 @@ export const createAndAppendExcel = async (formData) => {
       encoding: FileSystem.EncodingType.Base64,
     });
 
+    const parsedData = JSON.stringify(formData);
+    await AsyncStorage.setItem("formData", parsedData);
+
+    alert("Action Successfull!");
+
     // console.log("Excel file updated successfully with all 27 sheets:", fileUri);
 
     // Save the file to the Downloads folder
@@ -556,51 +597,66 @@ export const createAndAppendExcel = async (formData) => {
 
 export const requestPermission = async (uri) => {
   try {
-    const status =
-      await fs.StorageAccessFramework.requestDirectoryPermissionsAsync();
+    let directoryUri = await AsyncStorage.getItem("directoryUri");
 
-    if (status.granted) {
-      const base64 = await fs.readAsStringAsync(uri, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
+    // Request permissions only if no stored URI
+    if (!directoryUri) {
+      const status =
+        await fs.StorageAccessFramework.requestDirectoryPermissionsAsync();
 
-      // Get list of files in the directory
-      const files = await fs.StorageAccessFramework.readDirectoryAsync(
-        status.directoryUri
-      );
-
-      // Look for existing file with same name
-      const existingFile = files.find((file) => {
-        const fileName = file.split("/").pop(); // Get filename from path
-        return fileName === "All_Data.xlsx";
-      });
-
-      if (existingFile) {
-        // If file exists, delete it first
-        await fs.StorageAccessFramework.deleteAsync(existingFile);
+      if (!status.granted) {
+        alert("Permission denied. Cannot save the file.");
+        return;
       }
 
-      const date = new Date().toLocaleDateString("en-IN");
-
-      // Create new file
-      const newFileUri =
-        await FileSystem.StorageAccessFramework.createFileAsync(
-          status.directoryUri,
-          `All_Data(${date}).xlsx`,
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        );
-
-      // Write content to new file
-      await fs.writeAsStringAsync(newFileUri, base64, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-
-      console.log("File saved successfully");
+      directoryUri = status.directoryUri;
+      await AsyncStorage.setItem("directoryUri", directoryUri);
     }
+
+    const base64 = await fs.readAsStringAsync(uri, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+
+    // Get list of files in the directory
+    const files = await fs.StorageAccessFramework.readDirectoryAsync(
+      directoryUri
+    );
+
+    // Look for existing file with the same name
+    const existingFile = files.find((file) => {
+      const fileName = file.split("/").pop();
+      return fileName === "All_Data.xlsx";
+    });
+
+    if (existingFile) {
+      // If file exists, delete it first
+      await fs.StorageAccessFramework.deleteAsync(existingFile);
+    }
+
+    const date = new Date().toLocaleDateString("en-IN");
+
+    // Create new file
+    const newFileUri = await FileSystem.StorageAccessFramework.createFileAsync(
+      directoryUri,
+      `Data(${date}).xlsx`,
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+
+    // Write content to new file
+    await fs.writeAsStringAsync(newFileUri, base64, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+
+    console.log("File saved successfully");
+    alert(directoryUri);
+    //  alert(
+    //    "Saved successfully!"
+    //  );
+    // Open the saved file's folder location
   } catch (error) {
-    console.error("Error saving file:", error);
+    console.log("Error saving file:", error);
     alert(
-      "Something went wrong, make sure you have added initial data or contact maker!"
+      "Make sure you have added some data into it first or contact the maker!"
     );
   }
 };

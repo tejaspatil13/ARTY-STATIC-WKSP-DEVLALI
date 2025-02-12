@@ -30,7 +30,7 @@ const MedicalVisitPage = ({ navigation }) => {
     setShowTimePicker(false);
     if (selected) {
       setSelectedTime(selected);
-      const timeString = selected.toLocaleTimeString([], {
+      const timeString = selected.toLocaleTimeString("en-GB", {
         hour: "2-digit",
         minute: "2-digit",
         hour12: false,

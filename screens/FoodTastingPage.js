@@ -130,6 +130,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#333",
     marginLeft: 10,
+    paddingTop: 20,
   },
   foodTastingContainer: {
     marginBottom: 0,

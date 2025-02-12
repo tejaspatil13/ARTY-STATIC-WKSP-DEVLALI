@@ -52,10 +52,10 @@ const RollCallPage = ({ navigation }) => {
     setShowTimePicker(false);
     if (selected) {
       setSelectedTime(selected);
-      const formattedTime = selected.toLocaleTimeString("en-US", {
+      const formattedTime = selected.toLocaleTimeString("en-GB", {
         hour: "2-digit",
         minute: "2-digit",
-        hour12: true,
+        hour12: false,
       });
       handleInputChange("time", formattedTime);
     }
@@ -87,10 +87,11 @@ const RollCallPage = ({ navigation }) => {
         const updatedForm = {
           ...prevData[0],
           roll_call: {
-            location: "",
+            date: "",
+            time: "",
             details: "",
             date: new Date().toLocaleDateString("en-GB"),
-            time: new Date().toLocaleTimeString("en-US", {
+            time: new Date().toLocaleTimeString("en-GB", {
               hour: "2-digit",
               minute: "2-digit",
               hour12: false,

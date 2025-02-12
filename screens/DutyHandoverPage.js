@@ -40,7 +40,7 @@ const DutyHandoverPage = ({ navigation }) => {
     setShowStartTimePicker(false);
     if (selected) {
       setSelectedStartTime(selected);
-      const formattedTime = selected.toLocaleTimeString("en-US", {
+      const formattedTime = selected.toLocaleTimeString("en-GB", {
         hour: "2-digit",
         minute: "2-digit",
         hour12: false,
@@ -66,7 +66,7 @@ const DutyHandoverPage = ({ navigation }) => {
     setShowEndTimePicker(false);
     if (selected) {
       setSelectedEndTime(selected);
-      const formattedTime = selected.toLocaleTimeString("en-US", {
+      const formattedTime = selected.toLocaleTimeString("en-GB", {
         hour: "2-digit",
         minute: "2-digit",
         hour12: false,

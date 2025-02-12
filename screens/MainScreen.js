@@ -5,6 +5,7 @@ import * as FileSystem from "expo-file-system";
 import XLSX from "xlsx";
 import { shareAsync } from "expo-sharing";
 import createAndAppendExcel, { requestPermission } from "../utils/generator";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const fileName = "Daily_Report.xlsx";
 const downloadsUri = FileSystem.documentDirectory + fileName; // Internal storage
@@ -30,7 +31,7 @@ const MainScreen = ({ navigation }) => {
         console.log("No Excel file found to delete.");
       }
     } catch (error) {
-      console.error("Error deleting Excel file:", error);
+      console.log("Error deleting Excel file:", error);
     }
   };
 
@@ -93,7 +94,7 @@ const MainScreen = ({ navigation }) => {
   //       alert("Sharing is not available on this device");
   //     }
   //   } catch (error) {
-  //     console.error("Error exporting to Excel:", error);
+  //     console.log("Error exporting to Excel:", error);
   //   }
   // };
 
@@ -208,7 +209,7 @@ const MainScreen = ({ navigation }) => {
   //       alert("Sharing is not available on this device");
   //     }
   //   } catch (error) {
-  //     console.error("Error exporting to Excel:", error);
+  //     console.log("Error exporting to Excel:", error);
   //   }
   // };
 
@@ -225,12 +226,39 @@ const MainScreen = ({ navigation }) => {
   const date = new Date().toLocaleDateString("en-IN");
 
   useEffect(() => {
-    setFormData((prevData) =>
-      prevData?.map((item, index) => ({
-        ...item,
-        date: date,
-      }))
-    );
+    const loadFormData = async () => {
+      try {
+        const jsonValue = await AsyncStorage.getItem("formData");
+        if (jsonValue !== null) {
+          const parsedData = JSON.parse(jsonValue);
+          const date = new Date().toLocaleDateString("en-IN");
+
+          // Handle array of form data
+          if (Array.isArray(parsedData)) {
+            if (parsedData[0]?.date === date) {
+              setFormData(parsedData);
+            } else {
+              const updatedData = parsedData.map((item) => ({
+                ...item,
+                date: date,
+              }));
+              setFormData(updatedData);
+            }
+          } else {
+            // If no data or invalid data, initialize with default state
+            setFormData((prevData) =>
+              prevData.map((item) => ({
+                ...item,
+                date: date,
+              }))
+            );
+          }
+        }
+      } catch (error) {
+        console.log("Error loading data:", error);
+      }
+    };
+    loadFormData();
   }, []);
 
   return (
