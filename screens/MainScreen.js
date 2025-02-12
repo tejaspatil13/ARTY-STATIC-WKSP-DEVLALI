@@ -267,20 +267,7 @@ const MainScreen = ({ navigation }) => {
       <Text style={styles.title}>DUTY JCO FORM</Text>
 
       <View style={styles.buttonContainer}>
-        <Button title="delete Sheet" onPress={() => deleteExcelFile()} />
-
-        <Button
-          color={"#34d399"}
-          title="Export File"
-          onPress={() => requestPermission(pFileUri)}
-        />
-        <Button
-          title="PDF Preview"
-          onPress={() => navigation.navigate("PDFPreview")}
-          color="#34d399"
-        />
-        {/* Buttons for Navigation */}
-
+        {/* <Button title="delete Sheet" onPress={() => deleteExcelFile()} /> */}
         <View
           style={{
             gap: 5,
@@ -298,6 +285,18 @@ const MainScreen = ({ navigation }) => {
           <Text>Current Date</Text>
           <Text style={{ fontSize: 20 }}>{date}</Text>
         </View>
+
+        <Button
+          color={"#34d399"}
+          title="Export File"
+          onPress={() => requestPermission(pFileUri)}
+        />
+        <Button
+          title="PDF Preview"
+          onPress={() => navigation.navigate("PDFPreview")}
+          color="#34d399"
+        />
+        {/* Buttons for Navigation */}
 
         <Button
           title="1. Start Duty Handover"

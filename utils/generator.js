@@ -94,7 +94,7 @@ export const createAndAppendExcel = async (formData) => {
         const mtBriefingData = entry.mt_briefing.mtStrengthFields.map(
           (field) => ({
             Date: date,
-            Text: entry.mt_briefing.text,
+            Text: "I mounted the kote guard and found",
             Time: entry.mt_briefing.mt_time,
             Strength: entry.mt_briefing.mt_strength,
             ...field, // This spreads the id and name from mtStrengthFields

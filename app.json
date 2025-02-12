@@ -4,7 +4,7 @@
     "slug": "ARTY-STATIC-WKSP-DEVLALI",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/formicon.png",
+    "icon": "./assets/temp.jpeg",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
@@ -17,7 +17,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/img.png",
+        "foregroundImage": "./assets/temp.jpeg",
         "backgroundColor": "#ffffff"
       },
       "package": "com.harsh_patil.ARTYSTATICWKSPDEVLALI"

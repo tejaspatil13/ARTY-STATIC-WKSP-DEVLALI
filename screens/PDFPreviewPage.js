@@ -810,9 +810,13 @@ const PDFPreviewPage = ({ navigation }) => {
       
       
       <h2>6. Fresh/Dry Ration and Meat Check</h2>
-      <p>Observations: <b>${
-        form.ration_check.ration_observations || "____"
-      }</b></p>
+      <div style="word-wrap: break-word; max-width: 100%;">
+        <p style="white-space: normal; overflow-wrap: break-word;">
+          Observations: <b>${
+            form.ration_check.ration_observations || "____"
+          }</b>
+        </p>
+      </div>
   
       
       
@@ -1038,12 +1042,19 @@ const PDFPreviewPage = ({ navigation }) => {
     form.security_measures?.checkTime || "____"
   }</b> hrs and observed:</p>
 <ul>
-  <li>Any Salesmen/Beggars found in AOR: <b>${
-    form.security_measures?.measures[0]?.check ? "Yes" : "No"
-  }</b></li>
-  <li>Checked unit AOR for unauthorized occupation of def land: <b>${
-    form.security_measures?.measures[1]?.check ? "Yes" : "No"
-  }</b></li>
+  ${form.security_measures?.measures
+    .map(
+      (measure, index) => `
+    <li>${measure.text || ""}: <b>${measure.check ? "Yes" : "No"}</b>
+      ${
+        measure.observation
+          ? `<br/>Observation: <b>${measure.observation}</b>`
+          : ""
+      }
+    </li>
+  `
+    )
+    .join("")}
 </ul>
 
 <h2>18. CCTV Location</h2>
