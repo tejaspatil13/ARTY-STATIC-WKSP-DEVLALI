@@ -729,8 +729,7 @@ const PDFPreviewPage = ({ navigation }) => {
   <div class="form-container">
    <h1>DUTY JCO FORM</h1>
   
-      <p>
-        1. I, JC <b>
+      1. I, JC <b>
         ${form.duty_handover.jcNumber || "____"}</b>, Rank <b>
         ${form.duty_handover.rank || "____"}</b>, Name <b>
         ${form.duty_handover.name || "____"}</b> was the duty JCO from <b>
@@ -740,9 +739,9 @@ const PDFPreviewPage = ({ navigation }) => {
         ${
           form.duty_handover.endDate || "____"
         }</b>. I took over the duty from JC- <b>
-  ${form.duty_handover.prevJCNumber || "____"}</b>Rank<b>
-  ${form.duty_handover.prevRank || "____"}</b>Name<b>
-  ${form.duty_handover.prevName || "____"}</b>.
+  ${form.duty_handover.prevJCNumber || "____"} </b>  Rank <b>
+  ${form.duty_handover.prevRank || "____"}</b>  Name 
+  <b>${form.duty_handover.prevName || "____"}<b/>.
       </p>
   
      
@@ -912,11 +911,12 @@ const PDFPreviewPage = ({ navigation }) => {
     .join("")}
 </table>
 
-
 <h2>12. Defence Land Survey</h2>
 <p>
   I visited Defence Land Survey No. 36, 38, 40, 41, 43 & 59 along with a rep of the RP/QM and made an entry in the Defence Land Visit Register. I have the following to report:
 </p>
+<p><b>Regimental Police: ${form.defense_land_survey.RP ? "Yes" : "No"}</b></p>
+<p><b>Quartermaster: ${form.defense_land_survey.QM ? "Yes" : "No"}</b></p>
 <ul>
   ${form.defense_land_survey?.observations
     .map(
@@ -1170,7 +1170,7 @@ ${form.liquorIssue.text || "Remark : "}
 <ul>
   <li>(a) GFO: Rank and Name <b>${
     form.awareness.rankAndName || "________"
-  }</b>unit <b>${form.awareness.unit || "________"}</b></li>
+  }</b> unit <b>${form.awareness.unit || "________"}</b></li>
   <li>(b) Duty Offr: Rank and Name <b>${
     form.awareness.dutyOfficer || "________"
   }</b></li>

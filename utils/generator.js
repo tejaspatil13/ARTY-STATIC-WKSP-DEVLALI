@@ -91,12 +91,19 @@ export const createAndAppendExcel = async (formData) => {
 
       // 3. MT Briefing Sheet
       if (entry.mt_briefing?.mtStrengthFields?.length > 0) {
-        const mtBriefingData = processArrayData(
-          entry.mt_briefing.mtStrengthFields,
-          date
+        const mtBriefingData = entry.mt_briefing.mtStrengthFields.map(
+          (field) => ({
+            Date: date,
+            Text: entry.mt_briefing.text,
+            Time: entry.mt_briefing.mt_time,
+            Strength: entry.mt_briefing.mt_strength,
+            ...field, // This spreads the id and name from mtStrengthFields
+          })
         );
+
         const mtBriefingSheet =
           wb.Sheets["mt_briefing"] || XLSX.utils.json_to_sheet(mtBriefingData);
+
         if (!wb.Sheets["mt_briefing"]) {
           XLSX.utils.book_append_sheet(wb, mtBriefingSheet, "mt_briefing");
         } else {
@@ -158,10 +165,12 @@ export const createAndAppendExcel = async (formData) => {
 
       // 7. Cook Houses Sheet
       if (entry.cookHouseObservations?.length > 0) {
-        const cookHouseData = processArrayData(
-          entry.cookHouseObservations,
-          date
-        );
+        const cookHouseData = entry.cookHouseObservations.map((obs) => ({
+          Date: date,
+          CookHouse: obs.cook_house,
+          AppliancesStatus: obs.appliances_status,
+          StaffDetails: obs.staff_details,
+        }));
         const cookHouseSheet =
           wb.Sheets["cook_houses"] || XLSX.utils.json_to_sheet(cookHouseData);
         if (!wb.Sheets["cook_houses"]) {
@@ -310,10 +319,12 @@ export const createAndAppendExcel = async (formData) => {
 
       // 14. AMN Magazine Sheet
       if (entry.amn_magazine?.amnMagazineRows?.length > 0) {
-        const amnData = processArrayData(
-          entry.amn_magazine.amnMagazineRows,
-          date
-        );
+        const amnData = entry.amn_magazine.amnMagazineRows.map((row) => ({
+          Date: date,
+          Text: entry.amn_magazine.text,
+          CheckDate: entry.amn_magazine.amnMagazineCheckDate,
+          ...row,
+        }));
         const amnSheet =
           wb.Sheets["amn_magazine"] || XLSX.utils.json_to_sheet(amnData);
         if (!wb.Sheets["amn_magazine"]) {
@@ -365,7 +376,11 @@ export const createAndAppendExcel = async (formData) => {
 
       // 16. TSS Sheet
       if (entry.tss?.columns?.length > 0) {
-        const tssData = processArrayData(entry.tss.columns, date);
+        const tssData = entry.tss.columns.map((column) => ({
+          Date: date,
+          Text: entry.tss.text,
+          ...column,
+        }));
         const tssSheet = wb.Sheets["tss"] || XLSX.utils.json_to_sheet(tssData);
         if (!wb.Sheets["tss"]) {
           XLSX.utils.book_append_sheet(wb, tssSheet, "tss");
@@ -380,7 +395,11 @@ export const createAndAppendExcel = async (formData) => {
       // 17. Security Measures Sheet
       const securityData = {
         Date: date,
-        ...flattenObject(entry.security_measures),
+        Text: entry.security_measures.text,
+        CheckTime: entry.security_measures.checkTime,
+        Measures: entry.security_measures.measures
+          .map((m) => `${m.text}: ${m.check ? "Yes" : "No"} - ${m.observation}`)
+          .join("; "),
       };
       const securitySheet =
         wb.Sheets["security_measures"] ||
@@ -410,19 +429,23 @@ export const createAndAppendExcel = async (formData) => {
       }
 
       // 19. Devlali Visit Sheet
-      const devlaliData = {
-        Date: date,
-        ...flattenObject(entry.devlali_visit),
-      };
-      const devlaliSheet =
-        wb.Sheets["devlali_visit"] || XLSX.utils.json_to_sheet([devlaliData]);
-      if (!wb.Sheets["devlali_visit"]) {
-        XLSX.utils.book_append_sheet(wb, devlaliSheet, "devlali_visit");
-      } else {
-        XLSX.utils.sheet_add_json(devlaliSheet, [devlaliData], {
-          skipHeader: true,
-          origin: -1,
-        });
+      if (entry.devlali_visit?.observations?.length > 0) {
+        const devlaliData = entry.devlali_visit.observations.map((obs) => ({
+          Date: date,
+          Time: entry.devlali_visit.time,
+          Observation: obs.text,
+        }));
+
+        const devlaliSheet =
+          wb.Sheets["devlali_visit"] || XLSX.utils.json_to_sheet(devlaliData);
+        if (!wb.Sheets["devlali_visit"]) {
+          XLSX.utils.book_append_sheet(wb, devlaliSheet, "devlali_visit");
+        } else {
+          XLSX.utils.sheet_add_json(devlaliSheet, devlaliData, {
+            skipHeader: true,
+            origin: -1,
+          });
+        }
       }
 
       // 20. Roll Call Sheet
