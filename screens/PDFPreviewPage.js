@@ -9,6 +9,7 @@ import React, { useContext, useEffect, useState } from "react";
 import createAndAppendExcel from "../utils/generator";
 import EmptyFieldsPopup from "../utils/popUp";
 import { validateFormData } from "../utils/emptyChecker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const currentDate = new Date().toLocaleDateString("en-IN"); // Format: DD/MM/YYYY
 
@@ -33,7 +34,7 @@ const PDFPreviewPage = ({ navigation }) => {
     });
   }, [navigation]);
 
-  const { formData } = useContext(FormContext);
+  const { formData, setFormData } = useContext(FormContext);
   const form = formData[0] || {}; // Ensure form data exists
   const [popUp, setPopUp] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -638,23 +639,29 @@ ${form.liquorIssue.text || "Remark : "}
     }
   };
 
+  const setData = async () => {
+    try {
+      let existingData = JSON.parse(await AsyncStorage.getItem("formData"));
+      if (existingData === null || existingData.length < 1)
+        existingData = formData;
+      else existingData.push(formData[0]);
+      let newData = JSON.stringify(existingData);
+      await AsyncStorage.setItem("formData", newData);
+    } catch (error) {
+      alert("Something Went Wrong, Contact the maker!");
+      console.log(error);
+    }
+  };
+
   const handleAdd = () => {
     setIsLoading(true);
-    createAndAppendExcel(formData);
-    // handleClear();
+    setData();
+    // createAndAppendExcel(formData);
     setTimeout(() => {
       setPopUp(false);
       setIsLoading(false);
       // navigation.navigate("Main");
     }, 500);
-    // Toast.show({
-    //   type: "success",
-    //   text1: "Success",
-    //   text2: "Added successfully!",
-    //   position: "top",
-    //   visibilityTime: 3000,
-    //   autoHide: true,
-    // });
   };
 
   return (

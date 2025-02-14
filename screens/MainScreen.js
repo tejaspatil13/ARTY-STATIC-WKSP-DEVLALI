@@ -11,8 +11,6 @@ const fileName = "Daily_Report.xlsx";
 const downloadsUri = FileSystem.documentDirectory + fileName; // Internal storage
 
 const MainScreen = ({ navigation }) => {
-  // Generate an array of page numbers from 2 to 28
-  // const pages = Array.from({ length: 27 }, (_, i) => i + 2);
   const { formData, setFormData } = useContext(FormContext);
 
   const fileName = "Daily_Report.xlsx";
@@ -35,186 +33,6 @@ const MainScreen = ({ navigation }) => {
     }
   };
 
-  // const exportJsonToExcel = async () => {
-  //   try {
-  //     const workbook = XLSX.utils.book_new();
-
-  //     // Function to add sheet data
-  //     const addSheet = (sheetName, data) => {
-  //       const worksheet = XLSX.utils.json_to_sheet(data);
-  //       XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
-  //     };
-
-  //     // Create sheets for each section
-  //     addSheet("Duty Handover", [{ ...formData }]);
-  //     addSheet("Kote Guard Details", [
-  //       {
-  //         koteGuardTime: formData?.koteGuardTime,
-  //         koteGuardFindings: formData?.koteGuardFindings,
-  //       },
-  //     ]);
-  //     addSheet(
-  //       "MT Briefing",
-  //       formData?.mtStrengthFields.map((item) => ({
-  //         mt_time: formData?.mt_time,
-  //         mt_strength: formData?.mt_strength,
-  //         id: item.id,
-  //         name: item.name,
-  //       }))
-  //     );
-  //     addSheet("Office & Store Sealing", [
-  //       {
-  //         office_sealed: formData?.office_sealed,
-  //         store_sealed: formData?.store_sealed,
-  //       },
-  //     ]);
-  //     addSheet("Ration Checking", [
-  //       { ration_observations: formData?.ration_observations },
-  //     ]);
-  //     addSheet("Cook House Observations", formData?.cookHouseObservations);
-  //     addSheet("Fire Equipment Check", formData?.fireEquipment);
-  //     addSheet("Food Tasting", formData?.foodTasting);
-
-  //     // Convert workbook to binary string
-  //     const excelData = XLSX.write(workbook, {
-  //       type: "base64",
-  //       bookType: "xlsx",
-  //     });
-  //     const fileUri = FileSystem.documentDirectory + "data?.xlsx";
-
-  //     // Write the file
-  //     await FileSystem.writeAsStringAsync(fileUri, excelData, {
-  //       encoding: FileSystem.EncodingType.Base64,
-  //     });
-
-  //     // Share the file
-  //     if (await Sharing.isAvailableAsync()) {
-  //       await Sharing.shareAsync(fileUri);
-  //     } else {
-  //       alert("Sharing is not available on this device");
-  //     }
-  //   } catch (error) {
-  //     console.log("Error exporting to Excel:", error);
-  //   }
-  // };
-
-  // const exportJsonToExcel = async () => {
-  //   try {
-  //     const fileUri = FileSystem.documentDirectory + "data?.xlsx";
-  //     let workbook;
-
-  //     // Check if the file exists
-  //     const fileInfo = await FileSystem.getInfoAsync(fileUri);
-  //     if (fileInfo.exists) {
-  //       // Read the existing file
-  //       const existingData = await FileSystem.readAsStringAsync(fileUri, {
-  //         encoding: FileSystem.EncodingType.Base64,
-  //       });
-  //       workbook = XLSX.read(existingData, { type: "base64" });
-  //     } else {
-  //       workbook = XLSX.utils.book_new();
-  //     }
-
-  //     const addOrAppendSheet = (sheetName, newData) => {
-  //       if (workbook.Sheets[sheetName]) {
-  //         let existingSheetData =
-  //           XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]) || [];
-  //         // Merge the existing data with the new data
-  //         const mergedData = existingSheetData?.concat(newData);
-  //         // Convert merged data to a new worksheet
-  //         const newWorksheet = XLSX.utils.json_to_sheet(mergedData);
-  //         workbook.Sheets[sheetName] = newWorksheet;
-  //       } else {
-  //         const newWorksheet = XLSX.utils.json_to_sheet(newData);
-  //         XLSX.utils.book_append_sheet(workbook, newWorksheet, sheetName);
-  //       }
-  //     };
-
-  //     // Prepare your sheet data arrays
-  //     const dutyHandoverData = formData?.map((data) => ({
-  //       Date: data?.startDate,
-  //       ...data,
-  //     }));
-  //     const koteGuardData = formData?.map((data) => ({
-  //       Date: data?.startDate,
-  //       koteGuardTime: data?.koteGuardTime,
-  //       koteGuardFindings: data?.koteGuardFindings,
-  //     }));
-  //     const mtBriefingData = formData?.flatMap((data) =>
-  //       data?.mtStrengthFields.map((item) => ({
-  //         Date: data?.startDate,
-  //         mt_time: data?.mt_time,
-  //         mt_strength: data?.mt_strength,
-  //         id: item.id,
-  //         name: item.name,
-  //       }))
-  //     );
-  //     const officeStoreData = formData?.map((data) => ({
-  //       Date: data?.startDate,
-  //       office_sealed: data?.office_sealed,
-  //       store_sealed: data?.store_sealed,
-  //     }));
-  //     const rationData = formData?.map((data) => ({
-  //       Date: data?.startDate,
-  //       ration_observations: data?.ration_observations,
-  //     }));
-  //     const cookHouseData = formData?.flatMap((data) =>
-  //       data?.cookHouseObservations.map((item) => ({
-  //         Date: data?.startDate,
-  //         ...item,
-  //       }))
-  //     );
-  //     const fireEquipmentData = formData?.flatMap((data) =>
-  //       data?.fireEquipment.map((item) => ({
-  //         Date: data?.startDate,
-  //         ...item,
-  //       }))
-  //     );
-  //     const foodTastingData = formData?.flatMap((data) =>
-  //       data?.foodTasting.map((item) => ({
-  //         Date: data?.startDate,
-  //         ...item,
-  //       }))
-  //     );
-  //     // const imageData = formData?.map((data) => ({
-  //     //   Date: data?.startDate,
-  //     //   Image_Path: data?.imagePath,
-  //     // }));
-
-  //     addOrAppendSheet("Duty Handover", dutyHandoverData);
-  //     addOrAppendSheet("Kote Guard Details", koteGuardData);
-  //     addOrAppendSheet("MT Briefing", mtBriefingData);
-  //     addOrAppendSheet("Office & Store Sealing", officeStoreData);
-  //     addOrAppendSheet("Ration Checking", rationData);
-  //     addOrAppendSheet("Cook House Observations", cookHouseData);
-  //     addOrAppendSheet("Fire Equipment Check", fireEquipmentData);
-  //     addOrAppendSheet("Food Tasting", foodTastingData);
-  //     addOrAppendSheet("Mobile Check", mobileCheckData);
-  //     addOrAppendSheet("Quarter Visit", qtrVisitData);
-  //     addOrAppendSheet("CCTV Check", cctvData);
-  //     addOrAppendSheet("Guard Check", guardCheckData);
-
-  //     const excelData = XLSX.write(workbook, {
-  //       type: "base64",
-  //       bookType: "xlsx",
-  //     });
-
-  //     await FileSystem.writeAsStringAsync(fileUri, excelData, {
-  //       encoding: FileSystem.EncodingType.Base64,
-  //     });
-
-  //     if (await Sharing.isAvailableAsync()) {
-  //       await Sharing.shareAsync(fileUri);
-  //     } else {
-  //       alert("Sharing is not available on this device");
-  //     }
-  //   } catch (error) {
-  //     console.log("Error exporting to Excel:", error);
-  //   }
-  // };
-
-  // Set navigation options to remove the back button and center the title
-
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: "MAIN PAGE", // Set the title
@@ -225,41 +43,41 @@ const MainScreen = ({ navigation }) => {
 
   const date = new Date().toLocaleDateString("en-IN");
 
-  useEffect(() => {
-    const loadFormData = async () => {
-      try {
-        const jsonValue = await AsyncStorage.getItem("formData");
-        if (jsonValue !== null) {
-          const parsedData = JSON.parse(jsonValue);
-          const date = new Date().toLocaleDateString("en-IN");
+  // useEffect(() => {
+  //   const loadFormData = async () => {
+  //     try {
+  //       const jsonValue = await AsyncStorage.getItem("formData");
+  //       if (jsonValue !== null) {
+  //         const parsedData = JSON.parse(jsonValue);
+  //         const date = new Date().toLocaleDateString("en-IN");
 
-          // Handle array of form data
-          if (Array.isArray(parsedData)) {
-            if (parsedData[0]?.date === date) {
-              setFormData(parsedData);
-            } else {
-              const updatedData = parsedData.map((item) => ({
-                ...item,
-                date: date,
-              }));
-              setFormData(updatedData);
-            }
-          } else {
-            // If no data or invalid data, initialize with default state
-            setFormData((prevData) =>
-              prevData.map((item) => ({
-                ...item,
-                date: date,
-              }))
-            );
-          }
-        }
-      } catch (error) {
-        console.log("Error loading data:", error);
-      }
-    };
-    loadFormData();
-  }, []);
+  //         // Handle array of form data
+  //         if (Array.isArray(parsedData)) {
+  //           if (parsedData[0]?.date === date) {
+  //             setFormData(parsedData);
+  //           } else {
+  //             const updatedData = parsedData.map((item) => ({
+  //               ...item,
+  //               date: date,
+  //             }));
+  //             setFormData(updatedData);
+  //           }
+  //         } else {
+  //           // If no data or invalid data, initialize with default state
+  //           setFormData((prevData) =>
+  //             prevData.map((item) => ({
+  //               ...item,
+  //               date: date,
+  //             }))
+  //           );
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.log("Error loading data:", error);
+  //     }
+  //   };
+  //   loadFormData();
+  // }, []);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -289,7 +107,7 @@ const MainScreen = ({ navigation }) => {
         <Button
           color={"#34d399"}
           title="Export File"
-          onPress={() => requestPermission(pFileUri)}
+          onPress={() => createAndAppendExcel()}
         />
         <Button
           title="PDF Preview"

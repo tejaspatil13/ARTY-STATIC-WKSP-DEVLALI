@@ -1,11 +1,8 @@
 import React, { createContext, useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Request storage permissions (needed on Android)
 export const FormContext = createContext();
-
-export const fileContext = createContext();
-
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const FormProvider = ({ children }) => {
   const [formData, setFormData] = useState([
@@ -600,8 +597,8 @@ export const FormProvider = ({ children }) => {
   // useEffect(() => {
   //   const saveFormData = async () => {
   //     try {
-  //       const res = await AsyncStorage.getItem("formData");
-  //       const parsedData = JSON.parse(res);
+  //       const res = await AsyncStorage.getItem("currentData");
+  //       // const parsedData = JSON.parse(res);
 
   //       const date = new Date().toLocaleDateString("en-IN");
   //       const oldData = saveFormData();
@@ -614,17 +611,17 @@ export const FormProvider = ({ children }) => {
   //   saveFormData();
   // }, []);
 
-  useEffect(() => {
-    const saveData = async () => {
-      try {
-        const jsonValue = JSON.stringify(formData);
-        await AsyncStorage.setItem("formData", jsonValue);
-      } catch (error) {
-        console.log("Error saving data:", error);
-      }
-    };
-    saveData();
-  }, [formData]);
+  // useEffect(() => {
+  //   const saveData = async () => {
+  //     try {
+  //       const jsonValue = JSON.stringify(formData);
+  //       await AsyncStorage.setItem("currentData", jsonValue);
+  //     } catch (error) {
+  //       console.log("Error saving data:", error);
+  //     }
+  //   };
+  //   saveData();
+  // }, [formData]);
 
   return (
     <FormContext.Provider value={{ formData, setFormData }}>
