@@ -14,8 +14,29 @@ export const validateFormData = (formData) => {
       Object.entries(obj).forEach(([key, value]) => {
         const currentPath = parentPath ? `${parentPath}.${key}` : key;
 
-        if (Array.isArray(value)) {
-          // Handle arrays of objects
+        // Special handling for cookHouseObservations
+        if (key === "cookHouseObservations" && Array.isArray(value)) {
+          value.forEach((observation, index) => {
+            if (typeof observation === "object" && observation !== null) {
+              // Check each required field in cookhouse observation
+              const requiredFields = [
+                "cook_house",
+                "appliances_status",
+                "staff_details",
+              ];
+              requiredFields.forEach((field) => {
+                if (isEmpty(observation[field])) {
+                  emptyFields.push({
+                    formIndex,
+                    path: `${currentPath}[${index}].${field}`,
+                    parentObject: currentPath,
+                  });
+                }
+              });
+            }
+          });
+        } else if (Array.isArray(value)) {
+          // Handle other arrays of objects
           value.forEach((item, index) => {
             if (typeof item === "object" && item !== null) {
               Object.entries(item).forEach(([itemKey, itemValue]) => {
@@ -63,5 +84,14 @@ export const validateFormData = (formData) => {
 };
 
 // Example usage:
+// const formData = [{
+//   cookHouseObservations: [
+//     {
+//       cook_house: "",
+//       appliances_status: "Good",
+//       staff_details: ""
+//     }
+//   ]
+// }];
 // const emptyFields = validateFormData(formData);
 // console.log('Empty fields:', emptyFields);

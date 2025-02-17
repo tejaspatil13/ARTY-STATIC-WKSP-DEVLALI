@@ -626,14 +626,33 @@ ${form.liquorIssue.text || "Remark : "}
       // Generate the PDF
       const { uri } = await Print.printToFileAsync({ html: htmlContent });
 
-      // Rename the file with the current date
-      const newUri = `${FileSystem.documentDirectory}${fileName}`;
-      await FileSystem.moveAsync({ from: uri, to: newUri });
+      // Request directory permissions
+      const permissions =
+        await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
 
-      console.log("PDF saved at:", newUri);
+      if (!permissions.granted) {
+        alert("Please allow access to save the file");
+        return;
+      }
 
-      // Share the PDF
-      await Sharing.shareAsync(newUri);
+      // Create and save the PDF file in the selected directory
+      const pdfUri = await FileSystem.StorageAccessFramework.createFileAsync(
+        permissions.directoryUri,
+        fileName,
+        "application/pdf"
+      );
+
+      // Read the generated PDF file as binary
+      const pdfData = await FileSystem.readAsStringAsync(uri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      // Write the binary PDF data to the new location
+      await FileSystem.writeAsStringAsync(pdfUri, pdfData, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      alert(`PDF saved successfully!`);
     } catch (error) {
       console.log("Failed to generate PDF:", error);
     }
@@ -656,11 +675,11 @@ ${form.liquorIssue.text || "Remark : "}
   const handleAdd = () => {
     setIsLoading(true);
     setData();
-    // createAndAppendExcel(formData);
     setTimeout(() => {
       setPopUp(false);
       setIsLoading(false);
-      // navigation.navigate("Main");
+      alert("Data added!");
+      navigation.navigate("Main");
     }, 500);
   };
 

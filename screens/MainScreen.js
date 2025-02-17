@@ -1,35 +1,80 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, Text, Button, ScrollView, StyleSheet } from "react-native";
 import { FormContext } from "../utils/FormContext";
 import * as FileSystem from "expo-file-system";
-import XLSX from "xlsx";
-import { shareAsync } from "expo-sharing";
 import createAndAppendExcel, { requestPermission } from "../utils/generator";
+import { resetData } from "../utils/commanFunctions";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const fileName = "Daily_Report.xlsx";
 const downloadsUri = FileSystem.documentDirectory + fileName; // Internal storage
 
+const formatDate = (date) => {
+  return date.toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+};
+
 const MainScreen = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [showStartPicker, setShowStartPicker] = useState(false);
+  const [showEndPicker, setShowEndPicker] = useState(false);
 
-  const fileName = "Daily_Report.xlsx";
-  const fileUri = FileSystem.documentDirectory + fileName;
-  const pFileUri =
-    "file:///data/user/0/host.exp.exponent/files/Daily_Report.xlsx";
-
-  const deleteExcelFile = async () => {
-    try {
-      const fileExists = await FileSystem.getInfoAsync(fileUri);
-
-      if (fileExists.exists) {
-        await FileSystem.deleteAsync(fileUri);
-        console.log("Excel file deleted successfully.");
-      } else {
-        console.log("No Excel file found to delete.");
+  const onChangeStart = (event, selectedDate) => {
+    setShowStartPicker(false);
+    if (selectedDate) {
+      if (new Date(selectedDate) > new Date(endDate)) {
+        alert("Start date cannot be after end date");
+        return null;
       }
-    } catch (error) {
-      console.log("Error deleting Excel file:", error);
+      setStartDate(selectedDate); // Update local state
+      setFormData((prevFormData) =>
+        prevFormData.map((item) => {
+          if (
+            new Date(item.dutyEndDate) &&
+            selectedDate > new Date(item.dutyEndDate)
+          ) {
+            alert("Start date cannot be after end date.");
+            return item;
+          }
+          return {
+            ...item,
+            dutyStartDate: formatDate(selectedDate),
+          };
+        })
+      );
+    }
+  };
+
+  const onChangeEnd = (event, selectedDate) => {
+    setShowEndPicker(false);
+
+    if (selectedDate) {
+      if (new Date(selectedDate) < new Date(startDate)) {
+        alert("End date cannot be before start date");
+        return null;
+      }
+      setEndDate(selectedDate); // Update local state
+      setFormData((prevFormData) =>
+        prevFormData.map((item) => {
+          if (
+            new Date(item.dutyStartDate) &&
+            selectedDate < new Date(item.dutyStartDate)
+          ) {
+            alert("End date cannot be before start date.");
+            return item;
+          }
+          return {
+            ...item,
+            dutyEndDate: formatDate(selectedDate),
+          };
+        })
+      );
     }
   };
 
@@ -41,43 +86,21 @@ const MainScreen = ({ navigation }) => {
     });
   }, [navigation]);
 
-  const date = new Date().toLocaleDateString("en-IN");
+  useEffect(() => {
+    if (formData[0].dutyStartDate) {
+      const parsedStartDate = new Date(formData[0].dutyStartDate);
+      if (!isNaN(parsedStartDate)) {
+        setStartDate(parsedStartDate);
+      }
+    }
 
-  // useEffect(() => {
-  //   const loadFormData = async () => {
-  //     try {
-  //       const jsonValue = await AsyncStorage.getItem("formData");
-  //       if (jsonValue !== null) {
-  //         const parsedData = JSON.parse(jsonValue);
-  //         const date = new Date().toLocaleDateString("en-IN");
-
-  //         // Handle array of form data
-  //         if (Array.isArray(parsedData)) {
-  //           if (parsedData[0]?.date === date) {
-  //             setFormData(parsedData);
-  //           } else {
-  //             const updatedData = parsedData.map((item) => ({
-  //               ...item,
-  //               date: date,
-  //             }));
-  //             setFormData(updatedData);
-  //           }
-  //         } else {
-  //           // If no data or invalid data, initialize with default state
-  //           setFormData((prevData) =>
-  //             prevData.map((item) => ({
-  //               ...item,
-  //               date: date,
-  //             }))
-  //           );
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.log("Error loading data:", error);
-  //     }
-  //   };
-  //   loadFormData();
-  // }, []);
+    if (formData[0].dutyEndDate) {
+      const parsedEndDate = new Date(formData[0].dutyEndDate);
+      if (!isNaN(parsedEndDate)) {
+        setEndDate(parsedEndDate);
+      }
+    }
+  }, []);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -85,24 +108,59 @@ const MainScreen = ({ navigation }) => {
       <Text style={styles.title}>DUTY JCO FORM</Text>
 
       <View style={styles.buttonContainer}>
-        {/* <Button title="delete Sheet" onPress={() => deleteExcelFile()} /> */}
-        <View
-          style={{
-            gap: 5,
-            padding: 10,
-            border: "solid",
-            borderColor: "black",
-            borderWidth: 1,
-            width: "100%",
-            height: "fit-content",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Text>Current Date</Text>
-          <Text style={{ fontSize: 20 }}>{date}</Text>
+        <View style={styles.dateContainer}>
+          {/* Duty Start Date */}
+          <View>
+            <Text style={{ textAlign: "center", marginBottom: 5 }}>
+              Duty Start Date
+            </Text>
+            <Text
+              style={styles.dateText}
+              onPress={() => setShowStartPicker(true)}
+            >
+              {formData[0].dutyStartDate
+                ? formData[0].dutyStartDate
+                : formatDate(startDate)}
+            </Text>
+            {showStartPicker && (
+              <DateTimePicker
+                value={startDate}
+                mode="date"
+                display="default"
+                onChange={onChangeStart}
+              />
+            )}
+          </View>
+          <View>
+            {/* Duty End Date */}
+            <Text style={{ textAlign: "center", marginBottom: 5 }}>
+              Duty End Date
+            </Text>
+            <Text
+              style={styles.dateText}
+              onPress={() => setShowEndPicker(true)}
+            >
+              {formData[0].dutyEndDate
+                ? formData[0].dutyEndDate
+                : formatDate(endDate)}
+            </Text>
+            {showEndPicker && (
+              <DateTimePicker
+                value={endDate}
+                mode="date"
+                display="default"
+                onChange={onChangeEnd}
+              />
+            )}
+          </View>
         </View>
+
+        <Button
+          color={"#34d399"}
+          title="Clear Fields"
+          onPress={() => resetData(setFormData)}
+          // onPress={() => AsyncStorage.clear()}
+        />
 
         <Button
           color={"#34d399"}
@@ -291,6 +349,25 @@ const styles = StyleSheet.create({
     gap: 30,
     borderRadius: 5,
     overflow: "hidden",
+  },
+  datePickerContainer: {
+    marginBottom: 20,
+    alignItems: "center",
+  },
+  dateContainer: {
+    gap: 20,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "black",
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  dateText: {
+    fontSize: 20,
+    padding: 10,
+    borderRadius: 8,
+    backgroundColor: "#34d399",
+    color: "white",
   },
 });
 

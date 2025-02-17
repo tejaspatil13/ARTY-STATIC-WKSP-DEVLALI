@@ -7,8 +7,9 @@ export const FormContext = createContext();
 export const FormProvider = ({ children }) => {
   const [formData, setFormData] = useState([
     {
-      date: "",
-
+      date: new Date().toLocaleDateString("en-IN"),
+      dutyStartDate: new Date().toLocaleDateString("en-IN"),
+      dutyEndDate: new Date().toLocaleDateString("en-IN"),
       // Page 1: Duty Handover Details
       duty_handover: {
         jcNumber: "",
@@ -594,34 +595,31 @@ export const FormProvider = ({ children }) => {
   //   },
   // ]);
 
-  // useEffect(() => {
-  //   const saveFormData = async () => {
-  //     try {
-  //       const res = await AsyncStorage.getItem("currentData");
-  //       // const parsedData = JSON.parse(res);
+  useEffect(() => {
+    const saveFormData = async () => {
+      try {
+        const res = await AsyncStorage.getItem("currentData");
+        const parsedData = JSON.parse(res);
+        setFormData(parsedData);
+      } catch (error) {
+        alert("Something went wrong, while loading old data");
+        return null;
+      }
+    };
+    saveFormData();
+  }, []);
 
-  //       const date = new Date().toLocaleDateString("en-IN");
-  //       const oldData = saveFormData();
-
-  //       if (date === oldData.date) setFormData(oldData);
-  //     } catch (error) {
-  //       return null;
-  //     }
-  //   };
-  //   saveFormData();
-  // }, []);
-
-  // useEffect(() => {
-  //   const saveData = async () => {
-  //     try {
-  //       const jsonValue = JSON.stringify(formData);
-  //       await AsyncStorage.setItem("currentData", jsonValue);
-  //     } catch (error) {
-  //       console.log("Error saving data:", error);
-  //     }
-  //   };
-  //   saveData();
-  // }, [formData]);
+  useEffect(() => {
+    const saveData = async () => {
+      try {
+        const jsonValue = JSON.stringify(formData);
+        await AsyncStorage.setItem("currentData", jsonValue);
+      } catch (error) {
+        console.log("Error saving data:", error);
+      }
+    };
+    saveData();
+  }, [formData]);
 
   return (
     <FormContext.Provider value={{ formData, setFormData }}>
