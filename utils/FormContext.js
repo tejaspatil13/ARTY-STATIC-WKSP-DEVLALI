@@ -209,7 +209,7 @@ export const FormProvider = ({ children }) => {
           },
           {
             observation: "",
-            text: "I have checked init AoR for authorized occupation of def land",
+            text: "I have checked unit AOR for authorized occupation of def land",
             check: false,
           },
         ],
