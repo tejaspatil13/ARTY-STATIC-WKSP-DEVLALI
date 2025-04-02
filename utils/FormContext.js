@@ -266,8 +266,8 @@ export const FormProvider = ({ children }) => {
 
       // improvement in wksp tech
       improvement_in_wksp_tech: [
-        { id: 1, point: "" },
-        { id: 2, point: "" },
+        { id: 1, point: "", status: "Pending" },
+        { id: 2, point: "", status: "Pending" },
       ],
 
       // awareness

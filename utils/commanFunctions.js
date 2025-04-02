@@ -1,10 +1,17 @@
 export const resetData = (setFormData) => {
-  setFormData([
+  setFormData((prevData) => [
     {
       date: new Date().toLocaleDateString("en-IN"),
       dutyStartDate: new Date().toLocaleDateString("en-IN"),
       dutyEndDate: new Date().toLocaleDateString("en-IN"),
-      // Page 1: Duty Handover Details
+
+      // Preserve "Improvement in Workshop Tech" section
+      improvement_in_wksp_tech: prevData[0]?.improvement_in_wksp_tech || [
+        { id: 1, point: "", status: "Pending" },
+        { id: 2, point: "", status: "Pending" },
+      ],
+
+      // Reset all other sections
       duty_handover: {
         jcNumber: "",
         rank: "",
@@ -17,62 +24,42 @@ export const resetData = (setFormData) => {
         prevRank: "",
         prevName: "",
       },
-
-      // Page 2: Kote Guard Details
-      guard_details: {
-        koteGuardTime: "",
-        koteGuardFindings: "",
-      },
-
-      // MT Briefing Page Data
+      guard_details: { koteGuardTime: "", koteGuardFindings: "" },
       mt_briefing: {
         text: "I mounted the kote guard and found",
         mt_time: "",
         mt_strength: "",
         mtStrengthFields: [{ id: 1, name: "" }],
       },
-
-      // Guard Check
       guard_check: [{ id: 1, guard: "", dayInfo: "", nightInfo: "" }],
-
-      // Office Sealing
-      office_sealing: {
-        office_sealed_at: "",
-        store_sealed_at: "",
-      },
-
-      // Ration Checking
-      ration_check: {
-        ration_observations: "",
-      },
-
-      // Cook Houses
+      office_sealing: { office_sealed_at: "", store_sealed_at: "" },
+      ration_check: { ration_observations: "" },
       cookHouseObservations: [
         { cook_house: "", appliances_status: "", staff_details: "" },
       ],
-
-      // Fire equipment check
       fire_equipment_check: [
         { location: "", type: "", status: "", remarks: "" },
       ],
-
-      // Food Tasting
       foodTasting: [
-        { cookHouse: "A PI", meal: "Breakfast", quality: "", improvement: "" },
+        {
+          cookHouse: "A PI",
+          meal: "Breakfast",
+          quality: "",
+          improvement: "",
+        },
         { cookHouse: "A PI", meal: "Lunch", quality: "", improvement: "" },
         { cookHouse: "A PI", meal: "Dinner", quality: "", improvement: "" },
-        { cookHouse: "B PI", meal: "Breakfast", quality: "", improvement: "" },
+        {
+          cookHouse: "B PI",
+          meal: "Breakfast",
+          quality: "",
+          improvement: "",
+        },
         { cookHouse: "B PI", meal: "Lunch", quality: "", improvement: "" },
         { cookHouse: "B PI", meal: "Dinner", quality: "", improvement: "" },
       ],
-
-      // health and hygiene
       health_hygiene: [
-        {
-          field: "Cleanliness of JCO Mess",
-          observation: "",
-          remark: "",
-        },
+        { field: "Cleanliness of JCO Mess", observation: "", remark: "" },
         {
           field: "Persons sleeping on ground",
           observation: "",
@@ -83,71 +70,29 @@ export const resetData = (setFormData) => {
           observation: "",
           remark: "",
         },
-        {
-          field: "Cleanliness of OR Cook House",
-          observation: "",
-          remark: "",
-        },
-        {
-          field: "Disposal of Kitchen Wastage",
-          observation: "",
-          remark: "",
-        },
-        {
-          field: "Cleanliness of Barracks/Toilets",
-          observation: "",
-          remark: "",
-        },
-        {
-          field: "Personnel Maintenance",
-          observation: "",
-          remark: "",
-        },
-        {
-          field: "Availability of Drinking Water for Troops",
-          observation: "",
-          remark: "",
-        },
-        {
-          field: "Cleanliness of Civilian Tea Room",
-          observation: "",
-          remark: "",
-        },
-        {
-          field: "Anti-Malaria/Dengue Precautions",
-          observation: "",
-          remark: "",
-        },
       ],
-
-      // Land Matters
-      land_matters: [
-        {
-          location: "",
-          time: "",
-          remark: "",
-        },
-      ],
-
-      // defense land survey
+      land_matters: [{ location: "", time: "", remark: "" }],
       defense_land_survey: {
-        text: "I visited def land survey No. 36,38,40,41,43,59 along with a rep of the RP/QM and made entry in the Def land visit register. I have the following to report",
+        text: "I visited def land survey No. 36,38,40,41,43,59...",
         RP: false,
         QM: false,
         observations: [{ text: "" }],
       },
-
-      // Quarter Gd & Kote
       quarter_gd_kote: {
         koteCheckDate: "",
         quarterGdKoteRows: [
-          { id: 1, held: "", type: "", armsOut: "", armsIn: "", remarks: "" },
+          {
+            id: 1,
+            held: "",
+            type: "",
+            armsOut: "",
+            armsIn: "",
+            remarks: "",
+          },
         ],
       },
-
-      // Amn magazine
       amn_magazine: {
-        text: "I have physically cheked the Amn Magazine on",
+        text: "I have physically checked the Amn Magazine on",
         amnMagazineCheckDate: "",
         amnMagazineRows: [
           {
@@ -161,24 +106,12 @@ export const resetData = (setFormData) => {
           },
         ],
       },
-
-      // csd checks
       csd_checks: {
-        csd_items: {
-          csdItem1: "",
-          csdItem2: "",
-          csdItem3: "",
-        },
-        card_items: {
-          cardItem1: "",
-          cardItem2: "",
-          cardItem3: "",
-        },
+        csd_items: { csdItem1: "", csdItem2: "", csdItem3: "" },
+        card_items: { cardItem1: "", cardItem2: "", cardItem3: "" },
       },
-
-      // TSS
       tss: {
-        text: "I have physically checked the following sample items as per my trade-work (minimum three) and matched the ground and ledger balance",
+        text: "I have physically checked the following sample items...",
         columns: [
           {
             id: 1,
@@ -190,8 +123,6 @@ export const resetData = (setFormData) => {
           },
         ],
       },
-
-      // security measures
       security_measures: {
         text: "I have checked the premises of ASW AOR on",
         checkTime: "",
@@ -201,15 +132,8 @@ export const resetData = (setFormData) => {
             text: "Any salesmen/beggars found in AOR",
             check: false,
           },
-          {
-            observation: "",
-            text: "I have checked unit AOR for authorized occupation of def land",
-            check: false,
-          },
         ],
       },
-
-      // cctv_locations
       cctv_locations: [
         {
           location: "",
@@ -219,30 +143,10 @@ export const resetData = (setFormData) => {
           remarks: "",
         },
       ],
-
-      // devlali visit
-      devlali_visit: {
-        time: "",
-        observations: [{ id: 1, text: "" }],
-      },
-
-      // roll call
-      roll_call: {
-        date: "",
-        time: "",
-        details: "",
-      },
-
-      // sale of csd
-      sale_of_csd: {
-        grocery_amount: "",
-        liquor_amount: "",
-      },
-
-      // OTR visit
+      devlali_visit: { time: "", observations: [{ id: 1, text: "" }] },
+      roll_call: { date: "", time: "", details: "" },
+      sale_of_csd: { grocery_amount: "", liquor_amount: "" },
       qtr_visit: [{ id: 1, qtr_no_and_location: "", problem: "", remarks: "" }],
-
-      // Mobile Check Page
       mobileCheckRows: [
         {
           id: 1,
@@ -254,17 +158,7 @@ export const resetData = (setFormData) => {
           remarks: "",
         },
       ],
-
-      //liquor issue
       liquorIssue: { text: "" },
-
-      // improvement in wksp tech
-      improvement_in_wksp_tech: [
-        { id: 1, point: "" },
-        { id: 2, point: "" },
-      ],
-
-      // awareness
       awareness: {
         rankAndName: "",
         unit: "",
@@ -272,8 +166,6 @@ export const resetData = (setFormData) => {
         QRT_JCO: "",
         NCO: "",
       },
-
-      // handover duties
       handoverDuties: { no: "", rank: "", name: "", date: "", time: "" },
     },
   ]);
