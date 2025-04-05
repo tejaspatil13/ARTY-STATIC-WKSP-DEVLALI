@@ -7,27 +7,51 @@ import {
   FlatList,
   StyleSheet,
   TouchableOpacity,
-  Keyboard,
+  Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
 import { FormContext } from "../utils/FormContext";
 
 const FoodTastingPage = ({ navigation }) => {
   const { formData, setFormData } = useContext(FormContext);
 
-  // Handle input change and validation
+  // Handle input change
   const handleInputChange = (index, field, value) => {
     const updatedFoodTasting = [...formData[0].foodTasting];
     updatedFoodTasting[index][field] = value;
     setFormData((prevData) =>
-      prevData?.map((item, index) => ({
+      prevData?.map((item) => ({
         ...item,
         foodTasting: updatedFoodTasting,
       }))
     );
   };
 
-  const isValid = (field) => field.trim().length > 0;
+  // Function to capture image from the camera
+  const handleImagePick = async (index) => {
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+    if (!permissionResult.granted) {
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const updatedFoodTasting = [...formData[0].foodTasting];
+      updatedFoodTasting[index].image = result.assets[0].uri;
+      setFormData((prevData) =>
+        prevData?.map((item) => ({
+          ...item,
+          foodTasting: updatedFoodTasting,
+        }))
+      );
+    }
+  };
 
   // Set up the home icon and center the title
   useEffect(() => {
@@ -63,22 +87,19 @@ const FoodTastingPage = ({ navigation }) => {
               <TextInput
                 style={styles.input}
                 value={item.cookHouse}
-                editable={false} // Keep it static
+                editable={false}
               />
 
               <Text style={styles.label}>Meal</Text>
               <TextInput
                 style={styles.input}
                 value={item.meal}
-                editable={false} // Keep it static
+                editable={false}
               />
 
               <Text style={styles.label}>Quality of Food</Text>
               <TextInput
-                style={[
-                  styles.input,
-                  !isValid(item.quality) && styles.inputError,
-                ]}
+                style={styles.input}
                 multiline={true}
                 placeholder="Enter food quality"
                 value={item.quality}
@@ -87,15 +108,29 @@ const FoodTastingPage = ({ navigation }) => {
 
               <Text style={styles.label}>Points for Improvement</Text>
               <TextInput
-                style={[
-                  styles.input,
-                  !isValid(item.improvement) && styles.inputError,
-                ]}
+                style={styles.input}
                 multiline={true}
                 placeholder="Enter improvement points"
                 value={item.improvement}
                 onChangeText={(t) => handleInputChange(index, "improvement", t)}
               />
+
+              {/* Image Upload Section */}
+              <TouchableOpacity
+                style={styles.imageButton}
+                onPress={() => handleImagePick(index)}
+              >
+                <Ionicons name="camera" size={24} color="white" />
+                <Text style={styles.imageButtonText}>Add Image</Text>
+              </TouchableOpacity>
+
+              {/* Display Selected Image */}
+              {item.image && (
+                <Image
+                  source={{ uri: item.image }}
+                  style={styles.imagePreview}
+                />
+              )}
             </View>
           </View>
         )}
@@ -159,8 +194,26 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     backgroundColor: "#fff",
   },
-  inputError: {
-    // borderColor: "red",
+  imageButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#007AFF",
+    padding: 10,
+    borderRadius: 5,
+    justifyContent: "center",
+    marginVertical: 10,
+  },
+  imageButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+    marginLeft: 8,
+  },
+  imagePreview: {
+    width: "100%",
+    height: 200,
+    marginTop: 10,
+    borderRadius: 5,
   },
   buttonContainer: {
     flexDirection: "row",

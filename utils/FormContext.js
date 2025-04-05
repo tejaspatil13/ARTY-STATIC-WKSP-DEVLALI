@@ -64,12 +64,48 @@ export const FormProvider = ({ children }) => {
 
       // Food Tasting
       foodTasting: [
-        { cookHouse: "A PI", meal: "Breakfast", quality: "", improvement: "" },
-        { cookHouse: "A PI", meal: "Lunch", quality: "", improvement: "" },
-        { cookHouse: "A PI", meal: "Dinner", quality: "", improvement: "" },
-        { cookHouse: "B PI", meal: "Breakfast", quality: "", improvement: "" },
-        { cookHouse: "B PI", meal: "Lunch", quality: "", improvement: "" },
-        { cookHouse: "B PI", meal: "Dinner", quality: "", improvement: "" },
+        {
+          cookHouse: "A PI",
+          meal: "Breakfast",
+          quality: "",
+          improvement: "",
+          image: "",
+        },
+        {
+          cookHouse: "A PI",
+          meal: "Lunch",
+          quality: "",
+          improvement: "",
+          image: "",
+        },
+        {
+          cookHouse: "A PI",
+          meal: "Dinner",
+          quality: "",
+          improvement: "",
+          image: "",
+        },
+        {
+          cookHouse: "B PI",
+          meal: "Breakfast",
+          quality: "",
+          improvement: "",
+          image: "",
+        },
+        {
+          cookHouse: "B PI",
+          meal: "Lunch",
+          quality: "",
+          improvement: "",
+          image: "",
+        },
+        {
+          cookHouse: "B PI",
+          meal: "Dinner",
+          quality: "",
+          improvement: "",
+          image: "",
+        },
       ],
 
       // health and hygiene
