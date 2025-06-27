@@ -14,6 +14,41 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const currentDate = new Date().toLocaleDateString("en-IN"); // Format: DD/MM/YYYY
 
 const PDFPreviewPage = ({ navigation }) => {
+  const { formData, setFormData } = useContext(FormContext);
+  const form = formData[0] || {}; // Ensure form data exists
+  const [popUp, setPopUp] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const convertImagesToBase64 = async () => {
+      try {
+        const updatedRows = await Promise.all(
+          form.foodTasting.map(async (row) => {
+            if (row.image && row.image.startsWith("file://")) {
+              const base64 = await FileSystem.readAsStringAsync(row.image, {
+                encoding: FileSystem.EncodingType.Base64,
+              });
+              return {
+                ...row,
+                image: `data:image/jpeg;base64,${base64}`,
+              };
+            }
+            return row; // already a valid data URI or undefined
+          })
+        );
+
+        // Replace in formData (clone formData, modify foodTasting, and set)
+        const updatedFormData = [...formData];
+        updatedFormData[0].foodTasting = updatedRows;
+        setFormData(updatedFormData);
+      } catch (err) {
+        console.log("Image conversion error:", err);
+      }
+    };
+
+    convertImagesToBase64();
+  }, []);
+
   useEffect(() => {
     navigation.setOptions({
       headerTitle: "PDF Review",
@@ -33,11 +68,6 @@ const PDFPreviewPage = ({ navigation }) => {
       ),
     });
   }, [navigation]);
-
-  const { formData, setFormData } = useContext(FormContext);
-  const form = formData[0] || {}; // Ensure form data exists
-  const [popUp, setPopUp] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   // Generate HTML for PDF Preview
   const htmlContent = `
     <!-- Your HTML content here -->
@@ -247,8 +277,19 @@ const PDFPreviewPage = ({ navigation }) => {
             <td>${row.meal || "____"}</td>
             <td>${row.quality || "____"}</td>
             <td>${row.improvement || "____"}</td>
-          </tr>
-        `
+            ${
+              row.image
+                ? `<td>
+                  <img src=${row.image} style="width: 100px; height: auto;" />
+                </td>`
+                : `<td>
+                  <center>No image added</center>
+                </td>`
+            }
+                </tr>
+                
+                
+                `
           )
           .join("")}
       </table>
