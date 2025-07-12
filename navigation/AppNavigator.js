@@ -37,7 +37,7 @@ const Stack = createStackNavigator();
 
 const AppNavigator = () => {
   return (
-    <Stack.Navigator initialRouteName="Signature">
+    <Stack.Navigator initialRouteName="Main">
       <Stack.Screen
         name="Signature"
         component={Signature}
@@ -53,7 +53,11 @@ const AppNavigator = () => {
         component={DutyHandoverPage}
         options={{ title: "Duty Handover" }}
       />
-      <Stack.Screen name="GuardDetails" component={GuardDetailsPage} />
+      <Stack.Screen
+        name="GuardDetails"
+        options={{ title: "Guard Details" }}
+        component={GuardDetailsPage}
+      />
       <Stack.Screen
         name="MTBriefing"
         component={MTBriefingPage}
