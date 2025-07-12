@@ -644,7 +644,7 @@ export const FormProvider = ({ children }) => {
         return null;
       }
     };
-    // saveFormData();
+    saveFormData();
   }, []);
 
   useEffect(() => {
