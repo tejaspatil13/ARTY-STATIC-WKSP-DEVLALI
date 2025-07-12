@@ -280,7 +280,7 @@ const PDFPreviewPage = ({ navigation }) => {
             ${
               row.image
                 ? `<td>
-                  <img src=${row.image} style="width: 100px; height: auto;" />
+                  <img src=${row.image} style="width: auto; max-width:150px; height: auto;" />
                 </td>`
                 : `<td>
                   <center>No image added</center>
@@ -636,14 +636,43 @@ ${form.liquorIssue.text || "Remark : "}
 <h2>28. Progress on Tasks Given by Sub Maj / Adjt / 2IC</h2>
 <p>Date: <b>${currentDate}</b></p>
 
-<h3>Signatures:</h3>
-<p>Signature of Duty JCO: __________________</p>
-<p>Sub Maj: ______________</p>
-<p>Adjt: ______________</p>
-<p>2IC: ______________</p>
-<p>Comdt: ______________</p>
+<h3 style="margin-bottom: 50px;">Signatures:</h3>
+<div style="display: flex; flex-direction: column; gap: 20px;">
+  ${["JCO", "Sub Maj", "Adjit", "2IC", "Comdt"]
+    .map(
+      (name) => `
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <p style="width: 100px;"><b>${name}:</b></p>
+          ${
+            form.signatures?.[name]
+              ? `<div style="position: relative; height: 60px;">
+                  <img src="${form.signatures[name]}" style="max-height: 60px;" />
+                  <div style="border-bottom: 1px solid black; position: absolute; bottom: 0; width: 100%;"></div>
+                </div>`
+              : `<div style="width: 70px; border-bottom: 1px solid black; height: 60px;"></div>`
+          }
+        </div>
+      `
+    )
+    .join("")}
 
-
+  ${Object.entries(form.signatures || {})
+    .filter(
+      ([name]) => !["JCO", "Sub Maj", "Adjit", "2IC", "Comdt"].includes(name)
+    )
+    .map(
+      ([name, imageUri]) => `
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <p style="width: 100px;"><b>${name}:</b></p>
+          <div style="position: relative; height: 60px;">
+            <img src="${imageUri}" style="max-height: 60px;" />
+            <div style="border-bottom: 1px solid black; position: absolute; bottom: 0; width: 100%;"></div>
+          </div>
+        </div>
+      `
+    )
+    .join("")}
+</div>
   </div>
 </body>
 </html>

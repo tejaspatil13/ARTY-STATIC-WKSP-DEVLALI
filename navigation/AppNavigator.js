@@ -31,12 +31,18 @@ import TSSPage from "../screens/TSSPage";
 import SecurityMeasuresPage from "../screens/SecurityMeasuresPage";
 import DefenseLandSurveyPage from "../screens/DefenseLandSurveyPage";
 import PDFPreviewPage from "../screens/PDFPreviewPage";
+import Signature from "../screens/Signature";
 
 const Stack = createStackNavigator();
 
 const AppNavigator = () => {
   return (
-    <Stack.Navigator initialRouteName="Main">
+    <Stack.Navigator initialRouteName="Signature">
+      <Stack.Screen
+        name="Signature"
+        component={Signature}
+        options={{ title: "Signature" }}
+      />
       <Stack.Screen
         name="Main"
         component={MainScreen}

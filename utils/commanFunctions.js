@@ -167,6 +167,7 @@ export const resetData = (setFormData) => {
         NCO: "",
       },
       handoverDuties: { no: "", rank: "", name: "", date: "", time: "" },
+      signatures: {},
     },
   ]);
   alert("All fields are cleared!");

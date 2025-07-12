@@ -13,7 +13,8 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.harsh-patil.ARTYSTATICWKSPDEVLALI"
     },
     "android": {
       "permissions": [
@@ -27,7 +28,6 @@
         "foregroundImage": "./assets/formicon.png",
         "backgroundColor": "#ffffff"
       },
-
       "package": "com.harsh_patil.ARTYSTATICWKSPDEVLALI"
     },
     "web": {

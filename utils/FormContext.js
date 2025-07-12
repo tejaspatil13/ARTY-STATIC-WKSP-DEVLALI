@@ -317,6 +317,8 @@ export const FormProvider = ({ children }) => {
 
       // handover duties
       handoverDuties: { no: "", rank: "", name: "", date: "", time: "" },
+
+      signatures: {},
     },
   ]);
 

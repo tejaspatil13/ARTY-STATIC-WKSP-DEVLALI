@@ -167,9 +167,26 @@ export const createAndAppendExcel = async () => {
       );
 
       // 9. Food Tasting Sheet
-      foodData.push(
-        ...processArrayData(entry.foodTasting || [], dutyStartDate, dutyEndDate)
-      );
+      // foodData.push(
+      //   ...processArrayData(entry.foodTasting || [], dutyStartDate, dutyEndDate)
+      // );
+
+      if (entry.foodTasting && entry.foodTasting.length > 0) {
+        const filteredFoodTasting = entry.foodTasting.map(
+          ({ image, ...rest }) => rest
+        );
+        foodData.push(
+          ...processArrayData(filteredFoodTasting, dutyStartDate, dutyEndDate)
+        );
+      } else {
+        foodData.push(
+          ...processArrayData(
+            entry.foodTasting || [],
+            dutyStartDate,
+            dutyEndDate
+          )
+        );
+      }
 
       // 10. Health and Hygiene Sheet
       healthData.push(

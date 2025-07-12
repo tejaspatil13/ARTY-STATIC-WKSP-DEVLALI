@@ -1,5 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, Button, ScrollView, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Button,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { FormContext } from "../utils/FormContext";
 import * as FileSystem from "expo-file-system";
 import createAndAppendExcel, { requestPermission } from "../utils/generator";
@@ -107,6 +114,18 @@ const MainScreen = ({ navigation }) => {
       {/* App Title */}
       <Text style={styles.title}>DUTY JCO FORM</Text>
 
+      {/* <TouchableOpacity
+        onPress={async () => {
+          try {
+            await AsyncStorage.clear();
+          } catch (error) {
+            console.log(error);
+          }
+        }}
+      >
+        <Text>clear storage</Text>
+      </TouchableOpacity> */}
+
       <View style={styles.buttonContainer}>
         <View style={styles.dateContainer}>
           {/* Duty Start Date */}
@@ -154,6 +173,12 @@ const MainScreen = ({ navigation }) => {
             )}
           </View>
         </View>
+
+        <Button
+          color={"#34d399"}
+          title="Signature"
+          onPress={() => navigation.navigate("Signature")}
+        />
 
         <Button
           color={"#34d399"}
